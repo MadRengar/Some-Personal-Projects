@@ -1,7 +1,7 @@
 # Some-Personal-Projects
 Here are some of my daily practice projects
 
-## 1. 基于强化学习的 NPC 行为优化
+## 1. 基于强化学习的 NPC 行为优化(RL_FrozenLake)
 
 技术栈：**Python** 
 
@@ -82,7 +82,7 @@ NPC 可以执行 **四个动作**（上、下、左、右），但环境具有�
 
 
 
-## 2. 基于 Unity3D 的 RPG 游戏开发
+## 2. 基于 Unity3D 的 RPG 游戏开发(LowPoly-SimpleRPG)
 
 ### (1) 项目简介
 
@@ -108,7 +108,7 @@ NPC 可以执行 **四个动作**（上、下、左、右），但环境具有�
 
 
 
-## 3. 基于 C++的 2D 动作游戏
+## 3. 基于 C++的 2D 动作游戏(2DMiniGame-C++)
 
 ### (1) 项目简介
 
