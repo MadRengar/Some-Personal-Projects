@@ -165,9 +165,9 @@ MonoBehaviour:
   minCenter_Distance: 15
   perlinFrequency: 0.24
   perlinAmplitude: 1
-  hardMode: 0
-  fakeBridgeNums: 3
-  zombieNums: 2
+  hardMode: 1
+  fakeBridgeNums: 15
+  zombieNums: 3
   playerAgentPrefab: {fileID: 5712325932848185555, guid: bd9b9bf526f90b648871b4ff8dbf2078, type: 3}
   zombieAgentPrefab: {fileID: 1592840818726122500, guid: 7394da42a8ebaaf4d9fca497337efaa7, type: 3}
   gameManagerPrefab: {fileID: 1769610581997553856, guid: 281475541e163a244aef1674b26dc6c6, type: 3}

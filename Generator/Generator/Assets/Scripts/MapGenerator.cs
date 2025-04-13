@@ -129,6 +129,7 @@ public class MapGenerator : MonoBehaviour
         ClearTaggedObjects("PlayerSpawnPoint");
         ClearTaggedObjects("LabPoint");
         ClearTaggedObjects("Zombie");
+        ClearTaggedObjects("Player");
 
         map = new int[width, height];
 
