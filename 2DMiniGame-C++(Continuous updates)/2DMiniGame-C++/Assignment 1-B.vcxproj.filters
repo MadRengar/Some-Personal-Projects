@@ -117,6 +117,18 @@
     <ClInclude Include="include\components\PositionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\VelocityComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\ColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\GraphicsComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\PlayerStateComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Board.cpp">
@@ -165,6 +177,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\components\InputComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\VelocityComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\ColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\GraphicsComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\PlayerStateComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
