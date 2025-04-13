@@ -37,7 +37,6 @@ public class ZombieAgentPathing : MonoBehaviour
 
         if (player != null && Vector3.Distance(transform.position, player.position) < 0.6f)
         {
-            Debug.Log("Zombie caught the player!");
             if (gameManager != null) gameManager.OnPlayerCaught();
         }
     }

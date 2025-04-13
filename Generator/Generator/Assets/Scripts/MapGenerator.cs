@@ -616,7 +616,7 @@ public class MapGenerator : MonoBehaviour
         GameManager gm = gmObj.GetComponent<GameManager>();
 
         // 2. Instantiate PlayerAgent
-        Vector3 playerWorldPos = new Vector3(playerSpawn.tileX - width / 2 + 0.5f, 1.0f, playerSpawn.tileY - height / 2 + 0.5f);
+        Vector3 playerWorldPos = new Vector3(playerSpawn.tileX - width / 2 + 0.5f, 0.0f, playerSpawn.tileY - height / 2 + 0.5f);
         GameObject playerAgentObj = Instantiate(playerAgentPrefab, playerWorldPos, Quaternion.identity);
         PlayerAgent playerAgent = playerAgentObj.GetComponent<PlayerAgent>();
         playerAgent.gameManager = gm;
@@ -638,7 +638,7 @@ public class MapGenerator : MonoBehaviour
             for (int i = 0; i < spawnCount; i++)
             {
                 Coord spawnTile = region[Random.Range(0, region.Count)];
-                Vector3 zombiePos = new Vector3(spawnTile.tileX - width / 2 + 0.5f, 0.5f, spawnTile.tileY - height / 2 + 0.5f);
+                Vector3 zombiePos = new Vector3(spawnTile.tileX - width / 2 + 0.5f, 0.0f, spawnTile.tileY - height / 2 + 0.5f);
                 GameObject zombieObj = Instantiate(zombieAgentPrefab, zombiePos, Quaternion.identity);
 
                 ZombieAgentPathing zombie = zombieObj.GetComponent<ZombieAgentPathing>();

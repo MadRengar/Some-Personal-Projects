@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerReachedLab()
     {
-        Debug.Log("Escape successful!");
         foreach (var z in zombies)
         {
             z.StopChasing();
@@ -17,10 +16,10 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerCaught()
     {
-        Debug.Log("Game Over!");
-        foreach (var z in zombies)
-        {
-            z.StopChasing();
-        }
+        Debug.Log("Injured by zombies£¡");
+        //foreach (var z in zombies)
+        //{
+        //    z.StopChasing();
+        //}
     }
 }
