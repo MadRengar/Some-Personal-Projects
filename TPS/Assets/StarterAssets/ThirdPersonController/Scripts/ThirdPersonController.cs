@@ -111,6 +111,8 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+
+        private bool _rotateOnMove;
         private bool IsCurrentDeviceMouse
         {
             get
@@ -262,7 +264,10 @@ namespace StarterAssets
                     RotationSmoothTime);
 
                 // rotate to face input direction relative to camera position
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                if(_rotateOnMove)
+                {
+                    transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                }
             }
 
 
@@ -370,11 +375,6 @@ namespace StarterAssets
                 GroundedRadius);
         }
 
-        public void setLookSensitivity(float newSensitivity)
-        {
-            LookSensitivity = newSensitivity;
-        }
-
         private void OnFootstep(AnimationEvent animationEvent)
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
@@ -393,6 +393,16 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
+        }
+
+        public void setLookSensitivity(float newSensitivity)
+        {
+            LookSensitivity = newSensitivity;
+        }
+
+        public void SetRotateOnMove(bool newRotateOnMove)
+        {
+            _rotateOnMove = newRotateOnMove;
         }
     }
 }
