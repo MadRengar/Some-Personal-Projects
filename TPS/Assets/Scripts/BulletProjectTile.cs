@@ -17,7 +17,7 @@ public class BulletProjectTile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float bulletSpeed = 10f;
+        float bulletSpeed = 50f;
         bulletRigidbody.velocity = transform.forward * bulletSpeed;
     }
     private void OnTriggerEnter(Collider other)
