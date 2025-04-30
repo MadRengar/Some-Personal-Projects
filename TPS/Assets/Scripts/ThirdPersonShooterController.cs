@@ -17,14 +17,17 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private Transform spawnBulletPosition;
     [SerializeField] private GameObject hitGreen;
     [SerializeField] private GameObject hitred;
-    [SerializeField] private Rig aimRig;
-    [SerializeField] private Rig idleRig;
+    [SerializeField] private Rig aimWeapon;
+    [SerializeField] private Rig aimBody;
+    [SerializeField] private Rig idleWeapon;
 
     private StarterAssetsInputs _starterAssetsInputs;
     private ThirdPersonController _thirdPersonController;
     private Animator _animator;
-    private float _aimRigWeight;
-    private float _IdleRigWeight;
+
+    private float _aimWeapon_Weight;
+    private float _aimBody_Weight;
+    private float _idleWeapon_Weight;
 
     public GameObject aimTarget;
 
@@ -39,6 +42,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         Vector3 mouseWorldPosition = Vector3.zero;
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        //_starterAssetsInputs.aim = true;
         UpdateRigWeights();
 
         /*鼠标所指*/
@@ -54,10 +58,10 @@ public class ThirdPersonShooterController : MonoBehaviour
         /*是否开启瞄准*/
         if (_starterAssetsInputs.aim)
         {
-            _aimVirtualCamera.gameObject.SetActive(true);
-            _thirdPersonController.setLookSensitivity(aimSensitivity);
+            _aimVirtualCamera.gameObject.SetActive(true);// 镜头放大
+            _thirdPersonController.setLookSensitivity(aimSensitivity);// 降低Aiming状态下的灵敏度
             _thirdPersonController.SetRotateOnMove(false);
-            _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+            //_animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
 
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
@@ -70,7 +74,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             _aimVirtualCamera.gameObject.SetActive(false);
             _thirdPersonController.setLookSensitivity(normalSensitivity);
             _thirdPersonController.SetRotateOnMove(true);
-            _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+            //_animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
         }
 
         /*是否开火*/
@@ -100,9 +104,13 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private void UpdateRigWeights()
     {
-        _aimRigWeight = _starterAssetsInputs.aim ? 1f : 0f;
-        _IdleRigWeight = _starterAssetsInputs.aim ? 0f : 1f;
-        aimRig.weight = Mathf.Lerp(aimRig.weight, _aimRigWeight, Time.deltaTime * 20f);
-        idleRig.weight = Mathf.Lerp(idleRig.weight, _IdleRigWeight, Time.deltaTime * 20f);
+        _aimWeapon_Weight = _starterAssetsInputs.aim ? 1f : 0f;
+        _idleWeapon_Weight = _starterAssetsInputs.aim ? 0f : 1f;
+        _aimBody_Weight = _starterAssetsInputs.aim ? 1f : 0f;
+
+        aimWeapon.weight = Mathf.Lerp(aimWeapon.weight, _aimWeapon_Weight, Time.deltaTime * 20f);
+        aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);
+        idleWeapon.weight = Mathf.Lerp(idleWeapon.weight, _idleWeapon_Weight, Time.deltaTime * 20f);
+
     }
 }

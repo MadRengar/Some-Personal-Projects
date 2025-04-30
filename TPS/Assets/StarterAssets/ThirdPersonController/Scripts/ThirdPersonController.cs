@@ -170,7 +170,7 @@ namespace StarterAssets
             JumpAndGravity(); // 处理跳跃和重力
             GroundedCheck(); // 检测地面
             Move(); // 处理移动
-            UpdateRigWeights(); // 处理rig权重切换
+            //UpdateRigWeights(); // 处理rig权重切换
         }
 
         private void LateUpdate()
