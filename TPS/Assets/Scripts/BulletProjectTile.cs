@@ -20,17 +20,17 @@ public class BulletProjectTile : MonoBehaviour
         float bulletSpeed = 50f;
         bulletRigidbody.velocity = transform.forward * bulletSpeed;
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponent<BulletTarget>() != null)
-        {
-            Instantiate(hitGreen, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(hitred, transform.position, Quaternion.identity);
-        }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.GetComponent<BulletTarget>() != null)
+    //    {
+    //        Instantiate(hitGreen, transform.position, Quaternion.identity);
+    //    }
+    //    else
+    //    {
+    //        Instantiate(hitred, transform.position, Quaternion.identity);
+    //    }
 
-        Destroy(gameObject);
-    }
+    //    Destroy(gameObject);
+    //}
 }

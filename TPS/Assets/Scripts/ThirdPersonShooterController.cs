@@ -15,8 +15,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
     [SerializeField] private Transform pfBulletProjectile;
     [SerializeField] private Transform spawnBulletPosition;
-    [SerializeField] private GameObject hitGreen;
-    [SerializeField] private GameObject hitred;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [Header("Rig")]
     [SerializeField] private Rig aimWeapon;
     [SerializeField] private Rig aimBody;
     [SerializeField] private Rig idleWeapon;
@@ -42,17 +42,18 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         Vector3 mouseWorldPosition = Vector3.zero;
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        GameObject hitObj = null;
         //_starterAssetsInputs.aim = true;
         UpdateRigWeights();
 
         /*鼠标所指*/
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        Transform hitTransform = null;
+
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
         {
             mouseWorldPosition = raycastHit.point;
-            hitTransform = raycastHit.transform;
             aimTarget.transform.position = mouseWorldPosition;
+            hitObj = raycastHit.collider.gameObject;
         }
 
         /*是否开启瞄准*/
@@ -80,20 +81,15 @@ public class ThirdPersonShooterController : MonoBehaviour
         /*是否开火*/
         if(_starterAssetsInputs.shoot)
         {
-            /*击中到某物*/
-            if(hitTransform != null)
+            muzzleFlash.Emit(1);
+            /*击中到僵尸*/
+            if (hitObj.CompareTag("Enemy"))
             {
-                if (hitTransform.GetComponent<BulletTarget>() != null)
-                {
-                    //目标
-                    //Instantiate(hitGreen, transform.position, Quaternion.identity);
-                    Instantiate(hitGreen, raycastHit.point, Quaternion.identity);
-                }
-                else
-                {
-                    //其他的一些东西
-                    Instantiate(hitred, raycastHit.point, Quaternion.identity);
-                }
+                Debug.Log("命中敌人");
+            }
+            else /*击中到某物*/
+            {
+                Debug.Log("Miss");
             }
             //Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
             //Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));//取消实例化
