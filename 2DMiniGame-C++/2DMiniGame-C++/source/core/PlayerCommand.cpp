@@ -1,8 +1,8 @@
-#include "include/core/Command.h"
-#include "include/core/Game.h"
-#include "include/entities/Player.h"
-#include "include/entities/Entity.h"
-#include "include/components/VelocityComponent.h"
+#include "../../include/core/Command.h"
+#include "../../include/core/Game.h"
+#include "../../include/entities/Player.h"
+#include "../../include/entities/Entity.h"
+#include "../../include/components/VelocityComponent.h"
 
 void MoveRightCommand::execute(Game& game)
 {

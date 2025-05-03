@@ -197,7 +197,7 @@
     <ClCompile Include="source\core\InputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCommand.cpp">
+    <ClCompile Include="source\core\PlayerCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\components\InputComponent.cpp">

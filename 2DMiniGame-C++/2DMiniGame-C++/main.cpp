@@ -1,34 +1,26 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
-#include "../Assignment 1-B/include/core/Game.h"
+#include "include/core/Game.h"
 
 void adaptiveLoop(Game& game, float& lastTime, float updateTarget = 0)
 {
     float current = game.getElapsed().asSeconds();
     float elapsedSeconds = current - lastTime;
-    // I.A: Three function calls for the game loop: handleInput, update and render.
-    //    Update and Render are frame-dependent
+    //三个核心函数在每次循环中被调用：handleInput, update and render.
     game.handleInput();
     game.update(elapsedSeconds);
     game.render(elapsedSeconds);
 
-    // I.B: This loop is time-variable, set the game to sleep in order to get a 
-    //      constant framerate.
+    //计算相邻两帧之间的时间差
     float frameTime = game.getElapsed().asSeconds() - current;
     if (frameTime < updateTarget) {
-        sf::sleep(sf::seconds(updateTarget - frameTime));
+        sf::sleep(sf::seconds(updateTarget - frameTime));// 通过sleep来控制两帧之间的间隔时间->实现锁帧
     }
 
-
-    // I.C: Calculate the current frame rate and set it to the game.
     int currentFPS = (elapsedSeconds > 0) ? static_cast<int>(1.0f / elapsedSeconds) : 0;
-
-    // I.D: Call the function game.setFPS(int) to inform the game about the current FPS. Print this value to console as well.
     game.setFPS(currentFPS);
-    //std::cout << "FPS: " << currentFPS << "  " << "elapsed:" << elapsedSeconds << std::endl;
-
-    lastTime = current;
+    lastTime = current; // 更新上一帧的时间
 }
 
 int main(int argc, char** argv[])
