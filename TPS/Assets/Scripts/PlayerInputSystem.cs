@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-namespace StarterAssets
+namespace PlayerControl
 {
-	public class StarterAssetsInputs : MonoBehaviour
+	public class PlayerInputSystem : MonoBehaviour
 	{
 		[Header("Character Input Values")]
 		public Vector2 move;
@@ -22,8 +22,12 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+        [Header("Voice Input Settings")]
+        public bool voiceInput; // true 表示正在按下语音键
+
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}
@@ -55,6 +59,12 @@ namespace StarterAssets
         {
             ShootInput(value.isPressed);
         }
+
+        public void OnVoiceInput(InputValue value)
+        {
+            VoiceInput(value.isPressed);
+        }
+
 #endif
 
 
@@ -89,6 +99,11 @@ namespace StarterAssets
             shoot = newShootState;
         }
 
+        public void VoiceInput(bool newVoiceInputState)
+        {
+            voiceInput = newVoiceInputState;
+        }
+
         private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
@@ -98,6 +113,8 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
-	}
-	
+
+
+    }
+
 }

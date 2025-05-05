@@ -1,5 +1,5 @@
 {
-    "name": "StarterAssets",
+    "name": "PlayerInputAsset",
     "maps": [
         {
             "name": "Player",
@@ -54,6 +54,15 @@
                     "name": "Shoot",
                     "type": "Button",
                     "id": "e54655c4-242d-4366-b22d-77e8d79f4803",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "VoiceInput",
+                    "type": "Button",
+                    "id": "1b77456e-d4ee-4fc7-8d20-e408b7a3fe9a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -278,6 +287,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bcf3dec9-91c5-4f28-a3ba-2452e92500c0",
+                    "path": "<Keyboard>/v",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "VoiceInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a756266-4dbc-4026-ae13-02a7349ad622",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "VoiceInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

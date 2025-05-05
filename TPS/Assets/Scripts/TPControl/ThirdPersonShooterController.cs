@@ -1,5 +1,5 @@
 using Cinemachine;
-using StarterAssets;
+using PlayerControl;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
@@ -15,13 +15,15 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
     [SerializeField] private Transform pfBulletProjectile;
     [SerializeField] private Transform spawnBulletPosition;
-    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private ParticleSystem gunFireSmoke;
+    [SerializeField] private ParticleSystem gunFireFlash;
+    [SerializeField] private ParticleSystem bulletShells;
     [Header("Rig")]
     [SerializeField] private Rig aimWeapon;
     [SerializeField] private Rig aimBody;
     [SerializeField] private Rig idleWeapon;
 
-    private StarterAssetsInputs _starterAssetsInputs;
+    private PlayerInputSystem _playerInputs;
     private ThirdPersonController _thirdPersonController;
     private Animator _animator;
 
@@ -34,7 +36,7 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private void Awake()
     {
-        _starterAssetsInputs = GetComponent<StarterAssetsInputs>();
+        _playerInputs = GetComponent<PlayerInputSystem>();
         _thirdPersonController = GetComponent<ThirdPersonController>();
         _animator = GetComponent<Animator>();
     }
@@ -43,7 +45,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         Vector3 mouseWorldPosition = Vector3.zero;
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         GameObject hitObj = null;
-        //_starterAssetsInputs.aim = true;
+        //_playerInputs.aim = true;
         UpdateRigWeights();
 
         /*鼠标所指*/
@@ -57,7 +59,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         }
 
         /*是否开启瞄准*/
-        if (_starterAssetsInputs.aim)
+        if (_playerInputs.aim)
         {
             _aimVirtualCamera.gameObject.SetActive(true);// 镜头放大
             _thirdPersonController.setLookSensitivity(aimSensitivity);// 降低Aiming状态下的灵敏度
@@ -79,9 +81,11 @@ public class ThirdPersonShooterController : MonoBehaviour
         }
 
         /*是否开火*/
-        if(_starterAssetsInputs.shoot)
+        if(_playerInputs.shoot)
         {
-            muzzleFlash.Emit(1);
+            gunFireSmoke.Emit(1);
+            bulletShells.Emit(1);
+            gunFireFlash.Emit(1);
             /*击中到僵尸*/
             if (hitObj.CompareTag("Enemy"))
             {
@@ -93,16 +97,15 @@ public class ThirdPersonShooterController : MonoBehaviour
             }
             //Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
             //Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));//取消实例化
-            _starterAssetsInputs.shoot = false;
+            _playerInputs.shoot = false;
         }
-
     }
 
     private void UpdateRigWeights()
     {
-        _aimWeapon_Weight = _starterAssetsInputs.aim ? 1f : 0f;
-        _idleWeapon_Weight = _starterAssetsInputs.aim ? 0f : 1f;
-        _aimBody_Weight = _starterAssetsInputs.aim ? 1f : 0f;
+        _aimWeapon_Weight = _playerInputs.aim ? 1f : 0f;
+        _idleWeapon_Weight = _playerInputs.aim ? 0f : 1f;
+        _aimBody_Weight = _playerInputs.aim ? 1f : 0f;
 
         aimWeapon.weight = Mathf.Lerp(aimWeapon.weight, _aimWeapon_Weight, Time.deltaTime * 20f);
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);

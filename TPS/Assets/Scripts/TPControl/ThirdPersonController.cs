@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
  动画通过控制器调用，使用 animator 空检查来处理角色和胶囊体的动画
 */
 
-namespace StarterAssets
+namespace PlayerControl
 {
     [RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM 
@@ -113,7 +113,7 @@ namespace StarterAssets
 #endif
         private Animator _animator; // 动画控制器
         private CharacterController _controller; // 角色控制器组件
-        private StarterAssetsInputs _input; // 自定义输入处理脚本
+        private PlayerInputSystem _playerInputs; // 自定义输入处理脚本
         private GameObject _mainCamera; // 主摄像机引用
 
         private const float _threshold = 0.01f; // 判断输入阈值
@@ -150,7 +150,7 @@ namespace StarterAssets
 
             _hasAnimator = TryGetComponent(out _animator); // 尝试获取 Animator 组件
             _controller = GetComponent<CharacterController>(); // 获取 CharacterController 组件
-            _input = GetComponent<StarterAssetsInputs>(); // 获取输入处理脚本
+            _playerInputs = GetComponent<PlayerInputSystem>(); // 获取输入处理脚本
 #if ENABLE_INPUT_SYSTEM 
             _playerInput = GetComponent<PlayerInput>(); // 获取 PlayerInput 组件
 #else
@@ -205,13 +205,13 @@ namespace StarterAssets
         private void CameraRotation()
         {
             // 如果有输入且摄像机未被锁定，则根据输入旋转摄像机目标
-            if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (_playerInputs.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 // 鼠标输入不乘以 Time.deltaTime，摇杆输入乘以
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * LookSensitivity;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier * LookSensitivity;
+                _cinemachineTargetYaw += _playerInputs.look.x * deltaTimeMultiplier * LookSensitivity;
+                _cinemachineTargetPitch += _playerInputs.look.y * deltaTimeMultiplier * LookSensitivity;
             }
 
             // 限制摄像机俯仰角度在规定范围内
@@ -228,16 +228,16 @@ namespace StarterAssets
         private void Move()
         {
             // 根据是否按下冲刺键选择目标速度
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = _playerInputs.sprint ? SprintSpeed : MoveSpeed;
 
             // 如果没有移动输入，则目标速度设为 0
-            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+            if (_playerInputs.move == Vector2.zero) targetSpeed = 0.0f;
 
             // 获取当前水平速度 (忽略垂直分量)
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
             float speedOffset = 0.1f; // 速度误差阈值
-            float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f; // 模拟摇杆时使用输入幅度
+            float inputMagnitude = _playerInputs.analogMovement ? _playerInputs.move.magnitude : 1f; // 模拟摇杆时使用输入幅度
 
             // 加速或减速到目标速度
             if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
@@ -257,10 +257,10 @@ namespace StarterAssets
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
             // 计算输入方向 (归一化)
-            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+            Vector3 inputDirection = new Vector3(_playerInputs.move.x, 0.0f, _playerInputs.move.y).normalized;
 
             // 如果有移动输入则旋转角色朝向移动方向
-            if (_input.move != Vector2.zero)
+            if (_playerInputs.move != Vector2.zero)
             {
                 // 目标旋转角度 = 输入方向角度 + 摄像机 Y 轴角度
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
@@ -309,7 +309,7 @@ namespace StarterAssets
                 }
 
                 // 如果按下跳跃键且冷却到期，则跳跃
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (_playerInputs.jump && _jumpTimeoutDelta <= 0.0f)
                 {
                     // 计算达到指定高度所需的初始垂直速度
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
@@ -347,7 +347,7 @@ namespace StarterAssets
                 }
 
                 // 非地面时取消跳跃输入
-                _input.jump = false;
+                _playerInputs.jump = false;
             }
 
             // 如果未达到终端速度，则累加重力
