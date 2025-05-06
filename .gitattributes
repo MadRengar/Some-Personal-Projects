@@ -1,0 +1,2 @@
+TPS/Assets/StreamingAssets/Whisper/ggml-small.bin filter=lfs diff=lfs merge=lfs -text
+
