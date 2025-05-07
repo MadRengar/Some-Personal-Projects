@@ -418,7 +418,7 @@ namespace PlayerControl
             float idleTargetWeight = 0f;
             float walkTargetWeight = 0f;
             float runTargetWeight = 0f;
-            if(currentSpeed < 0.1f) // Idle
+            if(currentSpeed < 0.1f) // Guard
             {
                 idleTargetWeight = 1f;
             }else if(currentSpeed < 0.7f) // Walk
