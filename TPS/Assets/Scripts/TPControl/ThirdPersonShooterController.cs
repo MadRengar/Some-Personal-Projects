@@ -14,10 +14,9 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private float aimSensitivity;
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
     [SerializeField] private Transform pfBulletProjectile;
-    [SerializeField] private Transform spawnBulletPosition;
-    [SerializeField] private ParticleSystem gunFireSmoke;
-    [SerializeField] private ParticleSystem gunFireFlash;
-    [SerializeField] private ParticleSystem bulletShells;
+    [Header("Particle")]
+    [SerializeField] private ParticleSystem[] muzzleFlash;
+    [SerializeField] private ParticleSystem hitEffect;
     [Header("Rig")]
     [SerializeField] private Rig aimWeapon;
     [SerializeField] private Rig aimBody;
@@ -32,7 +31,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private float _idleWeapon_Weight;
 
     public GameObject aimTarget;
-
+    public GameObject originShootPosition;
 
     private void Awake()
     {
@@ -42,10 +41,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     }
     void Update()
     {
-        Vector3 mouseWorldPosition = Vector3.zero;
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        GameObject hitObj = null;
-        //_playerInputs.aim = true;
         UpdateRigWeights();
 
         /*鼠标所指*/
@@ -53,12 +49,17 @@ public class ThirdPersonShooterController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
         {
-            mouseWorldPosition = raycastHit.point;
-            aimTarget.transform.position = mouseWorldPosition;
-            hitObj = raycastHit.collider.gameObject;
+            aimTarget.transform.position = raycastHit.point;
         }
 
         /*是否开启瞄准*/
+        IfAiming(raycastHit);
+        IfShooting(raycastHit);
+
+    }
+
+    private void IfAiming(RaycastHit raycastHit)
+    {
         if (_playerInputs.aim)
         {
             _aimVirtualCamera.gameObject.SetActive(true);// 镜头放大
@@ -66,7 +67,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             _thirdPersonController.SetRotateOnMove(false);
             //_animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
 
-            Vector3 worldAimTarget = mouseWorldPosition;
+            Vector3 worldAimTarget = raycastHit.point; ;
             worldAimTarget.y = transform.position.y;
             Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
 
@@ -79,24 +80,27 @@ public class ThirdPersonShooterController : MonoBehaviour
             _thirdPersonController.SetRotateOnMove(true);
             //_animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
         }
+    }
 
+    private void IfShooting(RaycastHit raycastHit)
+    {
         /*是否开火*/
-        if(_playerInputs.shoot)
+        if (_playerInputs.shoot)
         {
-            gunFireSmoke.Emit(1);
-            bulletShells.Emit(1);
-            gunFireFlash.Emit(1);
+            StartFiring(raycastHit);
+
             /*击中到僵尸*/
-            if (hitObj.CompareTag("Enemy"))
+            if (raycastHit.collider.CompareTag("Enemy"))
             {
                 Debug.Log("命中敌人");
+                hitEffect.transform.position = raycastHit.point;
+                hitEffect.transform.forward = raycastHit.normal;
+                hitEffect.Emit(1);
             }
             else /*击中到某物*/
             {
                 Debug.Log("Miss");
             }
-            //Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-            //Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));//取消实例化
             _playerInputs.shoot = false;
         }
     }
@@ -111,5 +115,16 @@ public class ThirdPersonShooterController : MonoBehaviour
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);
         idleWeapon.weight = Mathf.Lerp(idleWeapon.weight, _idleWeapon_Weight, Time.deltaTime * 20f);
 
+    }
+
+    private void StartFiring(RaycastHit raycastHit)
+    {
+        Vector3 shootDirection = (raycastHit.point - originShootPosition.transform.position).normalized;
+        Debug.DrawLine(originShootPosition.transform.position, raycastHit.point, Color.red, 1.0f);
+
+        foreach (var effect in muzzleFlash)
+        {
+            effect.Emit(1);
+        }
     }
 }

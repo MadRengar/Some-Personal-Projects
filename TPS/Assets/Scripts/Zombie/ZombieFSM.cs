@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,7 @@ public class ZombieFSM : MonoBehaviour
     private NavMeshAgent agent;
     private ZombieState currentState;
     private Animator anim;
+    private ZombieStats stats;
 
     [Header("Basic Settings")]
     public bool isGuard = false; // 该敌人是否站桩
@@ -19,6 +21,8 @@ public class ZombieFSM : MonoBehaviour
     public float sightRadius; // 敌人发现敌人的半径
     private float speed; // 记录敌人追击前的初始速度
     private float actualSpeed; // 记录移动速度匹配动画
+    [SerializeField]private float attackRange;
+    [SerializeField]private float attackCD;
 
     [Header("Patrol State")] // ----------敌人巡逻设置
     public float patrolRange; // 随机生成新巡逻位置的范围
@@ -34,7 +38,7 @@ public class ZombieFSM : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-
+        stats = GetComponent<ZombieStats>();
         guardPos = transform.position;
         speed = agent.speed;
     }
@@ -205,14 +209,5 @@ public class ZombieFSM : MonoBehaviour
         anim.SetBool("isRunning", isRunning);
     }
 
-    public void ResetFSM()
-    {
-
-    }
-
-    public void OnAttackAnimationComplete()
-    {
-
-    }
-
+    //TODO:僵尸攻击
 }
