@@ -94,7 +94,6 @@ public class ZombieFSM : MonoBehaviour
 
     void Guard()
     {
-        Debug.Log("处于Idle状态");
         isRunning = false;
         if (agent.transform.position != guardPos) // 返回站桩点
         {

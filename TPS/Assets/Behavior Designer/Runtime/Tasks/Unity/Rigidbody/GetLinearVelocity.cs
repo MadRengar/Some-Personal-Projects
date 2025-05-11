@@ -1,16 +1,17 @@
-#if !UNITY_6000_0_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
 using UnityEngine;
 
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody
 {
     [TaskCategory("Unity/Rigidbody")]
-    [TaskDescription("Sets the drag of the Rigidbody. Returns Success.")]
-    public class SetDrag : Action
+    [TaskDescription("Stores the linear velocity of the Rigidbody. Returns Success.")]
+    public class GetLinearVelocity : Action
     {
         [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The drag of the Rigidbody")]
-        public SharedFloat drag;
+        [Tooltip("The linear velocity of the Rigidbody")]
+        [RequiredField]
+        public SharedVector3 storeValue;
 
         // cache the rigidbody component
         private Rigidbody rigidbody;
@@ -32,7 +33,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody
                 return TaskStatus.Failure;
             }
 
-            rigidbody.drag = drag.Value;
+            storeValue.Value = rigidbody.linearVelocity;
 
             return TaskStatus.Success;
         }
@@ -40,7 +41,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody
         public override void OnReset()
         {
             targetGameObject = null;
-            drag = 0;
+            storeValue = Vector3.zero;
         }
     }
 }

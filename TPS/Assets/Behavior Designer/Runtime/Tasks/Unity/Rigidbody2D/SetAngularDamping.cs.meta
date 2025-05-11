@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9ea79154ee01cf441a9744c877542a1f
+guid: f357c8e5586a0b0448d31458b10d068e
 MonoImporter:
   serializedVersion: 2
   defaultReferences: []
@@ -11,5 +11,5 @@ AssetOrigin:
   productId: 15277
   packageName: Behavior Designer - Behavior Trees for Everyone
   packageVersion: 1.7.10
-  assetPath: Assets/Behavior Designer/Runtime/Tasks/Unity/Rigidbody2D/AddForce.cs
+  assetPath: Assets/Behavior Designer/Runtime/Tasks/Unity/Rigidbody2D/SetAngularDrag.cs
   uploadId: 678687
