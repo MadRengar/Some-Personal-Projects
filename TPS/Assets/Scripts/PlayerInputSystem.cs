@@ -14,6 +14,10 @@ namespace PlayerControl
 		public bool sprint;
         public bool aim;
 		public bool shoot;
+        public bool pickUp;
+        public bool openStatusPanel;
+        public bool openBuildMenu;
+        public bool ping;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -65,6 +69,26 @@ namespace PlayerControl
             VoiceInput(value.isPressed);
         }
 
+        public void OnPickUp(InputValue value)
+        {
+            PickUpInput(value.isPressed);
+        }
+
+        public void OnOpenStatusPanel(InputValue value)
+        {
+            OpenStatusPanelInput(value.isPressed);
+        }
+
+        public void OnOpenBuildMenu(InputValue value)
+        {
+            OpenBuildMenuInput(value.isPressed);
+        }
+
+        public void OnPing(InputValue value)
+        {
+            PingInput(value.isPressed);
+        }
+
 #endif
 
 
@@ -102,6 +126,30 @@ namespace PlayerControl
         public void VoiceInput(bool newVoiceInputState)
         {
             voiceInput = newVoiceInputState;
+        }
+
+		public void PickUpInput(bool newPickUpInputState)
+		{
+			pickUp = newPickUpInputState;
+
+        }
+
+        public void OpenStatusPanelInput(bool newStatusPanelInputState)
+        {
+            openStatusPanel = newStatusPanelInputState;
+
+        }
+
+        public void OpenBuildMenuInput(bool newOpenBuildMenuInputState)
+        {
+            openBuildMenu = newOpenBuildMenuInputState;
+
+        }
+
+        public void PingInput(bool newPingInputState)
+        {
+            ping = newPingInputState;
+
         }
 
         private void OnApplicationFocus(bool hasFocus)

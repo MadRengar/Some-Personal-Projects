@@ -50,5 +50,17 @@ public class PlayerStats : MonoBehaviour
             playerData.stamina = value;
         }
     }
+
+    public bool IsAlive
+    {
+        get
+        {
+            return playerData.isAlive;
+        }
+        set 
+        { 
+            playerData.isAlive = value; 
+        }
+    }
     #endregion
 }

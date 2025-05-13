@@ -9,7 +9,7 @@ public class ResourceSlot
     public ResourceData_SO data;
     public int quantity;
 }
-public class Inventory : MonoBehaviour
+public class InventoryManager : MonoBehaviour
 {
 
     public List<ResourceSlot> resourceSlots = new List<ResourceSlot>();

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using PlayerControl;
 
 public class ResourceSpawner : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class ResourceSpawner : MonoBehaviour
         public GameObject resourcePrefab;
         public int maxAmountPerPile = 10; // 每堆包含资源个数的最大值
     }
-    public Inventory inventoryReference; // 持有Inventory引用 手动为生成的资源Prefab注入Inventory
-
+    public InventoryManager inventoryManagerRef; // 持有Inventory引用 手动为生成的资源Prefab注入Inventory
+    public PlayerInputSystem playerInputSystemRef;
     public List<ResourcePrefabInfo> resourceTypes;
 
     /*一次刷新会随机生成的“资源堆”的数量区间*/
@@ -74,7 +75,9 @@ public class ResourceSpawner : MonoBehaviour
                         {
                             pickup.resourceData = res.resourceData;
                             pickup.amount = Random.Range(1, res.maxAmountPerPile + 1);
-                            pickup.inventory = inventoryReference;
+
+                            pickup.inventory = inventoryManagerRef;
+                            pickup.playerInputSystem = playerInputSystemRef;
                         }
 
                         placedPositions.Add(navHit.position);
