@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3321642510939195967}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.45562217, z: -0, w: 0.8901733}
-  m_LocalPosition: {x: 0.109987035, y: 0.19185291, z: 0.8190233}
+  m_LocalPosition: {x: 0.109987035, y: 0.31199998, z: 0.8190233}
   m_LocalScale: {x: 0.40810496, y: 0.54743916, z: 0.15804935}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -110,7 +110,7 @@ Transform:
   m_GameObject: {fileID: 3494372715717518361}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.18499438, y: -0.27014706, z: 0.4749872}
+  m_LocalPosition: {x: -0.18499438, y: -0.15, z: 0.4749872}
   m_LocalScale: {x: 0.69947994, y: 0.69947994, z: 0.2664389}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -193,7 +193,7 @@ Transform:
   m_GameObject: {fileID: 3855511940245995064}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.16542596, y: -0.15014711, z: 0.47284922}
+  m_LocalPosition: {x: -0.16542596, y: 0.21014707, z: 0.47284922}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5079,7 +5079,7 @@ Transform:
   m_GameObject: {fileID: 5602139777180183921}
   serializedVersion: 2
   m_LocalRotation: {x: 0.19018526, y: -0.37400407, z: 0.14415456, w: 0.89619756}
-  m_LocalPosition: {x: -0.5559928, y: 0.05685288, z: 0.023992851}
+  m_LocalPosition: {x: -0.5559928, y: 0.17699994, z: 0.023992851}
   m_LocalScale: {x: 0.6994799, y: 0.69948, z: 0.22876982}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5162,7 +5162,7 @@ Transform:
   m_GameObject: {fileID: 8109965008472075777}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3274965, y: -0.30014703, z: 0.5739874}
+  m_LocalPosition: {x: 0.3274965, y: -0.17999996, z: 0.5739874}
   m_LocalScale: {x: 0.63760996, y: 0.63760996, z: 0.25515237}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5232,7 +5232,7 @@ GameObject:
   - component: {fileID: 1519165699631603146}
   m_Layer: 0
   m_Name: WoodResource
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5320,3 +5320,4 @@ MonoBehaviour:
   inventory: {fileID: 0}
   resourceData: {fileID: 11400000, guid: 74a3a068085d1f5469a3381f2633e9b7, type: 2}
   amount: 5
+  playerInputSystem: {fileID: 0}

@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Game Manager，我希望它的作用应该是：
+/// 1. 为全局脚本提供Player对象的。因为玩家的位置信息、PlayerState信息很重要
+/// 2. 为需要实现输入逻辑的其他脚本，提供挂载在Player对象下的PlayerInputSystem。
+/// 3. 关于PingManager， 标记地点、标记激活标志、可能后面读取到标记的对象类型。我觉得会经常用到
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }

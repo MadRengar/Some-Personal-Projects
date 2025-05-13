@@ -11,33 +11,38 @@ public class BTHasValidPingCommand : Conditional
     public SharedVector3 pingPosition;
     public SharedTransform player;
     private AIAgentSettings agentSettings;
-
+    private float minDistanceToPing;
     public override void OnStart()
     {
         agentSettings = GetComponent<AIAgentSettings>();
     }
     public override TaskStatus OnUpdate()
     {
-        if (!pingCommandActive.Value)
+        if (pingCommandActive.Value)
         {
-            Debug.Log("Ping命令未激活");
-            return TaskStatus.Failure;
-        }
-        if (pingPosition.Value == Vector3.zero)
-        {
-            Debug.Log("Ping位置无效");
-            return TaskStatus.Failure;
-        }
-        if (player.Value != null && agentSettings != null)
-        {
-            float distance = Vector3.Distance(player.Value.position, pingPosition.Value);
-            if(distance < agentSettings.minDistanceToPing)
+            if (pingPosition.Value == Vector3.zero)
             {
-                Debug.Log("Ping位置距离太近，无需前往");
+                Debug.Log("Ping位置无效");
                 return TaskStatus.Failure;
             }
+            if (player.Value != null && agentSettings != null)
+            {
+                float distance = Vector3.Distance(player.Value.position, pingPosition.Value);
+                if (agentSettings != null)
+                {
+                    minDistanceToPing = agentSettings.minDistanceToPing;
+                }
+
+                if (distance < minDistanceToPing)
+                {
+                    Debug.Log("Ping位置距离太近，无需前往");
+                    return TaskStatus.Failure;
+                }
+            }
+            Debug.Log("有效的 Ping 命令 + 合法位置");
+            return TaskStatus.Success;
         }
-        Debug.Log("有效的 Ping 命令 + 合法位置");
-        return TaskStatus.Success;
+        Debug.Log("当前没有指令");
+        return TaskStatus.Failure;
     }
 }

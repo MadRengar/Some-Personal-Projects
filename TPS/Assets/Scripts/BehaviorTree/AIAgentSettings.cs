@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// 所有行为树中的节点需要使用到的具体数据，都应该从外部获取。
+/// 因此这个脚本的职责，就是统一设置AIAgent行为树中的数据的。
+/// </summary>
 public class AIAgentSettings : MonoBehaviour
 {
     [Header("AI Agent Basic Setting")]
@@ -11,7 +15,7 @@ public class AIAgentSettings : MonoBehaviour
     public float patrolRadiusAroundPlayer = 5.0f; // AI 围绕玩家巡逻的最大半径
     public float patrolWaitTime = 1.5f; // AI 在每个巡逻点等待的时间
 
-    public float minDistanceToPing = 1.0f;    // 可选：与玩家的最小距离，避免 AI 原地执行
+    public float minDistanceToPing = 3.0f;    // 可选：与玩家的最小距离，避免 AI 原地执行
 
     private void Reset()
     {

@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Ping Manager应该管理ping的所有逻辑
+/// 包括：生成逻辑（位置、UI），向其他脚本提供标记的位置、标记激活的标志
+/// </summary>
 public class PingMarkerManager : MonoBehaviour
 {
     public GameObject markerPrefab;
@@ -21,8 +25,8 @@ public class PingMarkerManager : MonoBehaviour
     private TextMeshProUGUI distanceText;
     private float distance;
 
-    public Vector3 currentMarkedPosition;// 标记位置
-    public bool pingCommandActive;// 标记状态
+    private Vector3 currentMarkedPosition;// 标记位置
+    private bool pingCommandActive;// 标记状态
 
     private void Start()
     {
@@ -119,4 +123,14 @@ public class PingMarkerManager : MonoBehaviour
         return false;
     }
 
+    /*向其他脚本提供 激活标志、ping位置信息 重要函数*/
+    public bool GetPingCommandActive()
+    {
+        return pingCommandActive;
+    }
+
+    public Vector3 GetCurrentMarkedPosition()
+    {
+        return currentMarkedPosition;
+    }
 }

@@ -48,13 +48,12 @@ public class BTFollowPlayer : Action
         if (dist > stopDistance)
         {
             agent.SetDestination(player.Value.position);
+            return TaskStatus.Running;
         }
         else
         {
             agent.ResetPath(); // 停下来，不再持续 SetDestination
+            return TaskStatus.Success;
         }
-
-        // 这里不等待到达，持续执行
-        return TaskStatus.Running;
     }
 }
