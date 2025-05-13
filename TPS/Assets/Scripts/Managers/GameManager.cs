@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime;
 using PlayerControl;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,5 +62,26 @@ public class GameManager : MonoBehaviour
     public PingMarkerManager GetPingMarkerManager()
     {
         return pingMarkerManager;
+    }
+
+    public void ReceiveAIBehaviorCommand(string command)
+    {
+        var tree = aiTeammate.GetComponent<BehaviorTree>();
+        if (tree == null)
+        {
+            return;
+        }
+        switch(command)
+        {
+            case "move_to_mark":
+                Debug.Log("move_to_mark");
+                break;
+            case "follow_player":
+                Debug.Log("follow_player");
+                break;
+            default:
+                Debug.LogWarning("未识别的指令: " + command);
+                break;
+        }
     }
 }

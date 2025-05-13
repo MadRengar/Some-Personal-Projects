@@ -61,11 +61,10 @@ public class SpeechToTextManager : MonoBehaviour
         if (result != null)
         {
             string userText = result.Result;
-            Debug.Log("Whisper识别结果: " + userText);
-            //if (chatGPTManager != null)
-            //{
-            //    chatGPTManager.AskChatGPT(userText);
-            //}
+            if (chatGPTManager != null)
+            {
+                chatGPTManager.AskChatGPT(userText);
+            }
         }
     }
 }

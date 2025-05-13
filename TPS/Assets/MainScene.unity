@@ -5655,7 +5655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &203363033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5669,7 +5669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logLevel: 1
-  modelPath: Whisper/ggml-small.bin
+  modelPath: Whisper/ggml-tiny.bin
   isModelPathInStreamingAssets: 1
   initOnAwake: 1
   useGpu: 0
@@ -5681,9 +5681,9 @@ MonoBehaviour:
   singleSegment: 0
   enableTokens: 0
   initialPrompt: 
-  stepSec: 3
+  stepSec: 1
   keepSec: 0.2
-  lengthSec: 10
+  lengthSec: 2
   updatePrompt: 1
   dropOldBuffer: 0
   useVad: 1
@@ -16880,7 +16880,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &653437416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45426,7 +45426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1841318099
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,11 +12,16 @@ public class ChatGPTManager : MonoBehaviour
     [Header("Prompt")]
     public string promptFileName = "behavior_tree_prompt.txt";
 
+    [System.Serializable]
+    public class BehaviorResult
+    {
+        public string behavior;
+    }
+
     void Start()
     {
         LoadPromptFromFile(promptFileName);
-        AskChatGPT("Help me collect some resources.");
-
+        //AskChatGPT("Help me collect some resources.");
     }
 
     void Update()
@@ -64,6 +69,7 @@ public class ChatGPTManager : MonoBehaviour
 
             //控制台输出结构化结果（你可以把它传给 AI 行为系统）
             Debug.Log($"GPT返回: {chatResponse.Content}");
+            ProcessGPTResponse(chatResponse.Content);
         }
     }
 
@@ -80,6 +86,27 @@ public class ChatGPTManager : MonoBehaviour
         {
             Debug.LogWarning($"Can not find Prompt file: {path}");
             currentPrompt = "";
+        }
+    }
+
+    public void ProcessGPTResponse(string content)
+    {
+        try
+        {
+            var result = JsonUtility.FromJson<BehaviorResult>(content);
+            if (result != null && !string.IsNullOrEmpty(result.behavior))
+            {
+                Debug.Log("GPT 行为指令解析成功: " + result.behavior);
+                GameManager.Instance.ReceiveAIBehaviorCommand(result.behavior);
+            }
+            else
+            {
+                Debug.LogWarning("GPT 行为字段为空");
+            }
+        }
+        catch
+        {
+            Debug.LogError("无法解析 GPT 返回内容为 JSON");
         }
     }
 }
