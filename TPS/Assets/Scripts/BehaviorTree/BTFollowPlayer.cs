@@ -57,10 +57,4 @@ public class BTFollowPlayer : Action
         // 这里不等待到达，持续执行
         return TaskStatus.Running;
     }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, stopDistance);
-    }
 }

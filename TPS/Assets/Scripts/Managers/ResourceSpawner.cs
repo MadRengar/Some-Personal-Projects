@@ -37,7 +37,6 @@ public class ResourceSpawner : MonoBehaviour
 
     void SpawnResources()
     {
-        Debug.Log("开始生成资源");
         int pileCount = Random.Range(minPileCount, maxPileCount + 1);
         List<Vector3> placedPositions = new List<Vector3>();
 

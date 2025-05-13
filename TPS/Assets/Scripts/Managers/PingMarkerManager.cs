@@ -9,7 +9,8 @@ public class PingMarkerManager : MonoBehaviour
     public GameObject markerPrefab;
     public LayerMask groundLayer; // 用来射线检测地面
     public Transform markerParent; // 标记统一收纳在空物体下
-    public Vector3 currentMarkedPosition;
+
+
     [Header("2D UI")]
     public RectTransform markerUIIconPrefab;
     public Canvas uiCanvas;
@@ -20,6 +21,8 @@ public class PingMarkerManager : MonoBehaviour
     private TextMeshProUGUI distanceText;
     private float distance;
 
+    public Vector3 currentMarkedPosition;// 标记位置
+    public bool pingCommandActive;// 标记状态
 
     private void Start()
     {
@@ -35,19 +38,25 @@ public class PingMarkerManager : MonoBehaviour
         }
         if (playerInputSystem.ping)
         {
+            playerInputSystem.ping = false;
             Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
             Ray ray = Camera.main.ScreenPointToRay(screenCenter); // 屏幕中心发射射线
 
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 100f, groundLayer))
             {
+                if(CancelMarkIfHitUI(screenCenter))
+                {
+                    return;
+                }
                 currentMarkedPosition = raycastHit.point;
                 /* 3D Marker*/
                 if (currentMarker != null)
                 {
                     Destroy(currentMarker);
                 }
-                Vector3 spawnPosition = raycastHit.point + Vector3.up * 1.0f; // 抬高 0.5 米
+                Vector3 spawnPosition = raycastHit.point + Vector3.up * 0.5f; // 抬高 0.5 米
                 currentMarker = Instantiate(markerPrefab, spawnPosition, Quaternion.identity, markerParent);
+                pingCommandActive = true;
 
                 /* 2D Marker*/
                 if (currentMarkerUI != null)
@@ -56,8 +65,6 @@ public class PingMarkerManager : MonoBehaviour
                 }
                 currentMarkerUI = Instantiate(markerUIIconPrefab, uiCanvas.transform);
                 distanceText = currentMarkerUI.GetComponentInChildren<TextMeshProUGUI>();
-
-                playerInputSystem.ping = false;
                 Debug.Log("标记位置: " + raycastHit.point);
             }
         }
@@ -87,4 +94,29 @@ public class PingMarkerManager : MonoBehaviour
             }
         }
     }
+
+    bool CancelMarkIfHitUI(Vector2 screenCenter)
+    {
+        // 屏幕中心
+        if (currentMarkerUI != null &&
+                RectTransformUtility.RectangleContainsScreenPoint(currentMarkerUI, screenCenter, null))
+        {
+            Debug.Log("命中屏幕 UI 标记，取消标记");
+
+            if (currentMarker != null)
+            {
+                Destroy(currentMarker);
+                currentMarker = null;
+            }
+
+            Destroy(currentMarkerUI.gameObject);
+            currentMarkerUI = null;
+            //清空数据
+            pingCommandActive = false;
+            currentMarkedPosition = Vector3.zero;
+            return true;
+        }
+        return false;
+    }
+
 }

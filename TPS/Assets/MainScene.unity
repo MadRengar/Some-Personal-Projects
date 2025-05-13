@@ -1563,7 +1563,7 @@ Transform:
   m_GameObject: {fileID: 57503605}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 219.96, y: 1.84, z: 256.974}
+  m_LocalPosition: {x: 219.96, y: 1.84, z: 256.474}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1688,7 +1688,7 @@ Camera:
     height: 1
   near clip plane: 0.2
   far clip plane: 500
-  field of view: 30
+  field of view: 40
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -4534,6 +4534,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1495332977}
   playerInputSystem: {fileID: 1495332979}
+  aiTeammate: {fileID: 1909791441}
+  aiAgentSettings: {fileID: 1909791453}
+  pingMarkerManager: {fileID: 157247495}
 --- !u!4 &157247494
 Transform:
   m_ObjectHideFlags: 0
@@ -4566,9 +4569,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   markerParent: {fileID: 0}
-  currentMarkedPosition: {x: 0, y: 0, z: 0}
   markerUIIconPrefab: {fileID: 7650760141120498236, guid: b7d4f7f32f3815147938ec8356b3ef21, type: 3}
   uiCanvas: {fileID: 787301269}
+  currentMarkedPosition: {x: 0, y: 0, z: 0}
+  pingCommandActive: 0
 --- !u!1001 &157673962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47081,15 +47085,17 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(458.871429,22.021286)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-4.320038,128.404266)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(3.78800583,127.189804)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-189.243484,123.333344)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-96.27761,114.066483)"},"ID":4,"Name":"BT
-        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":0},"SingleinputThreshold":0.1},{"Type":"BTFollowPlayer","NodeData":{"Offset":"(111.4357,121.954857)"},"ID":5,"Name":"BT
-        Follow Player","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":1}}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true}]}'
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(458.871429,22.021286)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-4.320038,128.404266)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(3.78800583,127.189804)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-199.576233,130)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidPingCommand","NodeData":{"Offset":"(-114.278488,126.759811)"},"ID":4,"Name":"BT
+        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":0}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(166.019562,123.333351)"},"ID":5,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-122.593391,140.382263)"},"ID":6,"Name":"BT
+        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":1},"SingleinputThreshold":0.1},{"Type":"BTFollowPlayer","NodeData":{"Offset":"(98.27781,135.112747)"},"ID":7,"Name":"BT
+        Follow Player","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2}}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
         startIndex: 
         dataPosition: 
         unityObjects:
+        - {fileID: 1495332986}
         - {fileID: 1495332986}
         - {fileID: 1495332986}
         byteData: 
@@ -47110,7 +47116,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   behaviorTree: {fileID: 1909791447}
-  player: {fileID: 1495332986}
 --- !u!114 &1909791453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47127,6 +47132,7 @@ MonoBehaviour:
   idleDurationBeforePatrol: 3
   patrolRadiusAroundPlayer: 5
   patrolWaitTime: 1.5
+  minDistanceToPing: 1
 --- !u!1001 &1910916436
 PrefabInstance:
   m_ObjectHideFlags: 0
