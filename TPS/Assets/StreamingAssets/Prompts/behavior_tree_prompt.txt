@@ -36,5 +36,11 @@ Output: { "behavior": "protect_player" }
 Input: "We need to fall back!"
 Output: { "behavior": "retreat" }
 
+Input: "Moving this area!"
+Output: { "behavior": "move_to_mark" }
+
+Input: "Moving this way!"
+Output: { "behavior": "move_to_mark" }
+
 If the meaning is unclear or not matched, return:
 { "behavior": "unknown" }

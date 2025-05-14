@@ -89,7 +89,7 @@ public class ZombieFSM : MonoBehaviour
                 break;
         }
 
-        //UpdateAnimation();
+        UpdateAnimation();
     }
 
     void Guard()
@@ -204,8 +204,7 @@ public class ZombieFSM : MonoBehaviour
 
     void UpdateAnimation()
     {
-        anim.SetBool("isWalking", isWalking);
-        anim.SetBool("isRunning", isRunning);
+        anim.SetFloat("Speed", speed);
     }
 
     //TODO:½©Ê¬¹¥»÷

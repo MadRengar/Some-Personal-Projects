@@ -14,6 +14,7 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public string currentCommand;
     [Header("Player")]
     public GameObject player;
     public PlayerInputSystem playerInputSystem;
@@ -71,13 +72,17 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        switch(command)
+        currentCommand = command;
+        switch (currentCommand)
         {
             case "move_to_mark":
                 Debug.Log("move_to_mark");
                 break;
             case "follow_player":
                 Debug.Log("follow_player");
+                break;
+            case "collect_all":
+                Debug.Log("collect_all");
                 break;
             default:
                 Debug.LogWarning("未识别的指令: " + command);
