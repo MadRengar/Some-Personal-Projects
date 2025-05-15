@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public AIAgentSettings aiAgentSettings;
     [Header("Manager")]
     public PingMarkerManager pingMarkerManager;
+
+    private string lastCommand = "";
     private void Awake()
     {
         if(Instance == null)
@@ -67,26 +69,14 @@ public class GameManager : MonoBehaviour
 
     public void ReceiveAIBehaviorCommand(string command)
     {
-        var tree = aiTeammate.GetComponent<BehaviorTree>();
-        if (tree == null)
-        {
-            return;
-        }
+        if (command == currentCommand) return; // 不重复设置
         currentCommand = command;
-        switch (currentCommand)
+        // 同步一次行为树变量
+        var tree = aiTeammate.GetComponent<BehaviorTree>();
+        if (tree != null)
         {
-            case "move_to_mark":
-                Debug.Log("move_to_mark");
-                break;
-            case "follow_player":
-                Debug.Log("follow_player");
-                break;
-            case "collect_all":
-                Debug.Log("collect_all");
-                break;
-            default:
-                Debug.LogWarning("未识别的指令: " + command);
-                break;
+            tree.SetVariableValue("currentCommand", currentCommand);
+            Debug.Log("GPT指令更新为: " + currentCommand);
         }
     }
 }

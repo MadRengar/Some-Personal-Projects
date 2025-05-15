@@ -14,7 +14,6 @@ public class BTIsPlayerMoving : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        Debug.Log("正在检测玩家是否在移动...");
         if (player.Value == null)
         {
             Debug.LogWarning("BTIsPlayerMoving: player 未设置！");
@@ -40,7 +39,6 @@ public class BTIsPlayerMoving : Conditional
             Debug.Log("玩家正在移动");
             return TaskStatus.Success;
         }
-        Debug.Log("玩家未移动");
         return TaskStatus.Failure;
     }
 }

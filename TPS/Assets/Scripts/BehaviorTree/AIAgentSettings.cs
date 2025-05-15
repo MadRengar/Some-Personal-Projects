@@ -51,7 +51,6 @@ public class AIAgentSettings : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Agent velocity: " + agent.velocity.magnitude);
         if (agent == null || animator == null) return;
 
         /*

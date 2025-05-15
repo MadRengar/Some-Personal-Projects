@@ -69,7 +69,7 @@ public class PingMarkerManager : MonoBehaviour
                 }
                 currentMarkerUI = Instantiate(markerUIIconPrefab, uiCanvas.transform);
                 distanceText = currentMarkerUI.GetComponentInChildren<TextMeshProUGUI>();
-                Debug.Log("标记位置: " + raycastHit.point);
+                //Debug.Log("标记位置: " + raycastHit.point);
             }
         }
         Show2DUIMarker();
@@ -105,8 +105,6 @@ public class PingMarkerManager : MonoBehaviour
         if (currentMarkerUI != null &&
                 RectTransformUtility.RectangleContainsScreenPoint(currentMarkerUI, screenCenter, null))
         {
-            Debug.Log("命中屏幕 UI 标记，取消标记");
-
             if (currentMarker != null)
             {
                 Destroy(currentMarker);

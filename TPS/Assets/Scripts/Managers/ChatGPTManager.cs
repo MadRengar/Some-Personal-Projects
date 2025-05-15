@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using OpenAI;
 using System.IO;
+using NUnit.Framework.Internal.Commands;
 public class ChatGPTManager : MonoBehaviour
 {
     private OpenAIApi openAI = new OpenAIApi();
@@ -68,7 +69,6 @@ public class ChatGPTManager : MonoBehaviour
             var chatResponse = response.Choices[0].Message;
 
             //控制台输出结构化结果（你可以把它传给 AI 行为系统）
-            Debug.Log($"GPT返回: {chatResponse.Content}");
             ProcessGPTResponse(chatResponse.Content);
         }
     }

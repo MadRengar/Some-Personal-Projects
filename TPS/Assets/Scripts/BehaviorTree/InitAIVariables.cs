@@ -29,6 +29,6 @@ public class InitAIVariables : MonoBehaviour
     {
         behaviorTree.SetVariableValue("pingCommandActive", GameManager.Instance.GetPingMarkerManager().GetPingCommandActive());
         behaviorTree.SetVariableValue("pingPosition", GameManager.Instance.GetPingMarkerManager().GetCurrentMarkedPosition());
-        behaviorTree.SetVariableValue("currentCommand ", GameManager.Instance.currentCommand);
+        //behaviorTree.SetVariableValue("currentCommand", GameManager.Instance.currentCommand);
     }
 }

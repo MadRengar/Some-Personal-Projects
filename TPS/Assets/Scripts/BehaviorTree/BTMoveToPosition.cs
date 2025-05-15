@@ -9,6 +9,8 @@ public class BTMoveToPosition : Action
 {
     public SharedVector3 pingPosition;
     public SharedBool pingCommandActive;
+    public SharedString currentCommand;
+
     private NavMeshAgent agent;
     private AIAgentSettings settings;
     public override void OnStart()
@@ -30,28 +32,11 @@ public class BTMoveToPosition : Action
          到达判断
         1.!agent.pathPending：NavMeshAgent 是否已经完成路径计算
         2.agent.remainingDistance <= agent.stoppingDistance：剩余距离是否小于停止距离
+        （重大bug！ agent.remainingDistance导致if else中的代码频繁被交替执行）
          */
-        bool arrived = !agent.pathPending &&
-                       agent.remainingDistance <= agent.stoppingDistance &&
-                       (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
-        if(arrived)
+        if (dist >= agent.stoppingDistance)
         {
-
-            //settings.timeToFindPathCount = 0f;
-            //if(agent.remainingDistance <= agent.stoppingDistance + settings.margin)
-            //{
-            //    if(settings.timeToFindPathCount < settings.timeToFindPath)
-            //    {
-            //        settings.timeToFindPathCount += Time.deltaTime;
-            //        return TaskStatus.Running;
-            //    }
-            //    else
-            //    {
-            //        agent.ResetPath(); // 停下来，不再持续 SetDestination
-            //        return TaskStatus.Success;
-            //    }
-            //}
-
+            Debug.Log("移动中！");
             if(pingCommandActive.Value) // 如果指令没有被玩家取消
             {
                 agent.SetDestination(pingPosition.Value);
@@ -60,13 +45,16 @@ public class BTMoveToPosition : Action
             else // 指令在agent移动中取消，停在原地
             {
                 agent.ResetPath();
+                currentCommand.Value = "";
                 Debug.LogError("指令取消！");
                 return TaskStatus.Failure;
             }
         }
         else // 到达目的地
         {
+            Debug.Log("到达目的地！");
             agent.ResetPath(); // 停下来，不再持续 SetDestination
+            currentCommand.Value = "";
             return TaskStatus.Success;
         }
     }

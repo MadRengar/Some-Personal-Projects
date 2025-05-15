@@ -7,23 +7,23 @@ using UnityEngine.AI;
 
 public class BTHasValidPingCommand : Conditional
 {
-    public SharedBool pingCommandActive;
-    public SharedVector3 pingPosition;
+    public SharedBool pingCommandActive; // 指令是否激活
+    public SharedVector3 pingPosition; // Marker的位置
     public SharedTransform player;
-    public SharedString currentCommand;
+    public SharedString currentCommand; // 当前指令
     private AIAgentSettings agentSettings;
-    private float minDistanceToPing;
+    private float minDistanceToPing; // 最短ping距离
     public override void OnStart()
     {
         agentSettings = GetComponent<AIAgentSettings>();
     }
     public override TaskStatus OnUpdate()
     {
-        if (pingCommandActive.Value && currentCommand.Value == "move_to_mark")
+        if (pingCommandActive.Value)
         {
             if (pingPosition.Value == Vector3.zero)
             {
-                Debug.Log("Ping位置无效");
+                //Debug.Log("Ping位置无效");
                 return TaskStatus.Failure;
             }
             if (player.Value != null && agentSettings != null)
@@ -36,14 +36,13 @@ public class BTHasValidPingCommand : Conditional
 
                 if (distance < minDistanceToPing)
                 {
-                    Debug.Log("Ping位置距离太近，无需前往");
+                    //Debug.Log("Ping位置距离太近，无需前往");
                     return TaskStatus.Failure;
                 }
             }
-            Debug.Log("有效的 Ping 命令 + 合法位置");
+            //Debug.Log("有效的 Ping 命令 + 合法位置");
             return TaskStatus.Success;
         }
-        Debug.Log("当前没有指令");
         return TaskStatus.Failure;
     }
 }
