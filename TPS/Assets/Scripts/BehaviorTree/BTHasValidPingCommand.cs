@@ -19,7 +19,7 @@ public class BTHasValidPingCommand : Conditional
     }
     public override TaskStatus OnUpdate()
     {
-        if (pingCommandActive.Value)
+        if (pingCommandActive.Value && currentCommand.Value == "move_to_mark")
         {
             if (pingPosition.Value == Vector3.zero)
             {

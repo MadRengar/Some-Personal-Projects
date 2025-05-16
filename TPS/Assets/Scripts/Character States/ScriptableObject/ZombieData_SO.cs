@@ -9,5 +9,4 @@ public class ZombieData_SO : ScriptableObject
     public int maxHealth;
     public int currentHealth;
     public bool isAlive;
-    public bool isBerserk; // °×Ìì&Ò¹ÍíµÄÇĞ»»£¿
 }

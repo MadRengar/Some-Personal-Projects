@@ -36,7 +36,7 @@ public class BTIsPlayerMoving : Conditional
 
         if(inputSystem.move.magnitude > inputThreshold)
         {
-            Debug.Log("玩家正在移动");
+            //Debug.Log("玩家正在移动");
             return TaskStatus.Success;
         }
         return TaskStatus.Failure;

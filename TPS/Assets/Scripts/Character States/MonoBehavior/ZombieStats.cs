@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class ZombieStats : MonoBehaviour
 {
-    public ZombieData_SO zombieData;
+    public ZombieData_SO zombieData; // 只读配置引用
     public ZombieAttackData_SO zombieAttackData;
+
+    [Header("运行时状态")]
+    [SerializeField] private int currentHealth;
+    [SerializeField] private bool isAlive;
+    [SerializeField] private bool isBerserk;
 
     #region Read from Data_SO
     public int MaxHealth
@@ -27,30 +32,11 @@ public class ZombieStats : MonoBehaviour
         }
     }
 
-    public int CurrentHealth
-    {
-        get
-        {
-            if (zombieData != null)
-            {
-                return zombieData.currentHealth;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        set
-        {
-            zombieData.currentHealth = value;
-        }
-    }
-
     public bool IsAlive
     {
         get
         {
-            if(zombieData != null)
+            if (zombieData != null)
             {
                 return zombieData.isAlive;
             }
@@ -59,29 +45,43 @@ public class ZombieStats : MonoBehaviour
                 return false;
             }
         }
-        set
+    }
+    #endregion
+
+    private void OnEnable()
+    {
+        ResetZombie(); // 对象池激活时，重置状态
+    }
+
+    /// <summary>
+    /// 初始化/重置僵尸状态（用于对象池复用）
+    /// </summary>
+    public void ResetZombie()
+    {
+        currentHealth = MaxHealth;
+        isAlive = true;
+        isBerserk = false;// 与时间相关
+        // TODO：重置动画状态、AI状态、特效等
+    }
+
+    public void TakeDamage(int damageValue)
+    {
+        if (!isAlive) return;
+        if (zombieData != null)
         {
-            zombieData.isAlive = value;
+            currentHealth -= damageValue;
+            if (currentHealth <= 0)
+            {
+                Die();           
+            }
         }
     }
 
-    public bool IsBerserk
+    public void Die()
     {
-        get
-        {
-            if(zombieData != null)
-            {
-                return zombieData.isBerserk;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        set
-        {
-            zombieData.isBerserk = value;
-        }
+        isAlive = false;
+        currentHealth = 0;
+        Debug.Log("死亡！");
+        // TODO: 回收、播放动画等
     }
-    #endregion
 }

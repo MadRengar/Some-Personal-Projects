@@ -14,13 +14,12 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private float aimSensitivity;
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
     [SerializeField] private Transform pfBulletProjectile;
-    [Header("Particle")]
-    [SerializeField] private ParticleSystem[] muzzleFlash;
-    [SerializeField] private ParticleSystem hitEffect;
     [Header("Rig")]
     [SerializeField] private Rig aimWeapon;
     [SerializeField] private Rig aimBody;
     [SerializeField] private Rig idleWeapon;
+    [Header("Weapon")]
+    [SerializeField] private WeaponManager weapon;
 
     private PlayerInputSystem _playerInputs;
     private ThirdPersonController _thirdPersonController;
@@ -31,8 +30,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     private float _idleWeapon_Weight;
 
     public GameObject aimTarget;
-    public GameObject originShootPosition;
 
+    public GameObject originShootPosition;
     private void Awake()
     {
         _playerInputs = GetComponent<PlayerInputSystem>();
@@ -54,7 +53,11 @@ public class ThirdPersonShooterController : MonoBehaviour
 
         /*是否开启瞄准*/
         IfAiming(raycastHit);
-        IfShooting(raycastHit);
+        weapon.HandleShooting(
+            shootPressed: _playerInputs.shootPressed,
+            shootHeld: _playerInputs.shootHeld,
+            shootReleased: _playerInputs.shootReleased, 
+            raycastHit);
 
     }
 
@@ -82,28 +85,29 @@ public class ThirdPersonShooterController : MonoBehaviour
         }
     }
 
-    private void IfShooting(RaycastHit raycastHit)
-    {
-        /*是否开火*/
-        if (_playerInputs.shoot)
-        {
-            StartFiring(raycastHit);
+    //private void IfShooting(RaycastHit raycastHit)
+    //{
+    //    /*是否开火*/
+    //    if (_playerInputs.shoot)
+    //    {
+    //        //StartFiring(raycastHit);
+    //        weapon.TryFire(raycastHit);
 
-            /*击中到僵尸*/
-            if (raycastHit.collider.CompareTag("Enemy"))
-            {
-                Debug.Log("命中敌人");
-                hitEffect.transform.position = raycastHit.point;
-                hitEffect.transform.forward = raycastHit.normal;
-                hitEffect.Emit(1);
-            }
-            else /*击中到某物*/
-            {
-                Debug.Log("Miss");
-            }
-            _playerInputs.shoot = false;
-        }
-    }
+    //        /*击中到僵尸*/
+    //        if (raycastHit.collider.CompareTag("Enemy"))
+    //        {
+    //            Debug.Log("命中敌人");
+    //            //hitEffect.transform.position = raycastHit.point;
+    //            //hitEffect.transform.forward = raycastHit.normal;
+    //            //hitEffect.Emit(1);
+    //        }
+    //        else /*击中到某物*/
+    //        {
+    //            Debug.Log("Miss");
+    //        }
+    //        _playerInputs.shoot = false;
+    //    }
+    //}
 
     private void UpdateRigWeights()
     {
@@ -115,16 +119,5 @@ public class ThirdPersonShooterController : MonoBehaviour
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);
         idleWeapon.weight = Mathf.Lerp(idleWeapon.weight, _idleWeapon_Weight, Time.deltaTime * 20f);
 
-    }
-
-    private void StartFiring(RaycastHit raycastHit)
-    {
-        Vector3 shootDirection = (raycastHit.point - originShootPosition.transform.position).normalized;
-        Debug.DrawLine(originShootPosition.transform.position, raycastHit.point, Color.red, 1.0f);
-
-        foreach (var effect in muzzleFlash)
-        {
-            effect.Emit(1);
-        }
     }
 }

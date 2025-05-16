@@ -20,7 +20,6 @@ public class ZombieFSM : MonoBehaviour
     private float remainLookAtTime; // 计时器：怪物巡逻停留剩余时间
     public float sightRadius; // 敌人发现敌人的半径
     private float speed; // 记录敌人追击前的初始速度
-    private float actualSpeed; // 记录移动速度匹配动画
     [SerializeField]private float attackRange;
     [SerializeField]private float attackCD;
 
@@ -34,6 +33,12 @@ public class ZombieFSM : MonoBehaviour
     private bool isRunning;
     private bool isWalking;
 
+    /*Root Motion*/
+    private Vector2 smoothDeltaPosition;
+    private Vector2 velocity;
+    private float animSpeed;
+
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -45,6 +50,10 @@ public class ZombieFSM : MonoBehaviour
 
     void Start()
     {
+        agent.updatePosition = false; // 关闭自动位置更新
+        agent.updateRotation = true; // 保留旋转控制
+        anim.applyRootMotion = true; // 启用 Root Motion
+
         /*判断敌人是站桩类型的 or 巡逻状态*/
         if (isGuard)
         {
@@ -62,6 +71,7 @@ public class ZombieFSM : MonoBehaviour
         if (currentState != ZombieState.DEAD)
         {
             StateUpdate();
+            SyncWithNavMeshAgentRootMotion(); // 每帧更新 RootMotion 位置同步
         }
     }
 
@@ -88,8 +98,6 @@ public class ZombieFSM : MonoBehaviour
                 Attack();
                 break;
         }
-
-        UpdateAnimation();
     }
 
     void Guard()
@@ -99,6 +107,7 @@ public class ZombieFSM : MonoBehaviour
         {
             isWalking = true;
             agent.SetDestination(guardPos);
+            agent.speed = speed * 0.5f;
             if (Vector3.Distance(guardPos, transform.position) <= agent.stoppingDistance)
             {
                 isWalking = false;
@@ -113,6 +122,7 @@ public class ZombieFSM : MonoBehaviour
         if (Vector3.Distance(patrolPoint, transform.position) <= agent.stoppingDistance)
         {
             isWalking = false; // Animation Flag
+            agent.speed = 0f;
             if (remainLookAtTime > 0)
             {
                 remainLookAtTime -= Time.deltaTime;
@@ -184,7 +194,7 @@ public class ZombieFSM : MonoBehaviour
     void GetNewPatrolPoint()
     {
         remainLookAtTime = lookAtTime; // 充值时间计数器
-        Debug.Log("选择新巡逻地点！");
+        //Debug.Log("选择新巡逻地点！");
         float randomX = Random.Range(-patrolRange, patrolRange);
         float randomZ = Random.Range(-patrolRange, patrolRange);
         Vector3 randomPatrolPoint = new Vector3(guardPos.x + randomX, transform.position.y, guardPos.z + randomZ);
@@ -202,10 +212,43 @@ public class ZombieFSM : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, patrolRange);
     }
 
-    void UpdateAnimation()
+    /// <summary>
+    /// 在使用 Root Motion 时，同步 NavMeshAgent 与 transform 的位置/动画速度，避免滑动/漂移
+    /// 应在 Update() 中每帧调用
+    /// </summary>
+    /// 
+    private void SyncWithNavMeshAgentRootMotion()
     {
-        anim.SetFloat("Speed", speed);
-    }
+        if (agent == null || anim == null) return;
 
+        // 计算 NavMeshAgent 期望移动的位置与角色当前 transform 的差值
+        Vector3 worldDelta = agent.nextPosition - transform.position;
+        worldDelta.y = 0;
+
+        // 将差值转换为本地空间（forward/right）
+        float dx = Vector3.Dot(transform.right, worldDelta);
+        float dy = Vector3.Dot(transform.forward, worldDelta);
+        Vector2 delta = new Vector2(dx, dy);
+
+        // 平滑过渡（防止跳变）
+        smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, delta, Time.deltaTime * 10f);
+        velocity = smoothDeltaPosition / Mathf.Max(Time.deltaTime, 0.001f);
+        animSpeed = velocity.magnitude;
+
+        // 设置动画速度参数
+        anim.SetFloat("Speed", animSpeed, 0.1f, Time.deltaTime);
+     
+        // 如果偏差较大，强制同步位置（避免滑动）
+        float deltaMag = worldDelta.magnitude;
+
+        /*FIX BUG
+         * 处理transform.position 和 agent.nextPosition 出现了持续偏移，
+         * 导致 velocity 被误算为一个异常大的值，从而造成动画 Speed 参数异常飙升（17~19）。
+         */
+        transform.position = agent.nextPosition; 
+
+
+
+    }
     //TODO:僵尸攻击
 }

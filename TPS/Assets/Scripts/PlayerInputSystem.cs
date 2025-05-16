@@ -8,16 +8,16 @@ namespace PlayerControl
 	public class PlayerInputSystem : MonoBehaviour
 	{
 		[Header("Character Input Values")]
-		public Vector2 move;
-		public Vector2 look;
-		public bool jump;
-		public bool sprint;
-        public bool aim;
-		public bool shoot;
-        public bool pickUp;
-        public bool openStatusPanel;
-        public bool openBuildMenu;
-        public bool ping;
+        [HideInInspector] public Vector2 move;
+        [HideInInspector] public Vector2 look;
+        [HideInInspector] public bool jump;
+        [HideInInspector] public bool sprint;
+        [HideInInspector] public bool aim;
+		//public bool shoot;
+        [HideInInspector] public bool pickUp;
+        [HideInInspector] public bool openStatusPanel;
+        [HideInInspector] public bool openBuildMenu;
+        [HideInInspector] public bool ping;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -29,6 +29,28 @@ namespace PlayerControl
         [Header("Voice Input Settings")]
         public bool voiceInput; // true 表示正在按下语音键
 
+        public InputActionReference shootAction;
+        [HideInInspector] public bool shootPressed;
+        [HideInInspector] public bool shootHeld;
+        [HideInInspector] public bool shootReleased;
+        private void Awake()
+        {
+            shootAction.action.started += ctx => shootPressed = true;
+            shootAction.action.performed += ctx => shootHeld = true;
+            shootAction.action.canceled += ctx =>
+            {
+                shootHeld = false;
+                shootReleased = true;
+            };
+
+            shootAction.action.Enable();
+        }
+
+        private void LateUpdate()
+        {
+            shootPressed = false;
+            shootReleased = false;
+        }
 
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
@@ -59,10 +81,11 @@ namespace PlayerControl
             AimInput(value.isPressed);
         }
 
-        public void OnShoot(InputValue value)
-        {
-            ShootInput(value.isPressed);
-        }
+        //public void OnShoot(InputValue value)
+        //{
+
+        //    ShootInput(value.isPressed);
+        //}
 
         public void OnVoiceInput(InputValue value)
         {
@@ -118,10 +141,10 @@ namespace PlayerControl
             aim = newAimState;
         }
 
-        public void ShootInput(bool newShootState)
-        {
-            shoot = newShootState;
-        }
+        //public void ShootInput(bool newShootState)
+        //{
+        //    shoot = newShootState;
+        //}
 
         public void VoiceInput(bool newVoiceInputState)
         {
