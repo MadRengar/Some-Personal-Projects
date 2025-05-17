@@ -84,7 +84,9 @@ public class WeaponManager : MonoBehaviour
             bullet.transform.rotation = Quaternion.LookRotation(shootDirection);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             if (rb != null)
+            {
                 rb.AddForce(originShootPosition.forward * bulletVelocity, ForceMode.Impulse);
+            }               
         }
 
         //播放声音
@@ -115,17 +117,16 @@ public class WeaponManager : MonoBehaviour
         if (raycastHit.collider.CompareTag("Enemy"))
         {
             isEnemy = true;
-            Debug.Log("命中敌人");
             ZombieStats enemy = raycastHit.collider.GetComponent<ZombieStats>();
             if (enemy != null)
             {
+                Debug.Log("-10hp");
                 enemy.TakeDamage(damage); // 设置伤害
-                ShowHitImpactVF(raycastHit);
             }
         }
     }
 
-    public void ShowHitImpactVF(RaycastHit raycastHit)
+    public void ShowHitImpactVF(RaycastHit raycastHit, bool hitEnemy)
     {
         if (hitEffect != null)
         {
@@ -133,11 +134,12 @@ public class WeaponManager : MonoBehaviour
             hitEffect.transform.forward = raycastHit.normal;
             hitEffect.Emit(1);
         }
-        if (bloodEffect != null)
+        if (bloodEffect != null && hitEnemy)
         {
+            //TODO: 血液特效
             bloodEffect.transform.position = raycastHit.point;
             bloodEffect.transform.forward = raycastHit.normal;
-            bloodEffect.Emit(1);
+            bloodEffect.Play();
         }
     }
 }

@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class ZombiePool : MonoBehaviour
 {
+
+    [System.Serializable]
+    public class ZombieType
+    {
+        public string name;
+        public GameObject prefab;
+        public ZombieData_SO zombieData;
+    }
+
     [Header("Zombie Pool Settings")]
     public GameObject zombiePrefab; // 僵尸预制体
     public int poolSize = 10; // 初始池容量

@@ -85,30 +85,6 @@ public class ThirdPersonShooterController : MonoBehaviour
         }
     }
 
-    //private void IfShooting(RaycastHit raycastHit)
-    //{
-    //    /*是否开火*/
-    //    if (_playerInputs.shoot)
-    //    {
-    //        //StartFiring(raycastHit);
-    //        weapon.TryFire(raycastHit);
-
-    //        /*击中到僵尸*/
-    //        if (raycastHit.collider.CompareTag("Enemy"))
-    //        {
-    //            Debug.Log("命中敌人");
-    //            //hitEffect.transform.position = raycastHit.point;
-    //            //hitEffect.transform.forward = raycastHit.normal;
-    //            //hitEffect.Emit(1);
-    //        }
-    //        else /*击中到某物*/
-    //        {
-    //            Debug.Log("Miss");
-    //        }
-    //        _playerInputs.shoot = false;
-    //    }
-    //}
-
     private void UpdateRigWeights()
     {
         _aimWeapon_Weight = _playerInputs.aim ? 1f : 0f;

@@ -6,7 +6,7 @@ public class BulletPool : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public int poolSize = 2;
-    public Transform bulletContainer; // 用来收纳僵尸实例
+    public Transform bulletContainer; // 用来收纳子弹实例
 
     private Queue<GameObject> bulletPool = new Queue<GameObject>();
     public static BulletPool Instance;
@@ -41,5 +41,16 @@ public class BulletPool : MonoBehaviour
     {
         bullet.SetActive(false);
         bulletPool.Enqueue(bullet);
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        TrailRenderer trail = bullet.GetComponent<TrailRenderer>();
+        if (trail != null)
+        {
+            trail.Clear();
+        }
     }
 }

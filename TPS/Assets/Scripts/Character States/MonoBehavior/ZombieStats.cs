@@ -7,11 +7,12 @@ public class ZombieStats : MonoBehaviour
     public ZombieData_SO zombieData; // 只读配置引用
     public ZombieAttackData_SO zombieAttackData;
 
-    [Header("运行时状态")]
+    [Header("Running Stats")]
     [SerializeField] private int currentHealth;
     [SerializeField] private bool isAlive;
     [SerializeField] private bool isBerserk;
 
+    private Animator animator;
     #region Read from Data_SO
     public int MaxHealth
     {
@@ -48,6 +49,10 @@ public class ZombieStats : MonoBehaviour
     }
     #endregion
 
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
     private void OnEnable()
     {
         ResetZombie(); // 对象池激活时，重置状态
@@ -59,7 +64,7 @@ public class ZombieStats : MonoBehaviour
     public void ResetZombie()
     {
         currentHealth = MaxHealth;
-        isAlive = true;
+        isAlive = IsAlive;
         isBerserk = false;// 与时间相关
         // TODO：重置动画状态、AI状态、特效等
     }
@@ -83,5 +88,6 @@ public class ZombieStats : MonoBehaviour
         currentHealth = 0;
         Debug.Log("死亡！");
         // TODO: 回收、播放动画等
+        animator.SetBool("isAlive", isAlive);
     }
 }

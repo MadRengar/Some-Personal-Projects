@@ -23,7 +23,7 @@ public class ZombieSpawn : MonoBehaviour
     public float spawnIntervalAtNight = 1f; // 每秒刷一个
     public int nightZombiesPerWave = 20;
 
-    [Header("总僵尸数量限制")]
+    [Header("Total ZombieCount Limit")]
     public int maxZombiesAlive = 60;
     private int currentZombiesAlive = 0;
 
