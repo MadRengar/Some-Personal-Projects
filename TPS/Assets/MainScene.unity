@@ -8325,6 +8325,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Chr_Zombie_Female_02
       objectReference: {fileID: 0}
+    - target: {fileID: 1300917902799776, guid: 115e889341316e74b9a33d9cbcdd61b2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4183049840701662, guid: 115e889341316e74b9a33d9cbcdd61b2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 226.088
@@ -19509,7 +19513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 2168781591427101629, guid: f0418c924dfee9344b8f8d316743568a, type: 3}
-  poolSize: 20
+  poolSize: 10
   zombieContainer: {fileID: 1800202961}
 --- !u!4 &758596686
 Transform:
@@ -20593,6 +20597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 801724911}
   - component: {fileID: 801724910}
+  - component: {fileID: 801724912}
   m_Layer: 0
   m_Name: ResourceSpawner
   m_TagString: Untagged
@@ -20612,17 +20617,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e87e0d9ced0be949bd4eedd9563a626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolManager: {fileID: 801724912}
   inventoryManagerRef: {fileID: 1251094335}
   playerInputSystemRef: {fileID: 1495332979}
   resourceTypes:
   - resourceData: {fileID: 11400000, guid: 7305176a964c42340b91414ae155c95c, type: 2}
     resourcePrefab: {fileID: 3981172742875772530, guid: 7d36d06f9b3545849b62e6a79cdfc963, type: 3}
-    maxAmountPerPile: 15
+    maxAmountPerPile: 10
   - resourceData: {fileID: 11400000, guid: 74a3a068085d1f5469a3381f2633e9b7, type: 2}
     resourcePrefab: {fileID: 8561005586879356685, guid: 0a4724012511843429c257c8ccbf5528, type: 3}
     maxAmountPerPile: 15
-  minPileCount: 20
-  maxPileCount: 30
+  minPileCount: 10
+  maxPileCount: 20
   minDistanceBetweenPiles: 1
   maxTries: 500
   groundMask:
@@ -20644,6 +20650,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &801724912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801724909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7db96b565b437046aa0af94addf4c1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceTypes:
+  - resourceData: {fileID: 11400000, guid: 7305176a964c42340b91414ae155c95c, type: 2}
+    resourcePrefab: {fileID: 3981172742875772530, guid: 7d36d06f9b3545849b62e6a79cdfc963, type: 3}
+    initialPoolSize: 15
+  - resourceData: {fileID: 11400000, guid: 74a3a068085d1f5469a3381f2633e9b7, type: 2}
+    resourcePrefab: {fileID: 8561005586879356685, guid: 0a4724012511843429c257c8ccbf5528, type: 3}
+    initialPoolSize: 15
 --- !u!1 &801992191
 GameObject:
   m_ObjectHideFlags: 0
@@ -31558,8 +31583,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca68e9c24f2220f4ba23c9cefeac4a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceSlots: []
-  maxWeight: 100
+  playerResourceSlots: []
+  playerMaxWeight: 100
+  aiPlayerResourceSlots: []
+  aiPlayerMaxWeight: 100
 --- !u!4 &1251094336
 Transform:
   m_ObjectHideFlags: 0
@@ -32519,6 +32546,10 @@ PrefabInstance:
     - target: {fileID: 1331328711462180, guid: e8e6a8d0d7d9a1245a0d143f23cc283b, type: 3}
       propertyPath: m_Name
       value: SM_Chr_Zombie_Male_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1331328711462180, guid: e8e6a8d0d7d9a1245a0d143f23cc283b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4267430597299062, guid: e8e6a8d0d7d9a1245a0d143f23cc283b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -43579,6 +43610,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Chr_Zombie_Female_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1015224441584018, guid: 807784d16a875e0499c116c9506424aa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4379659365344250, guid: 807784d16a875e0499c116c9506424aa, type: 3}
       propertyPath: m_LocalPosition.x
       value: 227.16853
@@ -47455,7 +47490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198673632737434412, guid: 0624c6f5a57851d48ba74b4f86ec13d7, type: 3}
       propertyPath: looping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198673632737434412, guid: 0624c6f5a57851d48ba74b4f86ec13d7, type: 3}
       propertyPath: lengthInSec
@@ -47669,11 +47704,14 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(458.871429,22.021286)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-4.320038,128.404266)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(3.78800583,127.189804)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-272.746948,130)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidPingCommand","NodeData":{"Offset":"(-126.47364,126.759811)"},"ID":4,"Name":"BT
-        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":0},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTMoveToPosition","NodeData":{"Offset":"(117.773918,130.313873)"},"ID":5,"Name":"BT
-        Move To Position","Instant":true,"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(166.019562,123.333351)"},"ID":6,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-122.593391,140.382263)"},"ID":7,"Name":"BT
-        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":1},"SingleinputThreshold":0.1},{"Type":"BTFollowPlayer","NodeData":{"Offset":"(98.27781,135.112747)"},"ID":8,"Name":"BT
-        Follow Player","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2}}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}]}'
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(476.1128,22.021286)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-4.320038,128.404266)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(3.78800583,127.189804)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-656.3007,186.848572)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTFindNearestResource","NodeData":{"Offset":"(-121.473236,158.227844)"},"ID":4,"Name":"BT
+        Find Nearest Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"ResourceTyperesourceType":"Wood","BooleanfilterByType":false},{"Type":"BTMoveToResource","NodeData":{"Offset":"(78.52663,163.400146)"},"ID":5,"Name":"BT
+        Move To Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true}},{"Type":"BTPickupResource","NodeData":{"Offset":"(295.7691,169.262451)"},"ID":6,"Name":"BT
+        Pickup Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},"SinglepickupRange":2.5}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(3.11489868,198.965454)"},"ID":7,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidPingCommand","NodeData":{"Offset":"(-126.473633,144.001175)"},"ID":8,"Name":"BT
+        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":0},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTMoveToPosition","NodeData":{"Offset":"(117.773918,130.313873)"},"ID":9,"Name":"BT
+        Move To Position","Instant":true,"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(441.881378,192.298813)"},"ID":10,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-122.593391,140.382263)"},"ID":11,"Name":"BT
+        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":1},"SingleinputThreshold":0.1,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTFollowPlayer","NodeData":{"Offset":"(98.27781,135.112747)"},"ID":12,"Name":"BT
+        Follow Player","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2}}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -52968,6 +53006,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Chr_Zombie_Male_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1187010538823314, guid: b87cb604b959698428935c5d56bd97c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4507433646410060, guid: b87cb604b959698428935c5d56bd97c0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 227.16853
@@ -53955,13 +53997,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2167650203320395378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e98ac256d3b952f4b9a9bad61f1149bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 059d5a06ce7ca7a448095924f1177835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   zombieData: {fileID: 11400000, guid: 6267db2b4f6ba3f43ae4728463ed0f40, type: 2}
   zombieAttackData: {fileID: 11400000, guid: e4bd75a1f6d53c7458dcf983ac17cece, type: 2}
-  currentHealth: 0
-  isAlive: 0
+  currentHealth: 20
+  isAlive: 1
   isBerserk: 0
 --- !u!1 &2104118378475264706
 GameObject:

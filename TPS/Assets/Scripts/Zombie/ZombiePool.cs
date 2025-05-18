@@ -18,7 +18,7 @@ public class ZombiePool : MonoBehaviour
     public int poolSize = 10; // 初始池容量
     public Transform zombieContainer; // 用来收纳僵尸实例
 
-    private Queue<GameObject> zombieQueue = new Queue<GameObject>();
+    private Queue<GameObject> zombieQueue = new Queue<GameObject>(); // 先进先出的数据结构
 
     public static ZombiePool Instance { get; private set; }
 
@@ -41,7 +41,7 @@ public class ZombiePool : MonoBehaviour
         {
             GameObject zombie = Instantiate(zombiePrefab, zombieContainer);
             zombie.SetActive(false);
-            zombieQueue.Enqueue(zombie);
+            zombieQueue.Enqueue(zombie); // 加入到队列末尾，等待调用。
 
         }
     }
@@ -55,23 +55,21 @@ public class ZombiePool : MonoBehaviour
 
         if (zombieQueue.Count > 0)
         {
-            zombie = zombieQueue.Dequeue();
+            zombie = zombieQueue.Dequeue(); // 从队列中取出一个
         }
         else
         {
             Debug.LogWarning("超出可用僵尸对象数量！");
-            zombie = Instantiate(zombiePrefab, zombieContainer); // 动态扩容
+            /*动态扩容
+             * 重大Bug：新扩容的僵尸NavMesh导航报错
+             * 1."Resume" can only be called on an active agent that has been placed on a NavMesh.
+             * 2."SetDestination" can only be called on an active agent that has been placed on a NavMesh.
+             */
+            zombie = Instantiate(zombiePrefab, zombieContainer);
         }
 
         zombie.transform.SetPositionAndRotation(position, rotation);
         zombie.SetActive(true);
-
-        ZombieStats stats = zombie.GetComponent<ZombieStats>();
-        if (stats != null)
-        {
-            stats.ResetZombie(); // 确保状态被重置
-        }
-
         return zombie;
     }
 
@@ -81,6 +79,6 @@ public class ZombiePool : MonoBehaviour
     public void DespawnZombie(GameObject zombie)
     {
         zombie.SetActive(false);
-        zombieQueue.Enqueue(zombie);
-    }
+        zombieQueue.Enqueue(zombie); // 放回对象池
+    } 
 }

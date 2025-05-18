@@ -484,13 +484,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2168781591427101629}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e98ac256d3b952f4b9a9bad61f1149bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 059d5a06ce7ca7a448095924f1177835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   zombieData: {fileID: 11400000, guid: 6267db2b4f6ba3f43ae4728463ed0f40, type: 2}
   zombieAttackData: {fileID: 11400000, guid: e4bd75a1f6d53c7458dcf983ac17cece, type: 2}
-  currentHealth: 0
-  isAlive: 0
+  currentHealth: 20
+  isAlive: 1
   isBerserk: 0
 --- !u!95 &7795376619295601984
 Animator:

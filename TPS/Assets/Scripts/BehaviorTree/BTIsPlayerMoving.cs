@@ -11,6 +11,7 @@ public class BTIsPlayerMoving : Conditional
     public SharedTransform player;
     // 判断移动的速度阈值，小于此值认为玩家静止
     public float inputThreshold = 0.1f;
+    public SharedString currentCommand; // 当前指令
 
     public override TaskStatus OnUpdate()
     {
@@ -34,7 +35,7 @@ public class BTIsPlayerMoving : Conditional
             return TaskStatus.Failure;
         }
 
-        if(inputSystem.move.magnitude > inputThreshold)
+        if(inputSystem.move.magnitude > inputThreshold && currentCommand.Value == "follow_player")
         {
             //Debug.Log("玩家正在移动");
             return TaskStatus.Success;

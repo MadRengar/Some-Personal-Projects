@@ -4,15 +4,14 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum ZombieState { Guard, PATROL, CHASE, ATTACK, DEAD }
+public enum ZombieStates { Guard, PATROL, CHASE, ATTACK, DEAD }
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class ZombieFSM : MonoBehaviour
 {
     private NavMeshAgent agent;
-    private ZombieState currentState;
+    private ZombieStates currentState;
     private Animator anim;
-    private ZombieStats stats;
 
     [Header("Basic Settings")]
     public bool isGuard = false; // 该敌人是否站桩
@@ -43,32 +42,30 @@ public class ZombieFSM : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        stats = GetComponent<ZombieStats>();
-        guardPos = transform.position;
-        speed = agent.speed;
+        //guardPos = transform.position;
+        //speed = agent.speed;
     }
 
     void Start()
     {
-        agent.updatePosition = false; // 关闭自动位置更新
-        agent.updateRotation = true; // 保留旋转控制
-        anim.applyRootMotion = true; // 启用 Root Motion
+        //agent.updatePosition = false; // 关闭自动位置更新
+        //agent.updateRotation = true; // 保留旋转控制
+        //anim.applyRootMotion = true; // 启用 Root Motion
 
-        /*判断敌人是站桩类型的 or 巡逻状态*/
-        if (isGuard)
-        {
-            currentState = ZombieState.Guard;
-        }    
-        else
-        {
-            currentState = ZombieState.PATROL;
-            GetNewPatrolPoint(); // 选择新的巡逻点
-        }
+        //if (isGuard)
+        //{
+        //    currentState = ZombieStates.Guard;
+        //}
+        //else
+        //{
+        //    currentState = ZombieStates.PATROL;
+        //    GetNewPatrolPoint(); // 选择新的巡逻点
+        //}
     }
 
     void Update()
     {
-        if (currentState != ZombieState.DEAD)
+        if (currentState != ZombieStates.DEAD)
         {
             StateUpdate();
             SyncWithNavMeshAgentRootMotion(); // 每帧更新 RootMotion 位置同步
@@ -78,29 +75,64 @@ public class ZombieFSM : MonoBehaviour
     /*更新敌人状态*/
     void StateUpdate()
     {
+        
         if (FoundPlayer())
         {
-            currentState = ZombieState.CHASE;
+            currentState = ZombieStates.CHASE;
         }
 
         switch (currentState)
         {
-            case ZombieState.Guard:
+            case ZombieStates.Guard:
                 Guard();
                 break;
-            case ZombieState.PATROL:
+            case ZombieStates.PATROL:
                 Patrol();
                 break;
-            case ZombieState.CHASE:
+            case ZombieStates.CHASE:
                 Chase();
                 break;
-            case ZombieState.ATTACK:
+            case ZombieStates.ATTACK:
                 Attack();
                 break;
         }
     }
 
-    void Guard()
+    public void ResetZombieFSM()
+    {
+        // 恢复导航组件
+        if (agent != null)
+        {
+            agent.enabled = true;
+            agent.isStopped = false;
+
+            guardPos = transform.position;
+            speed = agent.speed;
+
+            agent.updatePosition = false; // 关闭自动位置更新
+            agent.updateRotation = true; // 保留旋转控制
+            anim.applyRootMotion = true; // 启用 Root Motion
+        }
+
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = true;
+        }
+
+        /*判断敌人是站桩类型的 or 巡逻状态*/
+        if (isGuard)
+        {
+            currentState = ZombieStates.Guard;
+        }
+        else
+        {
+            currentState = ZombieStates.PATROL;
+            GetNewPatrolPoint(); // 选择新的巡逻点
+        }
+    }
+
+    private void Guard()
     {
         isRunning = false;
         if (agent.transform.position != guardPos) // 返回站桩点
@@ -115,7 +147,7 @@ public class ZombieFSM : MonoBehaviour
         }
     }
 
-    void Patrol()
+    private void Patrol()
     {
         Debug.Log("处于Patrol状态");
         agent.speed = speed * 0.5f;
@@ -139,7 +171,7 @@ public class ZombieFSM : MonoBehaviour
         }
     }
 
-    void Chase()
+    private void Chase()
     {
         isWalking = false;
         isRunning = true;
@@ -154,12 +186,12 @@ public class ZombieFSM : MonoBehaviour
             }
             else if (isGuard) // 如果是站桩 就回到站桩点
             {
-                currentState = ZombieState.Guard;
+                currentState = ZombieStates.Guard;
                 remainLookAtTime = lookAtTime; // 重置时间计数器，希望它也能：脱战停在原地
             }
             else // 返回巡逻状态
             {
-                currentState = ZombieState.PATROL;
+                currentState = ZombieStates.PATROL;
             }
         }
         else
@@ -170,12 +202,37 @@ public class ZombieFSM : MonoBehaviour
         }
     }
 
-    void Attack()
+    private void Attack()
     {
         Debug.Log("处于Attack状态");
     }
 
-    bool FoundPlayer()
+    public void EnterDeadState(bool isAlive)
+    {
+        currentState = ZombieStates.DEAD;
+
+        // 停止导航移动
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        }
+
+        if (anim != null)
+        {
+            anim.SetFloat("Speed", 0f);
+            anim.SetBool("isAlive", isAlive);
+        }
+
+        // 禁用碰撞体
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = false;
+        }
+    }
+
+    private bool FoundPlayer()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRadius);
         foreach (var col in colliders)
@@ -191,7 +248,7 @@ public class ZombieFSM : MonoBehaviour
         return false;
     }
 
-    void GetNewPatrolPoint()
+    private void GetNewPatrolPoint()
     {
         remainLookAtTime = lookAtTime; // 充值时间计数器
         //Debug.Log("选择新巡逻地点！");
@@ -203,7 +260,7 @@ public class ZombieFSM : MonoBehaviour
     }
 
     /*绘画敌人巡逻范围的Gizmo*/
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, sightRadius);
@@ -246,9 +303,6 @@ public class ZombieFSM : MonoBehaviour
          * 导致 velocity 被误算为一个异常大的值，从而造成动画 Speed 参数异常飙升（17~19）。
          */
         transform.position = agent.nextPosition; 
-
-
-
     }
     //TODO:僵尸攻击
 }

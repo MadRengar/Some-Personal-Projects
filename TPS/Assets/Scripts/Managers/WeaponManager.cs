@@ -114,6 +114,10 @@ public class WeaponManager : MonoBehaviour
 
     public void HitTarget(RaycastHit raycastHit)
     {
+        if (raycastHit.collider == null)
+        {
+            Debug.Log("ÉäÏßÅö×²ÌåÎª¿Õ");
+        }
         if (raycastHit.collider.CompareTag("Enemy"))
         {
             isEnemy = true;

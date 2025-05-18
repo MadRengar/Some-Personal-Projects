@@ -12,6 +12,7 @@ public class ResourceSpawner : MonoBehaviour
         public GameObject resourcePrefab;
         public int maxAmountPerPile = 10; // 每堆包含资源个数的最大值
     }
+    public ResourcePoolManager poolManager;
     public InventoryManager inventoryManagerRef; // 持有Inventory引用 手动为生成的资源Prefab注入Inventory
     public PlayerInputSystem playerInputSystemRef;
     public List<ResourcePrefabInfo> resourceTypes;
@@ -68,17 +69,22 @@ public class ResourceSpawner : MonoBehaviour
                     {
                         // 随机资源种类
                         var res = resourceTypes[Random.Range(0, resourceTypes.Count)];
-                        var obj = Instantiate(res.resourcePrefab, navHit.position, Quaternion.identity);
+                        // 使用对象池取对象
+                        var obj = poolManager.Get(res.resourceData.type);
+                        obj.transform.position = navHit.position;
+                        obj.transform.rotation = Quaternion.identity;
                         var pickup = obj.GetComponent<PickupItem>();
                         if (pickup != null)
                         {
                             pickup.resourceData = res.resourceData;
                             pickup.amount = Random.Range(1, res.maxAmountPerPile + 1);
 
-                            pickup.inventory = inventoryManagerRef;
+                            pickup.inventoryManager = inventoryManagerRef;
                             pickup.playerInputSystem = playerInputSystemRef;
+                            // 记录池管理器与类型，便于回收
+                            pickup.poolManager = poolManager;
+                            pickup.poolType = res.resourceData.type;
                         }
-
                         placedPositions.Add(navHit.position);
                     }
                 }
