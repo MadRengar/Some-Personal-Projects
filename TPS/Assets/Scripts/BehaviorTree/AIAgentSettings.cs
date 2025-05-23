@@ -14,8 +14,9 @@ public class AIAgentSettings : MonoBehaviour
     public float idleDurationBeforePatrol = 3.0f; //玩家静止超过该时间（秒）后，AI 开始巡逻
     public float patrolRadiusAroundPlayer = 5.0f; // AI 围绕玩家巡逻的最大半径
     public float patrolWaitTime = 1.5f; // AI 在每个巡逻点等待的时间
-
+    public float sightRadius = 20f; // AI感知/射击范围
     public float minDistanceToPing = 3.0f; // 可选：与玩家的最小距离，避免 AI 原地执行
+    
     /*TODO：容忍ai错误寻路时间
       由于一些原因阻止ai代理无法真正的到达目标点，从而在目标点附近附近持续转圈
      */
@@ -101,6 +102,9 @@ public class AIAgentSettings : MonoBehaviour
 
         Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f); // 半透明橙色
         Gizmos.DrawWireSphere(transform.position, patrolRadiusAroundPlayer);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, sightRadius);
     }
 
     private void OnAnimatorMove()

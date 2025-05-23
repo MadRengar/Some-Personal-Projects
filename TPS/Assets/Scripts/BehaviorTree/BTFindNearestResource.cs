@@ -79,8 +79,10 @@ public class BTFindNearestResource : Conditional
         var nearest = filtered
             .OrderBy(p => Vector3.Distance(p.transform.position, aiPos))
             .First();
+        
         nearestResource.Value = nearest.transform;
         Debug.Log($"[BTFindNearestResource] {currentCommand.Value}，目标资源类型: {nearest.GetComponent<PickupItem>().resourceData.type}");
+        
         return TaskStatus.Success;
     }
 }

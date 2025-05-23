@@ -117,6 +117,7 @@ public class WeaponManager : MonoBehaviour
         if (raycastHit.collider == null)
         {
             Debug.Log("射线碰撞体为空");
+            return;
         }
         if (raycastHit.collider.CompareTag("Enemy"))
         {
@@ -124,7 +125,7 @@ public class WeaponManager : MonoBehaviour
             ZombieStats enemy = raycastHit.collider.GetComponent<ZombieStats>();
             if (enemy != null)
             {
-                Debug.Log("-10hp");
+                Debug.Log("-"+damage);
                 enemy.TakeDamage(damage); // 设置伤害
             }
         }
