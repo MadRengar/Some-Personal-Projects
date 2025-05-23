@@ -10,7 +10,7 @@ using BehaviorDesigner.Runtime;
 3. 在节点的脚本中申明对应类型的变量，然后在 Behavior Tree 编辑器中选中该节点
    通过Inspector窗口的小圆点来选择“黑板”中的变量。
  */
-public class InitAIVariables : MonoBehaviour
+public class AIInitBTVariables : MonoBehaviour
 {
 
     public BehaviorTree behaviorTree;
@@ -19,7 +19,7 @@ public class InitAIVariables : MonoBehaviour
     {
         if (behaviorTree == null)
         {
-            Debug.LogError("[InitAIVariables] 缺少 BehaviorTree 引用！");
+            Debug.LogError("[AIInitBTVariables] 缺少 BehaviorTree 引用！");
             return;
         }
         // 注入共享变量 "player"，对应 SharedTransform 类型变量

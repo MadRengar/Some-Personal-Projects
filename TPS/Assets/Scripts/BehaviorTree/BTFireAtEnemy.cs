@@ -9,7 +9,14 @@ public class BTFireAtEnemy : Action
 {
     public SharedTransform nearestEnemy;
     public WeaponManager weaponManager; // 手动拖引用
-
+    private AIAnimationController animController;
+    public override void OnStart()
+    {
+        animController = GetComponent<AIAnimationController>();
+        // 开始射击
+        if (animController != null)
+            animController.OnStartFiring();
+    }
     public override TaskStatus OnUpdate()
     {
         if (nearestEnemy.Value == null)
@@ -24,6 +31,13 @@ public class BTFireAtEnemy : Action
         }
         AITryFire();
         return TaskStatus.Success;
+    }
+
+    public override void OnEnd()
+    {
+        // 射击结束，回到战斗待机
+        if (animController != null)
+            animController.OnStopFiring();
     }
 
     private void AITryFire()
@@ -51,6 +65,7 @@ public class BTFireAtEnemy : Action
         }
 
         // 触发AI开火
+        Debug.Log("Firing!");
         weaponManager.TryFire(hit);
         weaponManager.cooldown = weaponManager.fireRate;
     }
