@@ -33,12 +33,23 @@ public class BTFireAtEnemy : Action
         return TaskStatus.Success;
     }
 
-    public override void OnEnd()
-    {
-        // 射击结束，回到战斗待机
-        if (animController != null)
-            animController.OnStopFiring();
-    }
+    /* Fix
+     * OnStart / OnEnd 的调用时机：
+     * OnStart()：节点刚被激活（刚切换到这个节点）时调用一次
+     * OnEnd()：节点刚被退出（切换到其他节点或自己返回）时调用一次
+     * animController.OnStopFiring()、animController.SetIdle()，这会立刻把动画切回Idle或非战斗状态。
+     * 下一帧又进入攻击节点，又触发OnStartFiring，刚开始播Firing动画，还没来得及播出来，立刻又被OnEnd切走了。
+     * 表现结果就是动画状态切换根本来不及显现，每帧都被打断，于是你看到的效果就是动画完全切不了。
+     */
+
+
+
+    //public override void OnEnd()
+    //{
+    //    // 射击结束，回到战斗待机
+    //    if (animController != null)
+    //        animController.OnStopFiring();
+    //}
 
     private void AITryFire()
     {
@@ -65,7 +76,7 @@ public class BTFireAtEnemy : Action
         }
 
         // 触发AI开火
-        Debug.Log("Firing!");
+        Debug.Log("[AI Player] Firing!");
         weaponManager.TryFire(hit);
         weaponManager.cooldown = weaponManager.fireRate;
     }

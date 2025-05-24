@@ -149,7 +149,7 @@ public class ZombieFSM : MonoBehaviour
 
     private void Patrol()
     {
-        Debug.Log("处于Patrol状态");
+        Debug.Log("[ZombieFSM] 处于Patrol状态");
         agent.speed = speed * 0.5f;
         if (Vector3.Distance(patrolPoint, transform.position) <= agent.stoppingDistance)
         {
@@ -196,7 +196,7 @@ public class ZombieFSM : MonoBehaviour
         }
         else
         {
-            Debug.Log("处于Chasing状态");
+            Debug.Log("[ZombieFSM] 处于Chasing状态");
             isRunning = true;
             agent.destination = attackTarget.transform.position;
         }
@@ -204,7 +204,7 @@ public class ZombieFSM : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("处于Attack状态");
+        Debug.Log("[ZombieFSM] 处于Attack状态");
     }
 
     public void EnterDeadState(bool isAlive)
@@ -240,7 +240,7 @@ public class ZombieFSM : MonoBehaviour
             if (col.CompareTag("Player"))
             {
                 attackTarget = col.gameObject; // 将攻击目标选择为玩家
-                Debug.Log("发现玩家");
+                Debug.Log("[ZombieFSM] 发现玩家");
                 return true;
             }
         }

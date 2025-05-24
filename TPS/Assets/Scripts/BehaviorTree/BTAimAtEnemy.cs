@@ -34,10 +34,10 @@ public class BTAimAtEnemy : Action
         // 如果想更精准，可以等转向到一定角度后再射击
         return TaskStatus.Success;
     }
-    public override void OnEnd()
-    {
-        // 停止瞄准，回到战斗待机
-        if (animController != null)
-            animController.SetCombatIdle();
-    }
+    //public override void OnEnd()
+    //{
+    //    // 停止瞄准，回到战斗待机
+    //    if (animController != null)
+    //        animController.SetIdle();
+    //}
 }

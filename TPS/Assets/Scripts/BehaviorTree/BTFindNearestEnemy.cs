@@ -51,7 +51,7 @@ public class BTFindNearestEnemy : Conditional
             nearestEnemy.Value = target;
             // 发现敌人，切换到战斗待机状态
             if (animController != null)
-                animController.OnEnemyDetected();
+                animController.OnStartAiming();
             return TaskStatus.Success;
         }
         else
@@ -60,7 +60,7 @@ public class BTFindNearestEnemy : Conditional
             Debug.Log("BackToMove!");
             // 没有敌人，切换到idle状态
             if (animController != null)
-                animController.OnEnemyDetected();
+                animController.OnLostEnemyTarget();
             return TaskStatus.Failure;
         }
     }

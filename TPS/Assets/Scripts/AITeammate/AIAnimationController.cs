@@ -21,10 +21,10 @@ public class AIAnimationController : MonoBehaviour
     public Animator animator;
 
     [Header("Animation States")]
-    public AnimationState combatIdleState = new AnimationState
+    public AnimationState IdleState = new AnimationState
     {
-        name = "Combat Idle",
-        animatorStateName = "Combat Idle"
+        name = "Idle",
+        animatorStateName = "Idle"
     };
 
     public AnimationState aimingState = new AnimationState
@@ -44,7 +44,6 @@ public class AIAnimationController : MonoBehaviour
     public float animationTransitionSpeed = 0.2f;
 
     [Header("Animator Parameters")]
-    public string speedParameter = "Speed";
     public string isFiringParameter = "IsFiring";
     public string isAimingParameter = "IsAiming";
 
@@ -52,7 +51,6 @@ public class AIAnimationController : MonoBehaviour
     public enum AIState
     {
         Idle,
-        CombatIdle,
         Aiming,
         Firing
     }
@@ -61,16 +59,11 @@ public class AIAnimationController : MonoBehaviour
     [SerializeField] private AIState currentState = AIState.Idle;
     [SerializeField] private AIState targetState = AIState.Idle;
 
-    // 移动相关
-    private float currentSpeed = 0f;
-    private Vector3 lastPosition;
     // Start is called before the first frame update
     void Start()
     {
         if (animator == null)
             animator = GetComponent<Animator>();
-
-        lastPosition = transform.position;
 
         // 初始化所有Rig权重
         InitializeRigWeights();
@@ -82,15 +75,13 @@ public class AIAnimationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //UpdateMovementSpeed();
         UpdateRigWeights();
-        //UpdateAnimatorParameters();
     }
 
     /* 初始化所有Rig权重为0 */
     private void InitializeRigWeights()
     {
-        SetRigWeights(combatIdleState, 0f);
+        SetRigWeights(IdleState, 0f);
         SetRigWeights(aimingState, 0f);
         SetRigWeights(firingState, 0f);
     }
@@ -122,44 +113,20 @@ public class AIAnimationController : MonoBehaviour
         switch (state)
         {
             case AIState.Idle:
-                // Idle状态只需要Speed参数
+                Debug.Log("Set Idle: Firing = false, Aiming = false");
                 break;
-
-            case AIState.CombatIdle:
-                // Combat Idle状态
-                break;
-
             case AIState.Aiming:
+                Debug.Log("Set Aiming: Firing = false, Aiming = true");
                 animator.SetBool(isAimingParameter, true);
                 break;
 
             case AIState.Firing:
+                Debug.Log("Set Firing: Firing = true, Aiming = true");
                 animator.SetBool(isFiringParameter, true);
                 animator.SetBool(isAimingParameter, true);
                 break;
         }
     }
-
-    /// <summary>
-    /// 更新移动速度
-    /// </summary>
-    private void UpdateMovementSpeed()
-    {
-        Vector3 velocity = (transform.position - lastPosition) / Time.deltaTime;
-        currentSpeed = Mathf.Lerp(currentSpeed, velocity.magnitude, Time.deltaTime * 10f);
-        lastPosition = transform.position;
-    }
-
-    /// <summary>
-    /// 更新动画参数
-    /// </summary>
-    private void UpdateAnimatorParameters()
-    {
-        if (animator == null) return;
-
-        animator.SetFloat(speedParameter, currentSpeed);
-    }
-
     /// <summary>
     /// 更新Rig权重
     /// </summary>
@@ -168,20 +135,20 @@ public class AIAnimationController : MonoBehaviour
         // 根据目标状态设置Rig权重
         switch (targetState)
         {
-            case AIState.CombatIdle:
-                UpdateStateRigWeights(combatIdleState, 1f);
+            case AIState.Idle:
+                UpdateStateRigWeights(IdleState, 1f);
                 UpdateStateRigWeights(aimingState, 0f);
                 UpdateStateRigWeights(firingState, 0f);
                 break;
 
             case AIState.Aiming:
-                UpdateStateRigWeights(combatIdleState, 0.3f); // 保持一些基础约束
+                UpdateStateRigWeights(IdleState, 0.3f); // 保持一些基础约束
                 UpdateStateRigWeights(aimingState, 1f);
                 UpdateStateRigWeights(firingState, 0f);
                 break;
 
             case AIState.Firing:
-                UpdateStateRigWeights(combatIdleState, 0.2f); // 保持一些基础约束
+                UpdateStateRigWeights(IdleState, 0.2f); // 保持一些基础约束
                 UpdateStateRigWeights(aimingState, 0.8f);     // 保持瞄准约束
                 UpdateStateRigWeights(firingState, 1f);
                 break;
@@ -233,8 +200,8 @@ public class AIAnimationController : MonoBehaviour
 
         switch (targetState)
         {
-            case AIState.CombatIdle:
-                return Mathf.Abs(combatIdleState.currentRigWeight - combatIdleState.rigWeight) < threshold;
+            case AIState.Idle:
+                return Mathf.Abs(IdleState.currentRigWeight - IdleState.rigWeight) < threshold;
 
             case AIState.Aiming:
                 return Mathf.Abs(aimingState.currentRigWeight - aimingState.rigWeight) < threshold;
@@ -248,7 +215,7 @@ public class AIAnimationController : MonoBehaviour
     }
 
     // 公共接口方法
-    public void SetCombatIdle() => ChangeState(AIState.CombatIdle);
+    public void SetIdle() => ChangeState(AIState.Idle);
     public void SetAiming() => ChangeState(AIState.Aiming);
     public void SetFiring() => ChangeState(AIState.Firing);
 
@@ -259,8 +226,8 @@ public class AIAnimationController : MonoBehaviour
     public bool IsTransitioningTo(AIState state) => targetState == state;
 
     // 特殊方法：用于行为树
-    public void OnEnemyDetected() => SetCombatIdle();
+    public void OnLostEnemyTarget() => SetIdle();
     public void OnStartAiming() => SetAiming();
     public void OnStartFiring() => SetFiring();
-    public void OnStopFiring() => SetCombatIdle();
+    public void OnStopFiring() => SetIdle();
 }
