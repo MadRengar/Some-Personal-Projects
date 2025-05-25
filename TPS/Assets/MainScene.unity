@@ -3860,7 +3860,7 @@ GameObject:
   - component: {fileID: 130837962}
   - component: {fileID: 130837963}
   m_Layer: 0
-  m_Name: CombatIdle_Left
+  m_Name: Aiming_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17765,7 +17765,7 @@ GameObject:
   - component: {fileID: 666498842}
   - component: {fileID: 666498841}
   m_Layer: 0
-  m_Name: RigLayer_CombatIdle
+  m_Name: RigLayer_Aiming
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18737,7 +18737,7 @@ GameObject:
   m_Component:
   - component: {fileID: 707110300}
   m_Layer: 0
-  m_Name: CombatIdle_Left_hint
+  m_Name: Aiming_Left_hint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48374,7 +48374,7 @@ MonoBehaviour:
         Follow Player","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(914.377,182.096649)"},"ID":13,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTFindNearestEnemy","NodeData":{"Offset":"(-102.40918,152.0965)"},"ID":14,"Name":"BT
         Find Nearest Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"SinglesightRadius":20,"LayerMaskenemyLayer":64},{"Type":"BTAimAtEnemy","NodeData":{"Offset":"(84.20203,150.76062)"},"ID":15,"Name":"BT
         Aim At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"GameObjectaiAimTarget":3},{"Type":"BTFireAtEnemy","NodeData":{"Offset":"(241.34436,150.760681)"},"ID":16,"Name":"BT
-        Fire At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"WeaponManagerweaponManager":4}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"animationState","IsShared":true}]}'
+        Fire At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"WeaponManagerweaponManager":4}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -55013,7 +55013,7 @@ GameObject:
   - component: {fileID: 1909791456}
   m_Layer: 0
   m_Name: AI Teammate
-  m_TagString: Untagged
+  m_TagString: AIPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58153,9 +58153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 95208774159887001}
-  combatIdleState:
-    name: Combat Idle
-    animatorStateName: Combat Idle
+  IdleState:
+    name: Idle
+    animatorStateName: Idle
     rigs:
     - {fileID: 447957423}
     rigWeight: 1
@@ -58176,7 +58176,6 @@ MonoBehaviour:
     currentRigWeight: 0
   rigTransitionSpeed: 5
   animationTransitionSpeed: 0.2
-  speedParameter: Speed
   isFiringParameter: IsFiring
   isAimingParameter: IsAiming
   currentState: 0
