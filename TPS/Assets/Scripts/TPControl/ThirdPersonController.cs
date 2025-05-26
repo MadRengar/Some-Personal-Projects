@@ -161,6 +161,9 @@ namespace PlayerControl
             // 重置跳跃和下落倒计时
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            // 订阅模式切换事件
+            PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
         }
 
         private void Update()
@@ -432,6 +435,31 @@ namespace PlayerControl
             idleRig.weight = Mathf.Lerp(idleRig.weight, idleTargetWeight, Time.deltaTime * smoothSpeed);
             walkRig.weight = Mathf.Lerp(walkRig.weight, walkTargetWeight, Time.deltaTime * smoothSpeed);
             runRig.weight = Mathf.Lerp(runRig.weight, runTargetWeight, Time.deltaTime * smoothSpeed);
+        }
+
+        private void OnDestroy()
+        {
+            // 取消订阅事件，防止内存泄漏
+            PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
+        }
+
+        private void OnPlayerModeChanged(PlayerInputSystem.PlayerMode newMode)
+        {
+            switch (newMode)
+            {
+                case PlayerInputSystem.PlayerMode.Combat:
+                    // 启用正常移动
+                    enabled = true;
+                    break;
+                case PlayerInputSystem.PlayerMode.BuildMenu:
+                    enabled = true;
+                    // 可以选择完全禁用组件或只是不处理移动输入
+                    break;
+                case PlayerInputSystem.PlayerMode.Placing:
+                    // 在放置模式下启用移动但可能需要不同的行为
+                    enabled = true;
+                    break;
+            }
         }
     }
 }

@@ -32,6 +32,19 @@ public class ThirdPersonShooterController : MonoBehaviour
     public GameObject aimTarget;
 
     public GameObject originShootPosition;
+
+    private void Start()
+    {
+        // 订阅模式切换事件
+        PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
+    }
+
+    private void OnDestroy()
+    {
+        // 取消订阅事件
+        PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
+    }
+
     private void Awake()
     {
         _playerInputs = GetComponent<PlayerInputSystem>();
@@ -40,6 +53,10 @@ public class ThirdPersonShooterController : MonoBehaviour
     }
     void Update()
     {
+        // 只在战斗模式下执行射击逻辑
+        if (_playerInputs.currentMode != PlayerInputSystem.PlayerMode.Combat)
+            return;
+
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         UpdateRigWeights();
 
@@ -95,5 +112,26 @@ public class ThirdPersonShooterController : MonoBehaviour
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);
         idleWeapon.weight = Mathf.Lerp(idleWeapon.weight, _idleWeapon_Weight, Time.deltaTime * 20f);
 
+    }
+
+    private void OnPlayerModeChanged(PlayerInputSystem.PlayerMode newMode)
+    {
+        switch (newMode)
+        {
+            case PlayerInputSystem.PlayerMode.Combat:
+                // 启用射击控制
+                enabled = true;
+                break;
+            case PlayerInputSystem.PlayerMode.BuildMenu:
+            case PlayerInputSystem.PlayerMode.Placing:
+                // 在建筑相关模式下禁用射击
+                enabled = false;
+                // 重置瞄准状态
+                if (_aimVirtualCamera != null)
+                {
+                    _aimVirtualCamera.gameObject.SetActive(false);
+                }
+                break;
+        }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -7,24 +8,32 @@ namespace PlayerControl
 {
 	public class PlayerInputSystem : MonoBehaviour
 	{
-		[Header("Character Input Values")]
+        public enum PlayerMode { Combat, BuildMenu, Placing }
+        public PlayerMode currentMode = PlayerMode.Combat;
+
+        // 模式切换事件
+        public static event Action<PlayerMode> OnModeChanged;
+
+        [Header("Character Input Values")]
         [HideInInspector] public Vector2 move;
         [HideInInspector] public Vector2 look;
         [HideInInspector] public bool jump;
         [HideInInspector] public bool sprint;
         [HideInInspector] public bool aim;
-		//public bool shoot;
         [HideInInspector] public bool pickUp;
         [HideInInspector] public bool openStatusPanel;
-        [HideInInspector] public bool openBuildMenu;
         [HideInInspector] public bool ping;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
 
-		[Header("Mouse Cursor Settings")]
-		public bool cursorLocked = true;
-		public bool cursorInputForLook = true;
+		[Header("Mouse Cursor Settings")] // 如果cursorLocked = true，SetCursorState(true) 就会让鼠标隐藏+锁定在屏幕中央；否则恢复正常鼠标。
+        public bool cursorLocked = true; // 当前是否锁定鼠标（一般指是否让鼠标“消失/定在屏幕中央”），默认是 true，代表一开局就把鼠标锁定。
+        /*
+         * 是否允许通过鼠标移动来控制角色视角/镜头。如果是true，OnLook()输入事件才响应鼠标操作，
+         * 适合“战斗/射击”状态。进入建筑/菜单/对话/操作UI等模式时一般会关闭（false）。
+         */
+        public bool cursorInputForLook = true;
 
         [Header("Voice Input Settings")]
         public bool voiceInput; // true 表示正在按下语音键
@@ -33,6 +42,14 @@ namespace PlayerControl
         [HideInInspector] public bool shootPressed;
         [HideInInspector] public bool shootHeld;
         [HideInInspector] public bool shootReleased;
+
+        [Header("Building System")]
+        public bool isBuildingMode = false; // 是否建筑模式
+        [HideInInspector] public bool openBuildMenu;
+
+        [Header("Cancel Input")]
+        [HideInInspector] public bool cancelPressed;
+
         private void Awake()
         {
             shootAction.action.started += ctx => shootPressed = true;
@@ -55,8 +72,8 @@ namespace PlayerControl
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
 		{
-			MoveInput(value.Get<Vector2>());
-		}
+            MoveInput(value.Get<Vector2>());
+        }
 
 		public void OnLook(InputValue value)
 		{
@@ -68,16 +85,17 @@ namespace PlayerControl
 
 		public void OnJump(InputValue value)
 		{
-			JumpInput(value.isPressed);
-		}
+            JumpInput(value.isPressed);
+        }
 
 		public void OnSprint(InputValue value)
 		{
-			SprintInput(value.isPressed);
-		}
+            SprintInput(value.isPressed);
+        }
 
         public void OnAim(InputValue value)
         {
+            if (currentMode != PlayerMode.Combat) return; // 只有战斗模式下才能瞄准
             AimInput(value.isPressed);
         }
 
@@ -94,6 +112,7 @@ namespace PlayerControl
 
         public void OnPickUp(InputValue value)
         {
+            if (currentMode != PlayerMode.Combat) return; // 只有战斗模式下才能拾取
             PickUpInput(value.isPressed);
         }
 
@@ -112,8 +131,33 @@ namespace PlayerControl
             PingInput(value.isPressed);
         }
 
-#endif
+        // 添加取消输入处理
+        public void OnCancel(InputValue value)
+        {
+            if (value.isPressed)
+            {
+                cancelPressed = true;
+                HandleCancelInput();
+            }
+        }
 
+#endif
+        // 处理取消输入的逻辑
+        private void HandleCancelInput()
+        {
+            switch (currentMode)
+            {
+                case PlayerMode.BuildMenu:
+                    EnterCombatMode();
+                    break;
+                case PlayerMode.Placing:
+                    EnterBuildMenu();
+                    break;
+                case PlayerMode.Combat:
+                    // 在战斗模式下，ESC 可以打开暂停菜单或其他UI
+                    break;
+            }
+        }
 
         public void MoveInput(Vector2 newMoveDirection)
 		{
@@ -163,12 +207,6 @@ namespace PlayerControl
 
         }
 
-        public void OpenBuildMenuInput(bool newOpenBuildMenuInputState)
-        {
-            openBuildMenu = newOpenBuildMenuInputState;
-
-        }
-
         public void PingInput(bool newPingInputState)
         {
             ping = newPingInputState;
@@ -185,7 +223,87 @@ namespace PlayerControl
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 
+        /*
+         * 输入模式切换
+         * 摄像机Look/角色转向/瞄准/射击等操作，都应该用currentMode判断：只在Combat和Placing响应，BuildMenu时全部禁止。
+         * WASD移动在所有模式都响应（不禁止）。
+         */
+        public void OpenBuildMenuInput(bool newState)
+        {
+            // B键只在战斗/建筑菜单间切换
+            if (newState)
+            {
+                if (currentMode == PlayerMode.Combat)
+                    EnterBuildMenu();
+                else if (currentMode == PlayerMode.BuildMenu)
+                    EnterCombatMode();
+                // 在Placing模式下不响应B（只能右键/esc退出）
+            }
+        }
+        public void EnterBuildMenu()
+        {
+            PlayerMode previousMode = currentMode;
+            currentMode = PlayerMode.BuildMenu;
+            cursorLocked = false;
+            cursorInputForLook = false;
+            SetCursorState(cursorLocked);
+            Cursor.visible = true;
+            openBuildMenu = true;
 
+            // 触发模式切换事件
+            OnModeChanged?.Invoke(currentMode);
+            Debug.Log($"Mode switched from {previousMode} to {currentMode}");
+        }
+
+        public void EnterCombatMode()
+        {
+            PlayerMode previousMode = currentMode;
+            currentMode = PlayerMode.Combat;
+            cursorLocked = true;
+            cursorInputForLook = true;
+            SetCursorState(cursorLocked);
+            Cursor.visible = false;
+            openBuildMenu = false;
+
+            // 重置所有输入状态
+            ResetInputStates();
+
+            // 触发模式切换事件
+            OnModeChanged?.Invoke(currentMode);
+            Debug.Log($"Mode switched from {previousMode} to {currentMode}");
+        }
+
+        public void EnterPlacingMode()
+        {
+            PlayerMode previousMode = currentMode;
+            currentMode = PlayerMode.Placing;
+            cursorLocked = true;
+            cursorInputForLook = true;
+            SetCursorState(cursorLocked);
+            Cursor.visible = false;
+            openBuildMenu = false;
+
+            // 触发模式切换事件
+            OnModeChanged?.Invoke(currentMode);
+            Debug.Log($"Mode switched from {previousMode} to {currentMode}");
+        }
+
+        // 重置输入状态
+        private void ResetInputStates()
+        {
+            aim = false;
+            jump = false;
+            sprint = false;
+            pickUp = false;
+            shootPressed = false;
+            shootHeld = false;
+            shootReleased = false;
+        }
+
+        // 公共方法，供其他脚本调用
+        public bool IsInCombatMode() => currentMode == PlayerMode.Combat;
+        public bool IsInBuildMenuMode() => currentMode == PlayerMode.BuildMenu;
+        public bool IsInPlacingMode() => currentMode == PlayerMode.Placing;
     }
 
 }
