@@ -42,19 +42,10 @@ public class BTFireAtEnemy : Action
      * 表现结果就是动画状态切换根本来不及显现，每帧都被打断，于是你看到的效果就是动画完全切不了。
      */
 
-
-
-    //public override void OnEnd()
-    //{
-    //    // 射击结束，回到战斗待机
-    //    if (animController != null)
-    //        animController.OnStopFiring();
-    //}
-
     private void AITryFire()
     {
         // 构造AI自己的射线（模拟玩家摄像机射线，从AI角色头部/中心发射到敌人）
-        Vector3 shootOrigin = weaponManager.originShootPosition.position;
+        Vector3 shootOrigin = weaponManager.firePoint.position;
         Vector3 shootTarget = nearestEnemy.Value.position + Vector3.up * 1f;
         Vector3 shootDir = (shootTarget - shootOrigin).normalized;
 

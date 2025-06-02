@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee8dee3b12419b5408d7e9b0a1519488, type: 3}
+  m_Name: AK-47
+  m_EditorClassIdentifier: 
+  weaponName: AK-$&
+  description: "\u5A01\u529B\u5F3A\u5927\u7684\u5168\u81EA\u52A8\u7A81\u51FB\u6B65\u67AA\uFF0C\u5C04\u901F\u5FEB\u4F46\u540E\u5750\u529B\u8F83\u5927"
+  weaponIcon: {fileID: 21300000, guid: 888c6174f83d2c44692b0937cadc0113, type: 3}
+  weaponPrefab: {fileID: 0}
+  isAutomatic: 1
+  fireRate: 0.1
+  bulletsPerShot: 1
+  bulletVelocity: 500
+  damage: 10
+  range: 100
+  accuracy: 0.95
+  magazineSize: 30
+  maxReserveAmmo: 300
+  reloadTime: 2
+  autoReloadWhenEmpty: 1
+  fireSound: {fileID: 8300000, guid: 5f3b376faffee1a40a7912e7c7ad9b1e, type: 3}
+  autoFireSound: {fileID: 8300000, guid: 61f0bd7a66f605e4985355b99f8c605f, type: 3}
+  reloadSound: {fileID: 0}
+  emptyClipSound: {fileID: 0}
+  drawSound: {fileID: 0}
+  holsterSound: {fileID: 0}
+  soundVolume: 1
+  muzzleFlashPrefab: {fileID: 2850996339940755639, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+  shellEjectPrefab: {fileID: 6890884654578176216, guid: df672dc51b574c14c838b16ae9e8e772, type: 3}
+  bulletTrailPrefab: {fileID: 0}
+  bulletImpactPrefab: {fileID: 5853225067423371789, guid: 5a9ffa6ce0628084c823e820ef800f27, type: 3}

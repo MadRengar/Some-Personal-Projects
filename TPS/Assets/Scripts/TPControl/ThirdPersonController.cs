@@ -79,12 +79,6 @@ namespace PlayerControl
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false; // 是否锁定摄像机位置
 
-        [Header("Rig References")]
-        public Rig idleRig;
-        public Rig walkRig;
-        public Rig runRig;
-
-
         // 私有变量
         private float _cinemachineTargetYaw; // 摄像机 Y 轴旋转角度
         private float _cinemachineTargetPitch; // 摄像机 X 轴旋转角度
@@ -412,29 +406,6 @@ namespace PlayerControl
         public void SetRotateOnMove(bool newRotateOnMove)
         {
             _rotateOnMove = newRotateOnMove; // 更新旋转开关
-        }
-
-        private void UpdateRigWeights()
-        {
-            float currentSpeed = _animator.GetFloat("Speed");
-            // 设定目标权重
-            float idleTargetWeight = 0f;
-            float walkTargetWeight = 0f;
-            float runTargetWeight = 0f;
-            if(currentSpeed < 0.1f) // Guard
-            {
-                idleTargetWeight = 1f;
-            }else if(currentSpeed < 0.7f) // Walk
-            {
-                walkTargetWeight = 1f;
-            }else // Run
-            {
-                runTargetWeight = 1f;
-            }
-            // 平滑过渡权重
-            idleRig.weight = Mathf.Lerp(idleRig.weight, idleTargetWeight, Time.deltaTime * smoothSpeed);
-            walkRig.weight = Mathf.Lerp(walkRig.weight, walkTargetWeight, Time.deltaTime * smoothSpeed);
-            runRig.weight = Mathf.Lerp(runRig.weight, runTargetWeight, Time.deltaTime * smoothSpeed);
         }
 
         private void OnDestroy()
