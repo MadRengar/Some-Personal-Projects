@@ -83,7 +83,7 @@ public class ZombieSpawn : MonoBehaviour
                 }
             }
         }
-        Debug.Log($"白天生成了 {aliveZombies.Count} 个僵尸");
+        //Debug.Log($"白天生成了 {aliveZombies.Count} 个僵尸");
     }
 
     private void SpawnZombie(Vector3 position)

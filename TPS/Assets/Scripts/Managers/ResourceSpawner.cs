@@ -91,7 +91,7 @@ public class ResourceSpawner : MonoBehaviour
             }
         }
 
-        Debug.Log($"生成了 {placedPositions.Count} 堆资源");
+        //Debug.Log($"生成了 {placedPositions.Count} 堆资源");
     }
 
     void OnDrawGizmosSelected()

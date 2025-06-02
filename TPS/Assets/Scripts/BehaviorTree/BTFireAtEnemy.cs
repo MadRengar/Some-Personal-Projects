@@ -76,7 +76,7 @@ public class BTFireAtEnemy : Action
         }
 
         // ´¥·¢AI¿ª»ð
-        Debug.Log("[AI Player] Firing!");
+        //Debug.Log("[AI Player] Firing!");
         weaponManager.TryFire(hit);
         weaponManager.cooldown = weaponManager.fireRate;
     }

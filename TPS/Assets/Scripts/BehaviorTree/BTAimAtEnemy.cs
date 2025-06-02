@@ -24,7 +24,7 @@ public class BTAimAtEnemy : Action
         {
             return TaskStatus.Failure;
         }
-        Debug.Log("Aiming!");
+        //Debug.Log("Aiming!");
         Vector3 targetPos = nearestEnemy.Value.position;
         aiAimTarget.transform.position = targetPos;
         Vector3 dir = (targetPos - transform.position).normalized;

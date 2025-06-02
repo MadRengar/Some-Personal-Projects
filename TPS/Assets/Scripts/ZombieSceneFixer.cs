@@ -18,7 +18,7 @@ public class ZombieSceneFixer : MonoBehaviour
         ZombieStats stats = GetComponent<ZombieStats>();
         if (stats != null)
         {
-            Debug.Log("[ZombieSceneInit] 手动触发 ResetZombie()");
+            //Debug.Log("[ZombieSceneInit] 手动触发 ResetZombie()");
             stats.ResetZombie();
         }
     }

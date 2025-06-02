@@ -36,7 +36,7 @@ public class BTFindNearestEnemy : Conditional
         {
             if (col.CompareTag("Enemy"))
             {
-                Debug.Log("找到敌人！" + col.name);  
+                //Debug.Log("找到敌人！" + col.name);  
                 float dist = Vector3.Distance(transform.position, col.transform.position);
                 if (dist < minDist)
                 {
@@ -57,7 +57,7 @@ public class BTFindNearestEnemy : Conditional
         else
         {
             nearestEnemy.Value = null;
-            Debug.Log("BackToMove!");
+            //Debug.Log("BackToMove!");
             // 没有敌人，切换到idle状态
             if (animController != null)
                 animController.OnLostEnemyTarget();

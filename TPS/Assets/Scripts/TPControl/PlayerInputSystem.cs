@@ -63,6 +63,13 @@ namespace PlayerControl
             shootAction.action.Enable();
         }
 
+        private void Start()
+        {
+            // 确保UI Action Map始终启用
+            var inputActions = GetComponent<PlayerInput>().actions;
+            inputActions.FindActionMap("UI").Enable();
+        }
+
         private void LateUpdate()
         {
             shootPressed = false;

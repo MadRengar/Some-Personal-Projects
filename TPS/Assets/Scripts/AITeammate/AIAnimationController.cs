@@ -91,7 +91,7 @@ public class AIAnimationController : MonoBehaviour
     {
         if (targetState == newState) return;
 
-        Debug.Log($"AI◊¥Ã¨«–ªª: {currentState} -> {newState}");
+        //Debug.Log($"AI◊¥Ã¨«–ªª: {currentState} -> {newState}");
         targetState = newState;
 
         // …Ë÷√∂Øª≠≤Œ ˝
@@ -113,15 +113,15 @@ public class AIAnimationController : MonoBehaviour
         switch (state)
         {
             case AIState.Idle:
-                Debug.Log("Set Idle: Firing = false, Aiming = false");
+                //Debug.Log("Set Idle: Firing = false, Aiming = false");
                 break;
             case AIState.Aiming:
-                Debug.Log("Set Aiming: Firing = false, Aiming = true");
+                //Debug.Log("Set Aiming: Firing = false, Aiming = true");
                 animator.SetBool(isAimingParameter, true);
                 break;
 
             case AIState.Firing:
-                Debug.Log("Set Firing: Firing = true, Aiming = true");
+                //Debug.Log("Set Firing: Firing = true, Aiming = true");
                 animator.SetBool(isFiringParameter, true);
                 animator.SetBool(isAimingParameter, true);
                 break;

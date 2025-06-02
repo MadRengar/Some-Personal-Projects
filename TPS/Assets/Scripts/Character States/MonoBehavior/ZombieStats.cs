@@ -69,7 +69,7 @@ public class ZombieStats : MonoBehaviour
     /// </summary>
     public void ResetZombie()
     {
-        Debug.Log("已被重置！");
+        //Debug.Log("已被重置！");
         currentHealth = MaxHealth;
         isAlive = IsAlive;
         isBerserk = false;// 与时间相关
@@ -107,7 +107,7 @@ public class ZombieStats : MonoBehaviour
     {
         isAlive = false;
         currentHealth = 0;
-        Debug.Log("死亡！");
+        //Debug.Log("死亡！");
 
         /* 切换状态机 */
         if (fsm != null)

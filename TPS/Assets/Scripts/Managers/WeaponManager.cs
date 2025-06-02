@@ -125,7 +125,7 @@ public class WeaponManager : MonoBehaviour
             ZombieStats enemy = raycastHit.collider.GetComponent<ZombieStats>();
             if (enemy != null)
             {
-                Debug.Log("-"+damage);
+                //Debug.Log("-"+damage);
                 enemy.TakeDamage(damage); // …Ë÷√…À∫¶
             }
         }
