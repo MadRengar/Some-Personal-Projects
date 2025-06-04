@@ -218,7 +218,6 @@ public class WeaponManager : MonoBehaviour
     private void ConsumeAmmo()
     {
         currentAmmo -= weaponData.bulletsPerShot;
-        Debug.Log(currentAmmo);
         if (currentAmmo < 0) currentAmmo = 0;
 
         // 触发弹药变化事件

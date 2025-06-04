@@ -101,6 +101,18 @@ namespace PlayerControl
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        /*冲刺*/
+        private int _animIDStartSprint;
+        private int _animIDStopSprint;
+        private bool _wasRunning = false;
+        /*射击*/
+        private int _animIDStartShooting;
+        private int _animIDStartAutoFire;
+        private int _animIDStopShooting;
+
+        private bool _wasShootPressed = false;
+        private bool _wasShootHeld = false;
+        private bool _isInAutoFire = false;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput; // 新输入系统对象
@@ -115,6 +127,8 @@ namespace PlayerControl
         private bool _hasAnimator; // 是否存在 Animator 组件
 
         private bool _rotateOnMove; // 是否在移动时旋转角色
+
+        float sprintTimer = 0f; // 奔跑时间计时器
 
         private bool IsCurrentDeviceMouse
         {
@@ -183,6 +197,13 @@ namespace PlayerControl
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDStartSprint = Animator.StringToHash("StartTrigger");
+            _animIDStopSprint = Animator.StringToHash("StopTrigger");
+
+            // 射击动画参数
+            _animIDStartShooting = Animator.StringToHash("StartShooting");
+            _animIDStartAutoFire = Animator.StringToHash("StartAutoFire");
+            _animIDStopShooting = Animator.StringToHash("StopShooting");
         }
 
         private void GroundedCheck()
@@ -227,6 +248,13 @@ namespace PlayerControl
             // 根据是否按下冲刺键选择目标速度
             float targetSpeed = _playerInputs.sprint ? SprintSpeed : MoveSpeed;
 
+            if (_playerInputs.sprint)
+            {
+                sprintTimer += Time.deltaTime;
+            }else
+            {
+                sprintTimer = 0f;
+            }
             // 如果没有移动输入，则目标速度设为 0
             if (_playerInputs.move == Vector2.zero) targetSpeed = 0.0f;
 
@@ -277,14 +305,83 @@ namespace PlayerControl
             // 执行移动，包含水平移动和垂直重力/跳跃
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
-            // 更新 Animator 中的速度参数
+            /*混合奔跑的开始和结束*/
             if (_hasAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+
+                bool isRunning = _playerInputs.sprint && _playerInputs.move.magnitude > 0.1f && Grounded;
+
+                // 只在状态真正改变时触发
+                if (isRunning != _wasRunning)
+                {
+                    if (isRunning)
+                    {
+                        _animator.SetTrigger(_animIDStartSprint);
+                    }
+                    if (!isRunning && sprintTimer > 1f)
+                    {
+                        _animator.SetTrigger(_animIDStopSprint);
+                    }
+                    _wasRunning = isRunning;
+                }
             }
+            // 射击动画控制
+            HandleShootingAnimation();
         }
 
+        private void HandleShootingAnimation()
+        {
+            bool shootPressed = _playerInputs.shootPressed;
+            bool shootHeld = _playerInputs.shootHeld;
+            bool shootReleased = _playerInputs.shootReleased;
+            Debug.Log($"[ANIMATION] Frame: {Time.frameCount}, Pressed: {shootPressed}, Held: {shootHeld}, Released: {shootReleased}");
+            // 获取武器信息
+            WeaponManager weaponManager = GetComponent<ThirdPersonShooterController>()?.weapon;
+            bool isAutomatic = weaponManager != null ? weaponManager.weaponData.isAutomatic : false;
+
+            // 获取动画状态
+            AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(1);
+            bool isInSingleShot = currentState.IsName("Rifle_ShootOnce");
+            bool isInAutoFire = currentState.IsName("Rifle_ShootLoop");
+
+            if (isAutomatic)
+            {
+                // 开始射击
+                if (shootPressed && !_wasShootPressed)
+                {
+                    _animator.SetTrigger(_animIDStartShooting);
+                    _isInAutoFire = false;
+                }
+                // 转为连发
+                else if (shootHeld && !_isInAutoFire && isInSingleShot)
+                {
+                    if (currentState.normalizedTime > 0.5f)
+                    {
+                        _animator.SetTrigger(_animIDStartAutoFire);
+                        _isInAutoFire = true;
+                    }
+                }
+                // 停止射击
+                else if (shootReleased && _isInAutoFire)
+                {
+                    _animator.SetTrigger(_animIDStopShooting);
+                    _isInAutoFire = false;
+                }
+            }
+            else
+            {
+                // 单发武器
+                if (shootPressed && !_wasShootPressed)
+                {
+                    _animator.SetTrigger(_animIDStartShooting);
+                }
+            }
+
+            _wasShootPressed = shootPressed;
+            _wasShootHeld = shootHeld;
+        }
         private void JumpAndGravity()
         {
             if (Grounded)

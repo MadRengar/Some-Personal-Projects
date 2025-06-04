@@ -17645,13 +17645,13 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   voiceInput: 0
+  isBuildingMode: 0
+  openBuildMenu: 0
+  cancelPressed: 0
   shootAction: {fileID: 0}
   shootPressed: 0
   shootHeld: 0
   shootReleased: 0
-  isBuildingMode: 0
-  openBuildMenu: 0
-  cancelPressed: 0
 --- !u!1001 &655772392
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38902,13 +38902,13 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   voiceInput: 0
+  isBuildingMode: 0
+  openBuildMenu: 0
+  cancelPressed: 0
   shootAction: {fileID: -1316457599563023689, guid: 4419d82f33d36e848b3ed5af4c8da37e, type: 3}
   shootPressed: 0
   shootHeld: 0
   shootReleased: 0
-  isBuildingMode: 0
-  openBuildMenu: 0
-  cancelPressed: 0
 --- !u!114 &1495332980
 MonoBehaviour:
   m_ObjectHideFlags: 0

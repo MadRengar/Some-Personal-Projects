@@ -10,7 +10,6 @@ namespace PlayerControl
 	{
         public enum PlayerMode { Combat, BuildMenu, Placing }
         public PlayerMode currentMode = PlayerMode.Combat;
-
         // 模式切换事件
         public static event Action<PlayerMode> OnModeChanged;
 
@@ -38,11 +37,6 @@ namespace PlayerControl
         [Header("Voice Input Settings")]
         public bool voiceInput; // true 表示正在按下语音键
 
-        public InputActionReference shootAction;
-        [HideInInspector] public bool shootPressed;
-        [HideInInspector] public bool shootHeld;
-        [HideInInspector] public bool shootReleased;
-
         [Header("Building System")]
         public bool isBuildingMode = false; // 是否建筑模式
         [HideInInspector] public bool openBuildMenu;
@@ -50,16 +44,18 @@ namespace PlayerControl
         [Header("Cancel Input")]
         [HideInInspector] public bool cancelPressed;
 
+        [Header("Shooting Input")]
+        public InputActionReference shootAction;
+        [HideInInspector] public bool shootPressed;
+        [HideInInspector] public bool shootHeld;
+        [HideInInspector] public bool shootReleased;
+
+        // 添加内部状态跟踪
+        private bool _lastFrameShootHeld = false;
+        public bool IsShootHeld => shootAction.action.IsPressed();
         private void Awake()
         {
-            shootAction.action.started += ctx => shootPressed = true;
-            shootAction.action.performed += ctx => shootHeld = true;
-            shootAction.action.canceled += ctx =>
-            {
-                shootHeld = false;
-                shootReleased = true;
-            };
-
+            // 射击输入处理
             shootAction.action.Enable();
         }
 
@@ -70,12 +66,24 @@ namespace PlayerControl
             inputActions.FindActionMap("UI").Enable();
         }
 
-        private void LateUpdate()
+        private void Update()
         {
-            shootPressed = false;
-            shootReleased = false;
+            // 更新射击输入状态
+            UpdateShootingInput();
         }
+        private void UpdateShootingInput()
+        {
+            // 直接从 Input Action 获取当前状态
+            bool currentFrameShootHeld = shootAction.action.IsPressed();
 
+            // 计算瞬时状态
+            shootPressed = currentFrameShootHeld && !_lastFrameShootHeld;
+            shootReleased = !currentFrameShootHeld && _lastFrameShootHeld;
+            shootHeld = currentFrameShootHeld;
+
+            // 更新上一帧状态
+            _lastFrameShootHeld = currentFrameShootHeld;
+        }
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
 		{

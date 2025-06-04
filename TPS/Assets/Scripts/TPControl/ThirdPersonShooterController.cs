@@ -19,7 +19,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private Rig aimBody;
     [SerializeField] private Rig idleWeapon;
     [Header("Weapon")]
-    [SerializeField] private WeaponManager weapon;
+    [SerializeField] public WeaponManager weapon;
 
     private PlayerInputSystem _playerInputs;
     private ThirdPersonController _thirdPersonController;
