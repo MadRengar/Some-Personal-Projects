@@ -109,10 +109,12 @@ namespace PlayerControl
         private int _animIDStartShooting;
         private int _animIDStartAutoFire;
         private int _animIDStopShooting;
-
         private bool _wasShootPressed = false;
         private bool _wasShootHeld = false;
         private bool _isInAutoFire = false;
+        /*瞄准*/
+        private int _animIDIsAiming;
+        private bool _wasAiming = false;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput; // 新输入系统对象
@@ -204,6 +206,7 @@ namespace PlayerControl
             _animIDStartShooting = Animator.StringToHash("StartShooting");
             _animIDStartAutoFire = Animator.StringToHash("StartAutoFire");
             _animIDStopShooting = Animator.StringToHash("StopShooting");
+            _animIDIsAiming = Animator.StringToHash("IsAiming");
         }
 
         private void GroundedCheck()
@@ -326,9 +329,22 @@ namespace PlayerControl
                     }
                     _wasRunning = isRunning;
                 }
+                // 瞄准动画控制
+                HandleAimingAnimation();
             }
             // 射击动画控制
             HandleShootingAnimation();
+        }
+        private void HandleAimingAnimation()
+        {
+            bool isAiming = _playerInputs.aim;
+
+            // 只在状态改变时更新
+            if (isAiming != _wasAiming)
+            {
+                _animator.SetBool(_animIDIsAiming, isAiming);
+                _wasAiming = isAiming;
+            }
         }
 
         private void HandleShootingAnimation()
@@ -382,6 +398,7 @@ namespace PlayerControl
             _wasShootPressed = shootPressed;
             _wasShootHeld = shootHeld;
         }
+
         private void JumpAndGravity()
         {
             if (Grounded)
