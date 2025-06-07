@@ -151,7 +151,7 @@ public class WeaponManager : MonoBehaviour
         }
 
         // 播放音效
-        PlayFireAudio();
+        //PlayFireAudio();
 
         // 播放视觉效果
         //PlayMuzzleFlash();

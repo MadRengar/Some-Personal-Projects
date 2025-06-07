@@ -68,10 +68,10 @@ namespace PlayerControl
         public GameObject CinemachineCameraTarget; // Cinemachine 摄像机跟随目标
 
         [Tooltip("How far in degrees can you move the camera up")]
-        public float TopClamp = 70.0f; // 摄像机向上最大仰角
+        public float TopClamp = 50.0f; // 摄像机向上最大仰角
 
         [Tooltip("How far in degrees can you move the camera down")]
-        public float BottomClamp = -30.0f; // 摄像机向下最大俯角
+        public float BottomClamp = -10.0f; // 摄像机向下最大俯角
 
         [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
         public float CameraAngleOverride = 0.0f; // 摄像机角度偏移
@@ -79,10 +79,15 @@ namespace PlayerControl
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false; // 是否锁定摄像机位置
 
-        // 私有变量
+
+        // cinemachine私有变量
         private float _cinemachineTargetYaw; // 摄像机 Y 轴旋转角度
         private float _cinemachineTargetPitch; // 摄像机 X 轴旋转角度
         private float LookSensitivity; // 鼠标/摇杆灵敏度
+
+        private float currentTopClamp;           // 当前使用的上限
+        private float currentBottomClamp;        // 当前使用的下限
+        private bool isAimingMode = false;       // 是否在瞄准模式
 
         private float _speed; // 当前速度
         private float _animationBlend; // 动画混合参数
@@ -239,6 +244,9 @@ namespace PlayerControl
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
+            currentTopClamp = TopClamp;
+            currentBottomClamp = BottomClamp;
+
             // 应用旋转到 Cinemachine 目标
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(
                 _cinemachineTargetPitch + CameraAngleOverride,
@@ -352,7 +360,6 @@ namespace PlayerControl
             bool shootPressed = _playerInputs.shootPressed;
             bool shootHeld = _playerInputs.shootHeld;
             bool shootReleased = _playerInputs.shootReleased;
-            Debug.Log($"[ANIMATION] Frame: {Time.frameCount}, Pressed: {shootPressed}, Held: {shootHeld}, Released: {shootReleased}");
             // 获取武器信息
             WeaponManager weaponManager = GetComponent<ThirdPersonShooterController>()?.weapon;
             bool isAutomatic = weaponManager != null ? weaponManager.weaponData.isAutomatic : false;
@@ -520,6 +527,25 @@ namespace PlayerControl
         public void SetRotateOnMove(bool newRotateOnMove)
         {
             _rotateOnMove = newRotateOnMove; // 更新旋转开关
+        }
+
+        //设置瞄准时的相机限制
+        public void SetAimCameraClamps(float topClamp, float bottomClamp)
+        {
+            currentTopClamp = topClamp;
+            currentBottomClamp = bottomClamp;
+            isAimingMode = true;
+
+            // 如果当前角度超出新限制，立即调整
+            _cinemachineTargetPitch = Mathf.Clamp(_cinemachineTargetPitch, currentBottomClamp, currentTopClamp);
+        }
+        
+        // 新增：恢复正常相机限制
+        public void RestoreNormalCameraClamps()
+        {
+            currentTopClamp = TopClamp;
+            currentBottomClamp = BottomClamp;
+            isAimingMode = false;
         }
 
         private void OnDestroy()

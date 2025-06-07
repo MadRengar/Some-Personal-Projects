@@ -2,6 +2,7 @@ using Cinemachine;
 using PlayerControl;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
@@ -9,13 +10,17 @@ using UnityEngine.InputSystem;
 
 public class ThirdPersonShooterController : MonoBehaviour
 {
+    [Header("Aim Camera Settings")]
+    [SerializeField] private float aimTopClamp = 45.0f;    // 瞄准时向上最大角度
+    [SerializeField] private float aimBottomClamp = -10.0f; // 瞄准时向下最大角度
     [SerializeField] private CinemachineVirtualCamera _aimVirtualCamera;
     [SerializeField] private float normalSensitivity;
     [SerializeField] private float aimSensitivity;
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
-    [SerializeField] private Transform pfBulletProjectile;
+
     [Header("Rig")]
     [SerializeField] private Rig aimWeapon;
+    [SerializeField] private Rig aimHandIK;
     [SerializeField] private Rig aimBody;
     [SerializeField] private Rig idleWeapon;
     [Header("Weapon")]
@@ -23,10 +28,10 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private PlayerInputSystem _playerInputs;
     private ThirdPersonController _thirdPersonController;
-    private Animator _animator;
 
     private float _aimWeapon_Weight;
     private float _aimBody_Weight;
+    private float _aimHandIK_Weight;
     private float _idleWeapon_Weight;
 
     public GameObject aimTarget;
@@ -49,33 +54,51 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         _playerInputs = GetComponent<PlayerInputSystem>();
         _thirdPersonController = GetComponent<ThirdPersonController>();
-        _animator = GetComponent<Animator>();
     }
     void Update()
     {
+        //_playerInputs.aim = true;
         // 只在战斗模式下执行射击逻辑
         if (_playerInputs.currentMode != PlayerInputSystem.PlayerMode.Combat)
             return;
 
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        UpdateRigWeights();
-
         /*鼠标所指*/
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
 
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
         {
-            aimTarget.transform.position = raycastHit.point;
+            float hitDistanceFromCamera = Vector3.Distance(Camera.main.transform.position, raycastHit.point);
+            float safeDistance = 2.5f;
+
+            if (hitDistanceFromCamera > safeDistance)
+            {
+                // 距离相机足够远，正常设置
+                aimTarget.transform.position = raycastHit.point;
+            }
+            else
+            {
+                // 距离太近，延长
+                Debug.Log("命中点离相机太近，延长至安全距离");
+                Vector3 direction = ray.direction.normalized;
+                Vector3 safePosition = Camera.main.transform.position + direction * safeDistance;
+                aimTarget.transform.position = safePosition;
+            }
         }
 
-        /*是否开启瞄准*/
-        IfAiming(raycastHit);
-        weapon.HandleShooting(
-            shootPressed: _playerInputs.shootPressed,
-            shootHeld: _playerInputs.shootHeld,
-            shootReleased: _playerInputs.shootReleased, 
-            raycastHit);
+        /*是否能开启瞄准*/
+        UpdateRigWeights();
 
+        IfAiming(raycastHit);
+    }
+
+    private void ForceExitAiming()
+    {
+        // 强制退出瞄准状态的所有效果
+        _aimVirtualCamera.gameObject.SetActive(false);
+        _thirdPersonController.setLookSensitivity(normalSensitivity);
+        _thirdPersonController.SetRotateOnMove(true);
+        _thirdPersonController.RestoreNormalCameraClamps();
     }
 
     private void IfAiming(RaycastHit raycastHit)
@@ -87,31 +110,40 @@ public class ThirdPersonShooterController : MonoBehaviour
             _thirdPersonController.SetRotateOnMove(false);
             //_animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
 
-            Vector3 worldAimTarget = raycastHit.point; ;
+            // 设置瞄准时的相机角度限制
+            _thirdPersonController.SetAimCameraClamps(aimTopClamp, aimBottomClamp);
+
+            Vector3 worldAimTarget = raycastHit.point;
             worldAimTarget.y = transform.position.y;
             Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
 
             transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+
+            weapon.HandleShooting(
+                shootPressed: _playerInputs.shootPressed,
+                shootHeld: _playerInputs.shootHeld,
+                shootReleased: _playerInputs.shootReleased,
+                raycastHit);
         }
         else
         {
-            _aimVirtualCamera.gameObject.SetActive(false);
-            _thirdPersonController.setLookSensitivity(normalSensitivity);
-            _thirdPersonController.SetRotateOnMove(true);
-            //_animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+            ForceExitAiming();
         }
     }
 
     private void UpdateRigWeights()
     {
-        _aimWeapon_Weight = _playerInputs.aim ? 1f : 0f;
-        _idleWeapon_Weight = _playerInputs.aim ? 0f : 1f;
-        _aimBody_Weight = _playerInputs.aim ? 1f : 0f;
+        bool shouldAim = _playerInputs.aim;
+
+        _aimWeapon_Weight = shouldAim ? 1f : 0f;
+        _aimHandIK_Weight = shouldAim ? 1f : 0f;
+        _aimBody_Weight = shouldAim ? 1f : 0f;
+        _idleWeapon_Weight = shouldAim ? 0f : 1f;
 
         aimWeapon.weight = Mathf.Lerp(aimWeapon.weight, _aimWeapon_Weight, Time.deltaTime * 20f);
+        aimHandIK.weight = Mathf.Lerp(aimHandIK.weight, _aimHandIK_Weight, Time.deltaTime * 20f);
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);
         idleWeapon.weight = Mathf.Lerp(idleWeapon.weight, _idleWeapon_Weight, Time.deltaTime * 20f);
-
     }
 
     private void OnPlayerModeChanged(PlayerInputSystem.PlayerMode newMode)
