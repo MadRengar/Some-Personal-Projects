@@ -90,6 +90,9 @@ public class ThirdPersonShooterController : MonoBehaviour
         UpdateRigWeights();
 
         IfAiming(raycastHit);
+
+        // 添加换弹输入处理
+        HandleReloadInput();
     }
 
     private void ForceExitAiming()
@@ -164,6 +167,16 @@ public class ThirdPersonShooterController : MonoBehaviour
                     _aimVirtualCamera.gameObject.SetActive(false);
                 }
                 break;
+        }
+    }
+
+    // 新增换弹输入处理方法
+    private void HandleReloadInput()
+    {
+        if (_playerInputs.reload && weapon != null)
+        {
+            // 尝试换弹
+            weapon.StartReload();
         }
     }
 }

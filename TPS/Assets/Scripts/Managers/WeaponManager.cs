@@ -25,7 +25,8 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private ParticleSystem[] muzzleFlash;
     [SerializeField] private ParticleSystem hitEffect;
     [SerializeField] private ParticleSystem bloodEffect;
-
+    [Header("Player Animator")]
+    public Animator playerAnimator; // 拖拽玩家的Animator组件
     // 事件系统
     public System.Action<int, int> OnAmmoChanged; // 弹药变化事件 (当前弹药, 备用弹药)
     public System.Action<bool> OnReloadStateChanged; // 换弹状态变化事件
@@ -244,7 +245,26 @@ public class WeaponManager : MonoBehaviour
     /// </summary>
     public void StartReload()
     {
-        if (!CanReload()) return;
+        // 检查是否可以换弹
+        if (!CanReload())
+        {
+            // 可选：播放无法换弹的音效
+            if (currentAmmo >= weaponData.magazineSize)
+            {
+                Debug.Log("弹夹已满，无需换弹");
+            }
+            else if (reserveAmmo <= 0)
+            {
+                Debug.Log("没有备用弹药");
+                // 可以播放空弹夹音效
+                PlayEmptyClipSound();
+            }
+            else if (isReloading)
+            {
+                Debug.Log("正在换弹中");
+            }
+            return;
+        }
 
         StartCoroutine(ReloadCoroutine());
     }
@@ -266,7 +286,11 @@ public class WeaponManager : MonoBehaviour
     {
         isReloading = true;
         OnReloadStateChanged?.Invoke(true);
-
+        // 设置换弹动画参数
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetBool("IsReloading", true);
+        }
         // 播放换弹音效
         PlayReloadAudio();
 
@@ -285,6 +309,12 @@ public class WeaponManager : MonoBehaviour
 
         isReloading = false;
         OnReloadStateChanged?.Invoke(false);
+
+        // 停止换弹动画
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetBool("IsReloading", false);
+        }
 
         // 触发弹药变化事件
         OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);

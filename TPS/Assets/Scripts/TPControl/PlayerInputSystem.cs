@@ -22,6 +22,7 @@ namespace PlayerControl
         [HideInInspector] public bool pickUp;
         [HideInInspector] public bool openStatusPanel;
         [HideInInspector] public bool ping;
+        [HideInInspector] public bool reload; // 添加换弹输入
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -155,6 +156,12 @@ namespace PlayerControl
                 HandleCancelInput();
             }
         }
+        public void OnReload(InputValue value)
+        {
+            if (currentMode != PlayerMode.Combat) return; // 只在战斗模式下允许换弹
+            ReloadInput(value.isPressed);
+        }
+
 
 #endif
         // 处理取消输入的逻辑
@@ -226,6 +233,14 @@ namespace PlayerControl
         {
             ping = newPingInputState;
 
+        }
+
+        public void ReloadInput(bool newReloadState)
+        {
+            if (newReloadState) // 只在按下时触发
+            {
+                reload = true;
+            }
         }
 
         private void OnApplicationFocus(bool hasFocus)
@@ -319,6 +334,13 @@ namespace PlayerControl
         public bool IsInCombatMode() => currentMode == PlayerMode.Combat;
         public bool IsInBuildMenuMode() => currentMode == PlayerMode.BuildMenu;
         public bool IsInPlacingMode() => currentMode == PlayerMode.Placing;
+
+        // 在LateUpdate中重置换弹输入
+        private void LateUpdate()
+        {
+            
+            reload = false; // 重置换弹输入
+        }
     }
 
 }
