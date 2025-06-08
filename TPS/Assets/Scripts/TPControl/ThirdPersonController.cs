@@ -360,6 +360,13 @@ namespace PlayerControl
             bool shootPressed = _playerInputs.shootPressed;
             bool shootHeld = _playerInputs.shootHeld;
             bool shootReleased = _playerInputs.shootReleased;
+
+            // 添加防抖检查：如果同时有 shootPressed 和 shootReleased，忽略这一帧
+            if (shootPressed && shootReleased)
+            {
+                return; // 跳过这一帧的处理，避免状态冲突
+            }
+
             // 获取武器信息
             WeaponManager weaponManager = GetComponent<ThirdPersonShooterController>()?.weapon;
             bool isAutomatic = weaponManager != null ? weaponManager.weaponData.isAutomatic : false;
@@ -375,6 +382,7 @@ namespace PlayerControl
                 if (shootPressed && !_wasShootPressed)
                 {
                     //TODO：FIX逻辑
+                    ResetShootingTriggers();
                     _animator.SetTrigger(_animIDStartShooting);
                     _isInAutoFire = false;
                 }
@@ -383,6 +391,7 @@ namespace PlayerControl
                 {
                     if (currentState.normalizedTime > 0.5f)
                     {
+                        ResetShootingTriggers();
                         _animator.SetTrigger(_animIDStartAutoFire);
                         _isInAutoFire = true;
                     }
@@ -390,6 +399,7 @@ namespace PlayerControl
                 // 停止射击
                 else if (shootReleased && _isInAutoFire)
                 {
+                    ResetShootingTriggers();
                     _animator.SetTrigger(_animIDStopShooting);
                     _isInAutoFire = false;
                 }
@@ -399,12 +409,22 @@ namespace PlayerControl
                 // 单发武器
                 if (shootPressed && !_wasShootPressed)
                 {
+                    ResetShootingTriggers();
                     _animator.SetTrigger(_animIDStartShooting);
                 }
             }
 
             _wasShootPressed = shootPressed;
             _wasShootHeld = shootHeld;
+        }
+        /// <summary>
+        /// 重置所有射击相关的触发器
+        /// </summary>
+        private void ResetShootingTriggers()
+        {
+            _animator.ResetTrigger(_animIDStartShooting);
+            _animator.ResetTrigger(_animIDStartAutoFire);
+            _animator.ResetTrigger(_animIDStopShooting);
         }
 
         private void JumpAndGravity()

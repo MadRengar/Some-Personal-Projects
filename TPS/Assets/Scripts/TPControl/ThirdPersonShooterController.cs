@@ -23,6 +23,10 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private Rig aimHandIK;
     [SerializeField] private Rig aimBody;
     [SerializeField] private Rig idleWeapon;
+    [SerializeField] private Rig idleHandIK;
+    [SerializeField] private Rig reloading;
+    [SerializeField] private TwoBoneIKConstraint aimLeftHandIK; // 拖拽Aim_LeftHandRig上的Two Bone IK组件
+    [SerializeField] private TwoBoneIKConstraint idleLeftHandIK; // 拖拽Aim_LeftHandRig上的Two Bone IK组件
     [Header("Weapon")]
     [SerializeField] public WeaponManager weapon;
 
@@ -33,6 +37,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     private float _aimBody_Weight;
     private float _aimHandIK_Weight;
     private float _idleWeapon_Weight;
+    private float _idleHandIK_Weight;
+    private float _reloading_Weight;
 
     public GameObject aimTarget;
 
@@ -136,13 +142,47 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private void UpdateRigWeights()
     {
-        bool shouldAim = _playerInputs.aim;
+        // 检查是否正在换弹
+        bool isReloading = weapon != null && weapon.IsReloading();
+        // 换弹时的rig权重逻辑
+        if (isReloading)
+        {
+            // 换弹期间：禁用所有瞄准相关的rig，启用idle rig
+            _aimWeapon_Weight = _playerInputs.aim ? 1f : 0f;
+            _aimBody_Weight = _playerInputs.aim ? 1f : 0f;
+            _aimHandIK_Weight = 0f;        // 换弹时禁用瞄准HandIK
+            _idleWeapon_Weight = _playerInputs.aim ? 0f : 1f;
+            _idleHandIK_Weight = 0f;       // 换弹时禁用idle HandIK
+            // 单独控制左手Two Bone IK权重
+            if (aimLeftHandIK != null)
+            {
+                aimLeftHandIK.weight = 0f; // 换弹时禁用左手IK
+            }
+            if (idleLeftHandIK != null)
+            {
+                idleLeftHandIK.weight = 0f;
+            }
+        }
+        else
+        {
+            // 正常情况：根据瞄准状态设置rig权重
+            _aimWeapon_Weight = _playerInputs.aim ? 1f : 0f;
+            _aimHandIK_Weight = _playerInputs.aim ? 1f : 0f;
+            _aimBody_Weight = _playerInputs.aim ? 1f : 0f;
+            _idleWeapon_Weight = _playerInputs.aim ? 0f : 1f;
+            _idleHandIK_Weight = _playerInputs.aim ? 0f : 1f;
+            // 恢复左手Two Bone IK权重
+            if (aimLeftHandIK != null)
+            {
+                aimLeftHandIK.weight = _playerInputs.aim ? 1f : 0f;
+            }
+            if (idleLeftHandIK != null)
+            {
+                idleLeftHandIK.weight = _playerInputs.aim ? 1f : 0f;
+            }
+        }
 
-        _aimWeapon_Weight = shouldAim ? 1f : 0f;
-        _aimHandIK_Weight = shouldAim ? 1f : 0f;
-        _aimBody_Weight = shouldAim ? 1f : 0f;
-        _idleWeapon_Weight = shouldAim ? 0f : 1f;
-
+        // 应用权重变化（保持原有的平滑过渡）
         aimWeapon.weight = Mathf.Lerp(aimWeapon.weight, _aimWeapon_Weight, Time.deltaTime * 20f);
         aimHandIK.weight = Mathf.Lerp(aimHandIK.weight, _aimHandIK_Weight, Time.deltaTime * 20f);
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);

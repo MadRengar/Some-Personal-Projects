@@ -338,7 +338,9 @@ namespace PlayerControl
         // 在LateUpdate中重置换弹输入
         private void LateUpdate()
         {
-            
+            // 重置一次性输入事件（这些应该只在触发的那一帧为true）
+            shootPressed = false;
+            shootReleased = false;
             reload = false; // 重置换弹输入
         }
     }

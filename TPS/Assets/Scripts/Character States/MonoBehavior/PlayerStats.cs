@@ -63,4 +63,10 @@ public class PlayerStats : MonoBehaviour
         }
     }
     #endregion
+
+    public void TakeDamage(int damageValue)
+    {
+        CurrentHealth -= damageValue;
+        Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{CurrentHealth}");
+    }
 }

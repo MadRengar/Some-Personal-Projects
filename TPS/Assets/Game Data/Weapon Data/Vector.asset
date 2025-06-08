@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee8dee3b12419b5408d7e9b0a1519488, type: 3}
   m_Name: Vector
   m_EditorClassIdentifier: 
-  weaponName: "\u9ED8\u8BA4\u6B66\u5668"
-  description: "\u6B66\u5668\u63CF\u8FF0"
+  weaponName: Vector
+  description: "\u5A01\u529B\u5C0F\uFF0C\u5C04\u901F\u5FEB"
   weaponIcon: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  isAutomatic: 0
-  fireRate: 1
+  isAutomatic: 1
+  fireRate: 0.1
   cooldown: 0.5
   bulletsPerShot: 1
   bulletVelocity: 500

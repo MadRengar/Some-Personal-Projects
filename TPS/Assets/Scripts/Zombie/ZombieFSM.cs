@@ -19,8 +19,6 @@ public class ZombieFSM : MonoBehaviour
     private float remainLookAtTime; // 计时器：怪物巡逻停留剩余时间
     public float sightRadius; // 敌人发现敌人的半径
     private float speed; // 记录敌人追击前的初始速度
-    [SerializeField]private float attackRange;
-    [SerializeField]private float attackCD;
 
     [Header("Patrol State")] // ----------敌人巡逻设置
     public float patrolRange; // 随机生成新巡逻位置的范围
@@ -37,13 +35,21 @@ public class ZombieFSM : MonoBehaviour
     private Vector2 velocity;
     private float animSpeed;
 
+    /* 攻击相关属性 */
+    private float attackRange;
+    private float attackCD;
+    private float attackCooldownTimer = 0f; // 攻击冷却计时器
+    private float attackDuration = 1.0f; // 攻击动画持续时间
+    private float attackTimer = 0f; // 攻击状态持续计时器
+    private bool isInAttackState = false; // 是否正在攻击状态
+    private bool hasTriggeredAttack = false; // 本次攻击是否已经触发过动画和伤害
+    private ZombieStats zombieStats; // 引用ZombieStats来读取SO数据
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        //guardPos = transform.position;
-        //speed = agent.speed;
+        zombieStats = GetComponent<ZombieStats>();
     }
 
     void Start()
@@ -61,24 +67,59 @@ public class ZombieFSM : MonoBehaviour
         //    currentState = ZombieStates.PATROL;
         //    GetNewPatrolPoint(); // 选择新的巡逻点
         //}
+        LoadAttackDataFromSO();
     }
 
     void Update()
     {
         if (currentState != ZombieStates.DEAD)
         {
+            // 更新攻击冷却计时器
+            if (attackCooldownTimer > 0f)
+            {
+                attackCooldownTimer -= Time.deltaTime;
+            }
+
+            if (isInAttackState && attackTimer > 0f)
+            {
+                attackTimer -= Time.deltaTime;
+            }
+
             StateUpdate();
             SyncWithNavMeshAgentRootMotion(); // 每帧更新 RootMotion 位置同步
+        }
+    }
+
+    // SO文件加载攻击数据
+    private void LoadAttackDataFromSO()
+    {
+        if (zombieStats != null && zombieStats.zombieAttackData != null)
+        {
+            attackRange = zombieStats.zombieAttackData.attackRange;
+            attackCD = zombieStats.zombieAttackData.attackCD;
+            Debug.Log($"加载攻击数据：范围={attackRange}, 冷却={attackCD}");
+        }
+        else
+        {
+            // 默认值
+            attackRange = 2.0f;
+            attackCD = 1.0f;
+            Debug.LogWarning("未找到攻击数据SO，使用默认值");
         }
     }
 
     /*更新敌人状态*/
     void StateUpdate()
     {
-        
-        if (FoundPlayer())
+
+        // 只有在非攻击状态时才检查是否切换到追击
+        if (currentState != ZombieStates.ATTACK && FoundPlayer())
         {
-            currentState = ZombieStates.CHASE;
+            if (currentState != ZombieStates.CHASE)
+            {
+                currentState = ZombieStates.CHASE;
+                Debug.Log("[ZombieFSM] 发现玩家，切换到追击状态");
+            }
         }
 
         switch (currentState)
@@ -130,6 +171,7 @@ public class ZombieFSM : MonoBehaviour
             currentState = ZombieStates.PATROL;
             GetNewPatrolPoint(); // 选择新的巡逻点
         }
+        attackCooldownTimer = 0f;
     }
 
     private void Guard()
@@ -198,13 +240,133 @@ public class ZombieFSM : MonoBehaviour
         {
             //Debug.Log("[ZombieFSM] 处于Chasing状态");
             isRunning = true;
+            // 检查是否可以攻击
+            float distanceToPlayer = Vector3.Distance(transform.position, attackTarget.transform.position);
+            if (distanceToPlayer <= attackRange && attackCooldownTimer <= 0f)
+            {
+                currentState = ZombieStates.ATTACK;
+                isInAttackState = true;
+                attackTimer = attackDuration;
+                Debug.Log("[ZombieFSM] 进入攻击状态！距离: " + distanceToPlayer);
+                return;
+            }
             agent.destination = attackTarget.transform.position;
         }
     }
 
     private void Attack()
     {
-        Debug.Log("[ZombieFSM] 处于Attack状态");
+        isWalking = false;
+        isRunning = false;
+
+        // 停止移动
+        agent.SetDestination(transform.position);
+
+        // 面向目标
+        if (attackTarget != null)
+        {
+            Vector3 directionToTarget = (attackTarget.transform.position - transform.position).normalized;
+            directionToTarget.y = 0; // 只在水平面旋转
+            if (directionToTarget != Vector3.zero)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation,
+                    Quaternion.LookRotation(directionToTarget), Time.deltaTime * 5f);
+            }
+        }
+
+        // 只在刚进入攻击状态时执行一次
+        if (isInAttackState && !hasTriggeredAttack)
+        {
+            // 触发攻击动画
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+                Debug.Log("[ZombieFSM] 触发攻击动画");
+            }
+
+            // 造成伤害
+            DealDamage();
+
+            // 设置冷却时间
+            attackCooldownTimer = attackCD;
+
+            // 标记已经触发过攻击
+            hasTriggeredAttack = true;
+
+            Debug.Log("[ZombieFSM] 执行攻击动作！冷却时间: " + attackCD);
+        }
+
+        if (attackTimer <= 0f)
+        {
+            FinishAttack();
+        }
+    }
+
+    // *** 新增：完成攻击的统一处理方法 ***
+    private void FinishAttack()
+    {
+        // 重置攻击状态
+        isInAttackState = false;
+        hasTriggeredAttack = false;
+
+        // *** 重要：重置Attack Trigger，防止动画卡住 ***
+        if (anim != null)
+        {
+            anim.ResetTrigger("Attack");
+        }
+
+        // 检查目标状态决定下一步
+        if (attackTarget != null && Vector3.Distance(transform.position, attackTarget.transform.position) <= sightRadius)
+        {
+            currentState = ZombieStates.CHASE;
+            Debug.Log("[ZombieFSM] 攻击完成，返回追击状态");
+        }
+        else
+        {
+            // 失去目标，返回原状态
+            if (isGuard)
+            {
+                currentState = ZombieStates.Guard;
+                remainLookAtTime = lookAtTime;
+            }
+            else
+            {
+                currentState = ZombieStates.PATROL;
+                GetNewPatrolPoint();
+            }
+            Debug.Log("[ZombieFSM] 攻击完成，失去目标，返回原状态: " + currentState);
+        }
+    }
+
+    // *** 新增：动画事件回调方法 - 修复AnimationEvent错误 ***
+    public void OnAttackAnimationEnd()
+    {
+        Debug.Log("[ZombieFSM] 攻击动画结束回调");
+        // 可以在这里添加攻击动画结束的特殊逻辑
+        // 比如：立即结束攻击状态而不等待timer
+        if (currentState == ZombieStates.ATTACK)
+        {
+            FinishAttack();
+        }
+    }
+
+    // 造成伤害
+    private void DealDamage()
+    {
+        if (attackTarget == null) return;
+
+        // 再次检查距离
+        float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
+        if (distanceToTarget <= attackRange)
+        {
+            PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
+            if (playerStats != null && zombieStats != null && zombieStats.zombieAttackData != null)
+            {
+                int damage = zombieStats.zombieAttackData.attackDamage;
+                playerStats.TakeDamage(damage);
+                Debug.Log($"[ZombieFSM] 对玩家造成 {damage} 点伤害！");
+            }
+        }
     }
 
     public void EnterDeadState(bool isAlive)
@@ -267,6 +429,9 @@ public class ZombieFSM : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, patrolRange);
+        // 攻击范围
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
     /// <summary>
