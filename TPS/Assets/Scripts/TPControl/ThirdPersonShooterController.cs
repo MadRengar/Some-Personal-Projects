@@ -178,7 +178,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             }
             if (idleLeftHandIK != null)
             {
-                idleLeftHandIK.weight = _playerInputs.aim ? 1f : 0f;
+                idleLeftHandIK.weight = _playerInputs.aim ? 0f : 1f;
             }
         }
 
