@@ -43,6 +43,7 @@ public class ZombieFSM : MonoBehaviour
     private float attackTimer = 0f; // 攻击状态持续计时器
     private bool isInAttackState = false; // 是否正在攻击状态
     private bool hasTriggeredAttack = false; // 本次攻击是否已经触发过动画和伤害
+    private bool hasDealDamage = false; // 本次攻击是否已经造成过伤害（防止重复扣血）
     private ZombieStats zombieStats; // 引用ZombieStats来读取SO数据
 
     void Awake()
@@ -54,19 +55,6 @@ public class ZombieFSM : MonoBehaviour
 
     void Start()
     {
-        //agent.updatePosition = false; // 关闭自动位置更新
-        //agent.updateRotation = true; // 保留旋转控制
-        //anim.applyRootMotion = true; // 启用 Root Motion
-
-        //if (isGuard)
-        //{
-        //    currentState = ZombieStates.Guard;
-        //}
-        //else
-        //{
-        //    currentState = ZombieStates.PATROL;
-        //    GetNewPatrolPoint(); // 选择新的巡逻点
-        //}
         LoadAttackDataFromSO();
     }
 
@@ -247,7 +235,9 @@ public class ZombieFSM : MonoBehaviour
                 currentState = ZombieStates.ATTACK;
                 isInAttackState = true;
                 attackTimer = attackDuration;
-                Debug.Log("[ZombieFSM] 进入攻击状态！距离: " + distanceToPlayer);
+                hasTriggeredAttack = false; // 重置攻击触发标记
+                hasDealDamage = false; // 重置伤害标记
+                //Debug.Log("[ZombieFSM] 进入攻击状态！距离: " + distanceToPlayer);
                 return;
             }
             agent.destination = attackTarget.transform.position;
@@ -281,33 +271,28 @@ public class ZombieFSM : MonoBehaviour
             if (anim != null)
             {
                 anim.SetTrigger("Attack");
-                Debug.Log("[ZombieFSM] 触发攻击动画");
             }
-
-            // 造成伤害
-            DealDamage();
 
             // 设置冷却时间
             attackCooldownTimer = attackCD;
 
             // 标记已经触发过攻击
             hasTriggeredAttack = true;
-
-            Debug.Log("[ZombieFSM] 执行攻击动作！冷却时间: " + attackCD);
         }
-
         if (attackTimer <= 0f)
         {
+            Debug.Log("[ZombieFSM] 攻击计时器结束，强制结束攻击");
             FinishAttack();
         }
     }
 
-    // *** 新增：完成攻击的统一处理方法 ***
+    // 完成攻击的统一处理方法
     private void FinishAttack()
     {
         // 重置攻击状态
         isInAttackState = false;
         hasTriggeredAttack = false;
+        hasDealDamage = false;
 
         // *** 重要：重置Attack Trigger，防止动画卡住 ***
         if (anim != null)
@@ -319,7 +304,6 @@ public class ZombieFSM : MonoBehaviour
         if (attackTarget != null && Vector3.Distance(transform.position, attackTarget.transform.position) <= sightRadius)
         {
             currentState = ZombieStates.CHASE;
-            Debug.Log("[ZombieFSM] 攻击完成，返回追击状态");
         }
         else
         {
@@ -334,19 +318,18 @@ public class ZombieFSM : MonoBehaviour
                 currentState = ZombieStates.PATROL;
                 GetNewPatrolPoint();
             }
-            Debug.Log("[ZombieFSM] 攻击完成，失去目标，返回原状态: " + currentState);
         }
     }
 
-    // *** 新增：动画事件回调方法 - 修复AnimationEvent错误 ***
-    public void OnAttackAnimationEnd()
+    // *** 新增：动画事件回调 - 在动画中造成伤害 ***
+    public void OnAttackHit()
     {
-        Debug.Log("[ZombieFSM] 攻击动画结束回调");
-        // 可以在这里添加攻击动画结束的特殊逻辑
-        // 比如：立即结束攻击状态而不等待timer
-        if (currentState == ZombieStates.ATTACK)
+        Debug.Log($"[ZombieFSM] OnAttackHit被调用！当前状态: {currentState}, hasDealDamage: {hasDealDamage}");
+        if (currentState == ZombieStates.ATTACK && !hasDealDamage)
         {
-            FinishAttack();
+            Debug.Log("1");
+            DealDamage();
+            hasDealDamage = true;
         }
     }
 
@@ -354,11 +337,10 @@ public class ZombieFSM : MonoBehaviour
     private void DealDamage()
     {
         if (attackTarget == null) return;
-
         // 再次检查距离
         float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
         if (distanceToTarget <= attackRange)
-        {
+        {         
             PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
             if (playerStats != null && zombieStats != null && zombieStats.zombieAttackData != null)
             {

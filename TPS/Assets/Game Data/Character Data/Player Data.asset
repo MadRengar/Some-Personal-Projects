@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Player Data
   m_EditorClassIdentifier: 
   maxHealth: 200
-  currentHealth: 200
+  currentHealth: 0
   stamina: 100
   isAlive: 0

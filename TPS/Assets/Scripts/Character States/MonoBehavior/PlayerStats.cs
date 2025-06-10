@@ -64,6 +64,7 @@ public class PlayerStats : MonoBehaviour
     }
     #endregion
 
+    //TODO: FIX CurrentHealth À•ºıŒ Ã‚
     public void TakeDamage(int damageValue)
     {
         CurrentHealth -= damageValue;
