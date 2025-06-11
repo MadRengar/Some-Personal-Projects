@@ -76,14 +76,17 @@ public class ResourceSpawner : MonoBehaviour
                         var pickup = obj.GetComponent<PickupItem>();
                         if (pickup != null)
                         {
+                            // 为生成的资源属性赋值
                             pickup.resourceData = res.resourceData;
                             pickup.amount = Random.Range(1, res.maxAmountPerPile + 1);
+                            pickup.poolType = res.resourceData.type;
+                            pickup.isConsuming = res.resourceData.isConsuming;
 
+                            // 获得Manager 的引用
                             pickup.inventoryManager = inventoryManagerRef;
                             pickup.playerInputSystem = playerInputSystemRef;
-                            // 记录池管理器与类型，便于回收
                             pickup.poolManager = poolManager;
-                            pickup.poolType = res.resourceData.type;
+
                         }
                         placedPositions.Add(navHit.position);
                     }
@@ -91,7 +94,7 @@ public class ResourceSpawner : MonoBehaviour
             }
         }
 
-        //Debug.Log($"生成了 {placedPositions.Count} 堆资源");
+        Debug.Log($"生成了 {placedPositions.Count} 堆资源");
     }
 
     void OnDrawGizmosSelected()

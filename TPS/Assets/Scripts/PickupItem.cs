@@ -6,18 +6,25 @@ using UnityEngine;
 
 public class PickupItem : MonoBehaviour
 {
-    public InventoryManager inventoryManager;
-    public ResourceData_SO resourceData;
-    public int amount = 1;
-    public PlayerInputSystem playerInputSystem;
-
-    public ResourcePoolManager poolManager;
-    public ResourceType poolType;
+    [HideInInspector] public InventoryManager inventoryManager;
+    [HideInInspector] public ResourceData_SO resourceData;
+    [HideInInspector] public int amount;
+    [HideInInspector] public PlayerInputSystem playerInputSystem;
+    [HideInInspector] public ResourcePoolManager poolManager;
+    [HideInInspector] public ResourceType poolType;
+    [HideInInspector] public bool isConsuming;
 
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && playerInputSystem.pickUp)
         {
+            if(isConsuming)
+            {
+                Debug.Log($"这是消耗品：{resourceData.name}！回复数值：{resourceData.restoreValues}");
+                ReturnToPool();
+                return;
+            }
+
             if (inventoryManager != null)
             {
                 bool success = inventoryManager.TryAddPlayer(resourceData, amount);

@@ -15,4 +15,5 @@ MonoBehaviour:
   resourceName: Food
   type: 3
   unitWeight: 0
+  isConsuming: 1
   restoreValues: 10

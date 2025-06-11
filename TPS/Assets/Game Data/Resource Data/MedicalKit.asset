@@ -15,4 +15,5 @@ MonoBehaviour:
   resourceName: Medical Kit
   type: 4
   unitWeight: 0
+  isConsuming: 1
   restoreValues: 20

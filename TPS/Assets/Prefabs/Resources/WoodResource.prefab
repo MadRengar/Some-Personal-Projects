@@ -5317,7 +5317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b93258df4a0524b9bc3cd7437f72e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 0}
-  resourceData: {fileID: 11400000, guid: 74a3a068085d1f5469a3381f2633e9b7, type: 2}
+  inventoryManager: {fileID: 0}
+  resourceData: {fileID: 0}
   amount: 5
   playerInputSystem: {fileID: 0}
+  poolManager: {fileID: 0}
+  poolType: 0
