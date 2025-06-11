@@ -7,7 +7,8 @@ public class PlayerDate_SO : ScriptableObject
 {
     [Header("State Info")]
     public int maxHealth;
-    public int currentHealth;
-    public int stamina; // 体力
+    public int maxStamina; // 体力
+    public int maxSatiety; // 饱食度
+    public int maxInfectivity; // 感染性
     public bool isAlive;
 }

@@ -281,7 +281,6 @@ public class ZombieFSM : MonoBehaviour
         }
         if (attackTimer <= 0f)
         {
-            Debug.Log("[ZombieFSM] 攻击计时器结束，强制结束攻击");
             FinishAttack();
         }
     }
@@ -324,10 +323,8 @@ public class ZombieFSM : MonoBehaviour
     // *** 新增：动画事件回调 - 在动画中造成伤害 ***
     public void OnAttackHit()
     {
-        Debug.Log($"[ZombieFSM] OnAttackHit被调用！当前状态: {currentState}, hasDealDamage: {hasDealDamage}");
         if (currentState == ZombieStates.ATTACK && !hasDealDamage)
         {
-            Debug.Log("1");
             DealDamage();
             hasDealDamage = true;
         }
@@ -346,7 +343,6 @@ public class ZombieFSM : MonoBehaviour
             {
                 int damage = zombieStats.zombieAttackData.attackDamage;
                 playerStats.TakeDamage(damage);
-                Debug.Log($"[ZombieFSM] 对玩家造成 {damage} 点伤害！");
             }
         }
     }
@@ -451,5 +447,4 @@ public class ZombieFSM : MonoBehaviour
          */
         transform.position = agent.nextPosition; 
     }
-    //TODO:僵尸攻击
 }

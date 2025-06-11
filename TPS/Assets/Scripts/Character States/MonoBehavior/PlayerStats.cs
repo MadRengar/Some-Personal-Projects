@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,68 +7,48 @@ public class PlayerStats : MonoBehaviour
 {
     public PlayerDate_SO playerData;
     public PlayerAttackData_SO playerAttackData;
-    /*Prompts 直接对CharacterDate_SO中的数值进行修改*/
-    #region Read from Data_SO
-    public int MaxHealth 
-    {  
-        get
-        {
-            if (playerData != null)
-            {
-                return playerData.maxHealth;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        set
-        {
-            playerData.maxHealth = value;
-        }
-    }
 
-    public int CurrentHealth
+    [Header("Running State")]
+    [SerializeField] private int currentHealth;
+    [SerializeField] private int currentStamina;
+    [SerializeField] private int currentSatiety;
+    [SerializeField] private int currentInfectivity;
+    [SerializeField] private bool isAlive;
+
+    public static event Action<int, int> OnHealthChanged; // 当前血量, 最大血量
+    private void Awake()
     {
-        get
-        {
-            return playerData.currentHealth;
-        }
-        set
-        {
-            playerData.currentHealth = value;
-        }
+        InitializePlayerState();
     }
 
-    public int Stamina
+    private void InitializePlayerState()
     {
-        get
-        {
-            return playerData.stamina;
-        }
-        set
-        {
-            playerData.stamina = value;
-        }
+        currentHealth = playerData.maxHealth;
+        currentStamina = playerData.maxStamina;
+        currentSatiety = playerData.maxSatiety;
+        currentInfectivity = playerData.maxInfectivity;
+        isAlive = playerData.isAlive;
+
+        //初始化事件
+        OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
     }
 
-    public bool IsAlive
-    {
-        get
-        {
-            return playerData.isAlive;
-        }
-        set 
-        { 
-            playerData.isAlive = value; 
-        }
-    }
-    #endregion
 
-    //TODO: FIX CurrentHealth 衰减问题
     public void TakeDamage(int damageValue)
     {
-        CurrentHealth -= damageValue;
-        Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{CurrentHealth}");
+        currentHealth -= damageValue;
+        Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
+        OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
     }
+
+    public void GetHealing(int healingValue)
+    {
+        currentHealth += healingValue;
+        Debug.Log($"玩家获得{healingValue}点治疗，当前生命值：{currentHealth}");
+        OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+    }
+
+    // getter方法
+    public int GetCurrentHealth() => currentHealth;
+    public int GetMaxHealth() => playerData.maxHealth;
 }
