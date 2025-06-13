@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Data
   m_EditorClassIdentifier: 
   maxHealth: 100
-  maxStamina: 0
-  maxSatiety: 0
-  maxInfectivity: 0
+  maxStamina: 6
+  maxSatiety: 10
+  maxInfectivity: 100
   isAlive: 1

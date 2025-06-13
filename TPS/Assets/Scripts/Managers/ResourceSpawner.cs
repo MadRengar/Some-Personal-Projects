@@ -11,6 +11,9 @@ public class ResourceSpawner : MonoBehaviour
         public ResourceData_SO resourceData;
         public GameObject resourcePrefab;
         public int maxAmountPerPile = 10; // 每堆包含资源个数的最大值
+        [Header("Spawn Weight")]
+        [Range(1, 100)]
+        public int spawnWeight = 10; // 生成权重，数值越大生成概率越高
     }
     public ResourcePoolManager poolManager;
     public InventoryManager inventoryManagerRef; // 持有Inventory引用 手动为生成的资源Prefab注入Inventory
@@ -67,34 +70,96 @@ public class ResourceSpawner : MonoBehaviour
 
                     if (!tooClose)
                     {
+                        // 根据权重随机选择资源类型
+                        var res = GetWeightedRandomResource();
                         // 随机资源种类
-                        var res = resourceTypes[Random.Range(0, resourceTypes.Count)];
-                        // 使用对象池取对象
-                        var obj = poolManager.Get(res.resourceData.type);
-                        obj.transform.position = navHit.position;
-                        obj.transform.rotation = Quaternion.identity;
-                        var pickup = obj.GetComponent<PickupItem>();
-                        if (pickup != null)
+                        if (res != null)
                         {
-                            // 为生成的资源属性赋值
-                            pickup.resourceData = res.resourceData;
-                            pickup.amount = Random.Range(1, res.maxAmountPerPile + 1);
-                            pickup.poolType = res.resourceData.type;
-                            pickup.isConsuming = res.resourceData.isConsuming;
+                            // 使用对象池取对象
+                            var obj = poolManager.Get(res.resourceData.type);
+                            obj.transform.position = navHit.position;
+                            obj.transform.rotation = Quaternion.identity;
+                            var pickup = obj.GetComponent<PickupItem>();
+                            if (pickup != null)
+                            {
+                                // 为生成的资源属性赋值
+                                pickup.resourceData = res.resourceData;
+                                pickup.amount = Random.Range(1, res.maxAmountPerPile + 1);
+                                pickup.poolType = res.resourceData.type;
+                                pickup.isConsuming = res.resourceData.isConsuming;
 
-                            // 获得Manager 的引用
-                            pickup.inventoryManager = inventoryManagerRef;
-                            pickup.playerInputSystem = playerInputSystemRef;
-                            pickup.poolManager = poolManager;
-
+                                // 获得Manager 的引用
+                                pickup.inventoryManager = inventoryManagerRef;
+                                pickup.playerInputSystem = playerInputSystemRef;
+                                pickup.poolManager = poolManager;
+                                pickup.playerStats = GameManager.Instance.GetPlayerStats();
+                            }
+                            placedPositions.Add(navHit.position);
                         }
-                        placedPositions.Add(navHit.position);
                     }
                 }
             }
         }
 
         Debug.Log($"生成了 {placedPositions.Count} 堆资源");
+        // 打印各种资源的统计信息
+        LogResourceStatistics(placedPositions.Count);
+    }
+
+    /// <summary>
+    /// 根据权重随机选择资源
+    /// </summary>
+    ResourcePrefabInfo GetWeightedRandomResource()
+    {
+        if (resourceTypes.Count == 0) return null;
+
+        // 计算总权重
+        int totalWeight = 0;
+        foreach (var res in resourceTypes)
+        {
+            totalWeight += res.spawnWeight;
+        }
+
+        // 生成随机数
+        int randomValue = Random.Range(0, totalWeight);
+
+        // 根据权重选择
+        int currentWeight = 0;
+        foreach (var res in resourceTypes)
+        {
+            currentWeight += res.spawnWeight;
+            if (randomValue < currentWeight)
+            {
+                return res;
+            }
+        }
+
+        // 备用返回第一个
+        return resourceTypes[0];
+    }
+
+    /// <summary>
+    /// 打印资源生成统计（可选，用于调试）
+    /// </summary>
+    void LogResourceStatistics(int totalGenerated)
+    {
+        Debug.Log("=== 资源生成统计 ===");
+        foreach (var res in resourceTypes)
+        {
+            float expectedRatio = (float)res.spawnWeight / GetTotalWeight();
+            int expectedCount = Mathf.RoundToInt(totalGenerated * expectedRatio);
+            Debug.Log($"{res.resourceData.resourceName}: 权重 {res.spawnWeight}, 预期数量 ~{expectedCount}");
+        }
+    }
+
+    int GetTotalWeight()
+    {
+        int total = 0;
+        foreach (var res in resourceTypes)
+        {
+            total += res.spawnWeight;
+        }
+        return total;
     }
 
     void OnDrawGizmosSelected()

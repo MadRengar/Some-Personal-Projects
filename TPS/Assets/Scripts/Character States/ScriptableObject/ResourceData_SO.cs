@@ -11,5 +11,5 @@ public class ResourceData_SO : ScriptableObject
     public ResourceType type;
     public float unitWeight;
     public bool isConsuming;
-    public float restoreValues;
+    public int restoreValues;
 }

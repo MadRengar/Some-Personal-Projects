@@ -7,21 +7,37 @@ using UnityEngine;
 public class PickupItem : MonoBehaviour
 {
     [HideInInspector] public InventoryManager inventoryManager;
-    [HideInInspector] public ResourceData_SO resourceData;
-    [HideInInspector] public int amount;
     [HideInInspector] public PlayerInputSystem playerInputSystem;
     [HideInInspector] public ResourcePoolManager poolManager;
-    [HideInInspector] public ResourceType poolType;
-    [HideInInspector] public bool isConsuming;
+    public PlayerStats playerStats;
+    public ResourceData_SO resourceData;
+    public int amount;
+    public ResourceType poolType;
+    public bool isConsuming;
 
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && playerInputSystem.pickUp)
         {
             if(isConsuming)
-            {
-                Debug.Log($"这是消耗品：{resourceData.name}！回复数值：{resourceData.restoreValues}");
-                ReturnToPool();
+            {               
+                if(poolType == ResourceType.MedicalKit)
+                {
+                    if(playerStats != null)
+                    {
+                        playerStats.GetHealing(resourceData.restoreValues);
+                        ReturnToPool();
+                    }             
+                    
+                }
+                else if(poolType == ResourceType.Food)
+                {
+                    if (playerStats != null)
+                    {
+                        playerStats.GetFood(resourceData.restoreValues);
+                        ReturnToPool();
+                    }                                 
+                }
                 return;
             }
 

@@ -8,6 +8,7 @@ namespace PlayerControl
 {
 	public class PlayerInputSystem : MonoBehaviour
 	{
+        public PlayerStats playerStats;
         public enum PlayerMode { Combat, BuildMenu, Placing }
         public PlayerMode currentMode = PlayerMode.Combat;
         // 模式切换事件
@@ -198,8 +199,29 @@ namespace PlayerControl
 
 		public void SprintInput(bool newSprintState)
 		{
-			sprint = newSprintState;
-		}
+            if (newSprintState && playerStats.GetCurrentStamina() < 2f)
+            {
+                // 体力不足3时禁止冲刺
+                sprint = false;
+                return;
+            }
+
+            sprint = newSprintState;
+            
+            // 控制体力衰减
+            if (newSprintState)
+            {
+                // 开始冲刺，启动体力衰减
+                playerStats.StopStaminaRecover();
+                playerStats.StartStaminaDecay();
+            }
+            else
+            {
+                // 停止冲刺，停止体力衰减
+                playerStats.StopStaminaDecay();
+                playerStats.StartStaminaRecover();
+            }
+        }
 
 		//鼠标右键瞄准
         public void AimInput(bool newAimState)
