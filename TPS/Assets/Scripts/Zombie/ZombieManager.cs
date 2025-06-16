@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZombieSpawn : MonoBehaviour
+public class ZombieManager : MonoBehaviour
 {
     [Header("Basic Setting")]
     public LayerMask groundMask;
@@ -18,14 +18,11 @@ public class ZombieSpawn : MonoBehaviour
     public float minDistanceBetweenGroups = 10f;
 
     [Header("Night Spawn Setting")]
-    public bool enableNightSpawn = true;
-    public List<Transform> nightSpawnPoints; // 地图四个固定点
-    public float spawnIntervalAtNight = 1f; // 每秒刷一个
-    public int nightZombiesPerWave = 20;
+    public List<ZombieSpawner> nightSpawners = new List<ZombieSpawner>(); // 夜晚生成器列表
 
     [Header("Total ZombieCount Limit")]
     public int maxZombiesAlive = 60;
-    private int currentZombiesAlive = 0;
+    public int currentZombiesAlive = 0;
 
     private List<GameObject> aliveZombies = new List<GameObject>();
 
@@ -35,9 +32,58 @@ public class ZombieSpawn : MonoBehaviour
         {
             SpawnDayZombies();
         }
-        //if (enableNightSpawn)
-        //    StartCoroutine(SpawnNightZombies());
+        // 订阅游戏时间事件
+        if (GameTimeManager.Instance != null)
+        {
+            GameTimeManager.Instance.OnNightStarted += OnNightStarted;
+            GameTimeManager.Instance.OnDawnStarted += OnDawnStarted;
+        }
     }
+
+    private void OnDestroy()
+    {
+        // 取消订阅事件
+        if (GameTimeManager.Instance != null)
+        {
+            GameTimeManager.Instance.OnNightStarted -= OnNightStarted;
+            GameTimeManager.Instance.OnDawnStarted -= OnDawnStarted;
+        }
+    }
+
+    /// <summary>
+    /// 夜晚开始事件处理
+    /// </summary>
+    private void OnNightStarted()
+    {
+        //Debug.Log("夜晚降临，启动所有僵尸生成器");
+
+        // 启动所有生成器
+        foreach (var spawner in nightSpawners)
+        {
+            if (spawner != null)
+            {
+                spawner.StartSpawning();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 黎明开始事件处理
+    /// </summary>
+    private void OnDawnStarted()
+    {
+        //Debug.Log("黎明到来，停止所有僵尸生成器");
+
+        // 停止所有生成器
+        foreach (var spawner in nightSpawners)
+        {
+            if (spawner != null)
+            {
+                spawner.StopSpawning();
+            }
+        }
+    }
+
 
     private void SpawnDayZombies()
     {
@@ -86,14 +132,66 @@ public class ZombieSpawn : MonoBehaviour
         //Debug.Log($"白天生成了 {aliveZombies.Count} 个僵尸");
     }
 
-    private void SpawnZombie(Vector3 position)
+    private void SpawnZombie(Vector3 position, bool isBerserk = false)
     {
         if (currentZombiesAlive >= maxZombiesAlive) return;
+
         // 从对象池中取一个僵尸，放置到目标位置
         GameObject zombie = ZombiePool.Instance.TrySpawnZombie(position, Quaternion.identity);
-        aliveZombies.Add(zombie); // 加入活着的僵尸列表
-        currentZombiesAlive++; // 活着的数量加一
+
+        if (zombie != null)
+        {
+            aliveZombies.Add(zombie); // 加入活着的僵尸列表
+            currentZombiesAlive++; // 活着的数量加一
+
+            // 如果是夜晚僵尸，设置为狂暴状态
+            if (isBerserk)
+            {
+                SetZombieBerserkState(zombie, true);
+            }
+        }
     }
+
+    /// <summary>
+    /// 由ZombieSpawner调用，注册生成的僵尸
+    /// </summary>
+    public void RegisterSpawnedZombie(GameObject zombie)
+    {
+        if (zombie != null && !aliveZombies.Contains(zombie))
+        {
+            aliveZombies.Add(zombie);
+            currentZombiesAlive++;
+        }
+    }
+
+    /// <summary>
+    /// 检查是否可以生成更多僵尸
+    /// </summary>
+    public bool CanSpawnMoreZombies()
+    {
+        return currentZombiesAlive < maxZombiesAlive;
+    }
+
+    /// <summary>
+    /// 设置僵尸狂暴状态
+    /// </summary>
+    private void SetZombieBerserkState(GameObject zombie, bool isBerserk)
+    {
+        // 获取僵尸的数据组件
+        var zombieStats = zombie.GetComponent<ZombieStats>();
+        if (zombieStats != null && zombieStats.zombieData != null)
+        {
+            zombieStats.isBerserk = isBerserk;
+        }
+
+        // 重置僵尸FSM以应用新状态
+        var zombieFSM = zombie.GetComponent<ZombieFSM>();
+        if (zombieFSM != null)
+        {
+            zombieFSM.ResetZombieFSM();
+        }
+    }
+
 
     public void OnZombieDied(GameObject zombie)
     {
@@ -116,7 +214,10 @@ public class ZombieSpawn : MonoBehaviour
     private IEnumerator RespawnAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SpawnDayZombies();
+        if(!GameTimeManager.Instance.IsNight())
+        {
+            SpawnDayZombies();
+        }
     }
 
     private IEnumerator DelayedDespawn(GameObject zombie, float delay)
@@ -127,5 +228,24 @@ public class ZombieSpawn : MonoBehaviour
         {
             ZombiePool.Instance.DespawnZombie(zombie);
         }
+    }
+
+    /// <summary>
+    /// 获取当前活跃的僵尸总数
+    /// </summary>
+    public int GetTotalActiveZombies()
+    {
+        return currentZombiesAlive;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // 绘制范围边界线
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, daySpawnRadius);
+
+        // 绘制群体间最小距离示意
+        Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // 半透明红色
+        Gizmos.DrawWireSphere(transform.position, minDistanceBetweenGroups);
     }
 }

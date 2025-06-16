@@ -8,9 +8,9 @@ public class ZombieStats : MonoBehaviour
     public ZombieAttackData_SO zombieAttackData;
 
     [Header("Running Stats")]
-    [SerializeField] private int currentHealth;
-    [SerializeField] private bool isAlive;
-    [SerializeField] private bool isBerserk;
+    public int currentHealth;
+    public bool isAlive;
+    public bool isBerserk;
 
     private Animator animator;
     private ZombieFSM fsm;
@@ -49,7 +49,7 @@ public class ZombieStats : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        //spawnManager = GetComponent<ZombieSpawn>();
+        //spawnManager = GetComponent<ZombieManager>();
         //原因：prefab 在运行时被对象池实例化时，其 Inspector 是失效的 所以ZombieSpawn为空
 
         fsm = GetComponent<ZombieFSM>();
@@ -73,8 +73,7 @@ public class ZombieStats : MonoBehaviour
         currentHealth = MaxHealth;
         isAlive = IsAlive;
         isBerserk = false;// 与时间相关
-        // TODO：重置动画状态、AI状态、特效等
-        
+
         if (animator != null)
         {
             animator.SetBool("isAlive", true);
@@ -116,7 +115,7 @@ public class ZombieStats : MonoBehaviour
         }
 
         /* 对象池回收 */
-        ZombieSpawn spawnManager = FindObjectOfType<ZombieSpawn>();
+        ZombieManager spawnManager = FindObjectOfType<ZombieManager>();
         if (spawnManager != null)
         {
             spawnManager.OnZombieDied(gameObject);

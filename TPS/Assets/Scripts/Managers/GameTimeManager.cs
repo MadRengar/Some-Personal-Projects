@@ -83,7 +83,7 @@ public class GameTimeManager : MonoBehaviour
             currentHour -= 24f;
             currentDay++;
             OnDayChanged?.Invoke(currentDay);
-            Debug.Log($"新的一天开始 - 第{currentDay}天");
+            //Debug.Log($"新的一天开始 - 第{currentDay}天");
         }
         updateUITime();
         // 触发小时变化事件
@@ -120,7 +120,7 @@ public class GameTimeManager : MonoBehaviour
 
     private void StartDawnPhase()
     {
-        Debug.Log($"黎明开始 - 第{currentDay}天 {currentHour:F1}时");
+        //Debug.Log($"黎明开始 - 第{currentDay}天 {currentHour:F1}时");
 
         // TODO: 停止大批量僵尸生成
         // ZombieSpawnManager.Instance.StopMassiveSpawn();
@@ -137,7 +137,7 @@ public class GameTimeManager : MonoBehaviour
 
     private void StartNightPhase()
     {
-        Debug.Log($"夜晚开始 - 第{currentDay}天 {currentHour:F1}时");
+        //Debug.Log($"夜晚开始 - 第{currentDay}天 {currentHour:F1}时");
 
         // TODO: 将白天生成的僵尸设为狂暴状态
         // SetAllZombiesRageState(true);

@@ -11,6 +11,5 @@ public class ZombieData_SO : ScriptableObject
     public int maxHealth;
     public bool isAlive;
     public bool isGuard;
-    public bool isBerserk;
     public ZombieType type;
 }

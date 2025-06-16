@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum ZombieStates { Guard, PATROL, CHASE, ATTACK, DEAD }
+public enum ZombieStates { Guard, PATROL, CHASE, ATTACK, DEAD, BERSERK_CHASE }
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class ZombieFSM : MonoBehaviour
@@ -36,6 +36,8 @@ public class ZombieFSM : MonoBehaviour
     private float animSpeed;
 
     /* 攻击相关属性 */
+    [Header("Attack State")]
+    public float dealDamageRange;
     private float attackRange;
     private float attackCD;
     private float attackCooldownTimer = 0f; // 攻击冷却计时器
@@ -46,16 +48,24 @@ public class ZombieFSM : MonoBehaviour
     private bool hasDealDamage = false; // 本次攻击是否已经造成过伤害（防止重复扣血）
     private ZombieStats zombieStats; // 引用ZombieStats来读取SO数据
 
+    /* 狂暴模式相关 */
+    private bool isBerserk = false; // 是否为狂暴状态
+    private Transform playerTransform; // 玩家Transform缓存
+    [Header("Berserk Settings")]
+    public float berserkSpeed = 10f; // 狂暴模式移动速度
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         zombieStats = GetComponent<ZombieStats>();
+        playerTransform = GameManager.Instance.GetPlayerTransform();
     }
 
     void Start()
     {
         LoadAttackDataFromSO();
+        CheckBerserkState();
     }
 
     void Update()
@@ -73,26 +83,17 @@ public class ZombieFSM : MonoBehaviour
                 attackTimer -= Time.deltaTime;
             }
 
-            StateUpdate();
-            SyncWithNavMeshAgentRootMotion(); // 每帧更新 RootMotion 位置同步
-        }
-    }
+            // 根据是否狂暴选择不同的更新逻辑
+            if (isBerserk)
+            {
+                BerserkUpdate(); // 简化的狂暴模式逻辑
+            }
+            else
+            {
+                StateUpdate(); // 原有的完整状态机
+            }
 
-    // SO文件加载攻击数据
-    private void LoadAttackDataFromSO()
-    {
-        if (zombieStats != null && zombieStats.zombieAttackData != null)
-        {
-            attackRange = zombieStats.zombieAttackData.attackRange;
-            attackCD = zombieStats.zombieAttackData.attackCD;
-            Debug.Log($"加载攻击数据：范围={attackRange}, 冷却={attackCD}");
-        }
-        else
-        {
-            // 默认值
-            attackRange = 2.0f;
-            attackCD = 1.0f;
-            Debug.LogWarning("未找到攻击数据SO，使用默认值");
+            SyncWithNavMeshAgentRootMotion(); // 每帧更新 RootMotion 位置同步
         }
     }
 
@@ -148,18 +149,110 @@ public class ZombieFSM : MonoBehaviour
         {
             col.enabled = true;
         }
+        // 重新检查狂暴状态（这里会设置正确的速度和状态）
+        CheckBerserkState();
 
-        /*判断敌人是站桩类型的 or 巡逻状态*/
-        if (isGuard)
+        // 根据狂暴状态设置初始状态
+        if (isBerserk)
         {
-            currentState = ZombieStates.Guard;
+            // 狂暴模式直接进入狂暴追击状态
+            currentState = ZombieStates.BERSERK_CHASE;
+            if (playerTransform != null)
+            {
+                attackTarget = playerTransform.gameObject;
+            }
         }
         else
         {
-            currentState = ZombieStates.PATROL;
-            GetNewPatrolPoint(); // 选择新的巡逻点
+            // 普通模式根据是否守卫设置状态
+            if (isGuard)
+            {
+                currentState = ZombieStates.Guard;
+            }
+            else
+            {
+                currentState = ZombieStates.PATROL;
+                GetNewPatrolPoint(); // 选择新的巡逻点
+            }
         }
+
         attackCooldownTimer = 0f;
+    }
+
+    /// <summary>
+    /// 检查狂暴状态
+    /// </summary>
+    private void CheckBerserkState()
+    {
+        if (zombieStats != null)
+        {
+            isBerserk = zombieStats.isBerserk;
+
+            if (isBerserk)
+            {
+                Debug.Log($"[ZombieFSM] {gameObject.name} 进入狂暴模式，设置速度为 {berserkSpeed}");
+                // 狂暴模式下直接进入狂暴追击状态
+                currentState = ZombieStates.BERSERK_CHASE;
+                if (playerTransform != null)
+                {
+                    attackTarget = playerTransform.gameObject;
+                }
+                // 设置狂暴速度
+                agent.speed = berserkSpeed;
+                speed = berserkSpeed;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 狂暴模式的简化更新逻辑
+    /// </summary>
+    private void BerserkUpdate()
+    {
+        if (playerTransform == null) return;
+
+        // 狂暴僵尸只有两种状态：狂暴追击和攻击
+        switch (currentState)
+        {
+            case ZombieStates.BERSERK_CHASE:
+                BerserkChase();
+                break;
+            case ZombieStates.ATTACK:
+                Attack(); // 攻击逻辑保持不变
+                break;
+            default:
+                // 其他状态强制切换到狂暴追击
+                currentState = ZombieStates.BERSERK_CHASE;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 狂暴模式的追击逻辑
+    /// </summary>
+    private void BerserkChase()
+    {
+        isWalking = false;
+        isRunning = true;
+
+        // 确保使用狂暴速度
+        agent.speed = berserkSpeed;
+
+        // 直接设置目标为玩家位置，无视距离
+        agent.SetDestination(playerTransform.position);
+        attackTarget = playerTransform.gameObject;
+
+        // 检查是否可以攻击
+        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        if (distanceToPlayer <= attackRange && attackCooldownTimer <= 0f)
+        {
+            // 切换到攻击状态
+            currentState = ZombieStates.ATTACK;
+            isInAttackState = true;
+            attackTimer = attackDuration;
+            hasTriggeredAttack = false;
+            hasDealDamage = false;
+        }
     }
 
     private void Guard()
@@ -249,8 +342,7 @@ public class ZombieFSM : MonoBehaviour
         isWalking = false;
         isRunning = false;
 
-        // 停止移动
-        agent.SetDestination(transform.position);
+
 
         // 面向目标
         if (attackTarget != null)
@@ -267,10 +359,22 @@ public class ZombieFSM : MonoBehaviour
         // 只在刚进入攻击状态时执行一次
         if (isInAttackState && !hasTriggeredAttack)
         {
+            // 50%概率停止移动
+            bool shouldStop = Random.Range(0f, 1f) < 0.5f;
+            if (shouldStop)
+            {
+                agent.SetDestination(transform.position);
+
+            }
+
+            // 随机选择攻击动画
+            bool useAttack2 = Random.Range(0f, 1f) < 0.5f;
+            string attackTrigger = useAttack2 ? "Attack2" : "Attack";
+
             // 触发攻击动画
             if (anim != null)
             {
-                anim.SetTrigger("Attack");
+                anim.SetTrigger(attackTrigger);
             }
 
             // 设置冷却时间
@@ -297,6 +401,14 @@ public class ZombieFSM : MonoBehaviour
         if (anim != null)
         {
             anim.ResetTrigger("Attack");
+            anim.ResetTrigger("Attack2");
+        }
+
+        // 狂暴模式下攻击完成后直接继续狂暴追击
+        if (isBerserk)
+        {
+            currentState = ZombieStates.BERSERK_CHASE;
+            return;
         }
 
         // 检查目标状态决定下一步
@@ -336,7 +448,7 @@ public class ZombieFSM : MonoBehaviour
         if (attackTarget == null) return;
         // 再次检查距离
         float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
-        if (distanceToTarget <= attackRange)
+        if (distanceToTarget <= dealDamageRange)
         {         
             PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
             if (playerStats != null && zombieStats != null && zombieStats.zombieAttackData != null)
@@ -412,6 +524,22 @@ public class ZombieFSM : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
+    private void LoadAttackDataFromSO()
+    {
+        if (zombieStats != null && zombieStats.zombieAttackData != null)
+        {
+            attackRange = zombieStats.zombieAttackData.attackRange;
+            attackCD = zombieStats.zombieAttackData.attackCD;
+            Debug.Log($"加载攻击数据：范围={attackRange}, 冷却={attackCD}");
+        }
+        else
+        {
+            // 默认值
+            attackRange = 2.0f;
+            attackCD = 1.0f;
+            Debug.LogWarning("未找到攻击数据SO，使用默认值");
+        }
+    }
     /// <summary>
     /// 在使用 Root Motion 时，同步 NavMeshAgent 与 transform 的位置/动画速度，避免滑动/漂移
     /// 应在 Update() 中每帧调用
