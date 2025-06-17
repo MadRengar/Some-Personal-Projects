@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17433ab56c6e78b40bdbb2117ca77650, type: 3}
+  m_Name: TurretType1
+  m_EditorClassIdentifier: 
+  requiredWoodNum: 10
+  requiredIronNum: 5
+  requiredBuidlingTime: 2
+  attackDamage: 20
+  cooldown: 0.5
+  attackRange: 40
+  continuousFireDuration: 3
+  restDuration: 1
+  fireSound: {fileID: 0}
+  muzzleFlashPrefab: {fileID: 2850996339940755639, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+  shellEjectPrefab: {fileID: 6890884654578176216, guid: df672dc51b574c14c838b16ae9e8e772, type: 3}

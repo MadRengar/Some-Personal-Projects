@@ -54,6 +54,13 @@ public class ZombieFSM : MonoBehaviour
     [Header("Berserk Settings")]
     public float berserkSpeed = 10f; // 狂暴模式移动速度
 
+    [Header("Target Selection")]
+    [Range(0f, 1f)]
+    public float aiPlayerTargetChance = 0.4f; // AI玩家被选择为目标的概率
+    public LayerMask targetLayerMask = -1; // 目标层级掩码，可在Inspector中设置
+    [Range(0f, 1f)]
+    public float targetSwitchChance = 0.2f; // 切换目标的概率（比选择概率更低）
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -190,7 +197,6 @@ public class ZombieFSM : MonoBehaviour
 
             if (isBerserk)
             {
-                Debug.Log($"[ZombieFSM] {gameObject.name} 进入狂暴模式，设置速度为 {berserkSpeed}");
                 // 狂暴模式下直接进入狂暴追击状态
                 currentState = ZombieStates.BERSERK_CHASE;
                 if (playerTransform != null)
@@ -486,18 +492,74 @@ public class ZombieFSM : MonoBehaviour
 
     private bool FoundPlayer()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRadius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRadius, targetLayerMask);
+
+        GameObject playerTarget = null;
+        GameObject aiPlayerTarget = null;
+
         foreach (var col in colliders)
         {
             if (col.CompareTag("Player"))
             {
-                attackTarget = col.gameObject; // 将攻击目标选择为玩家
-                //Debug.Log("[ZombieFSM] 发现玩家");
-                return true;
+                playerTarget = col.gameObject;
+            }
+            else if (col.CompareTag("AIPlayer"))
+            {
+                aiPlayerTarget = col.gameObject;
             }
         }
+
+        // 智能目标选择逻辑
+        GameObject selectedTarget = SmartTargetSelection(playerTarget, aiPlayerTarget);
+
+        if (selectedTarget != null)
+        {
+            attackTarget = selectedTarget;
+            return true;
+        }
+
         attackTarget = null;
         return false;
+    }
+
+    /// <summary>
+    /// 智能目标选择：优先保持当前目标，按概率考虑切换
+    /// </summary>
+    private GameObject SmartTargetSelection(GameObject playerTarget, GameObject aiPlayerTarget)
+    {
+        // 情况1：没有目标
+        if (playerTarget == null && aiPlayerTarget == null)
+            return null;
+
+        // 情况2：只有一个目标，直接选择
+        if (playerTarget != null && aiPlayerTarget == null)
+            return playerTarget;
+        if (aiPlayerTarget != null && playerTarget == null)
+            return aiPlayerTarget;
+
+        // 情况3：两个目标都存在
+        if (playerTarget != null && aiPlayerTarget != null)
+        {
+            // 如果已经有目标，优先保持当前目标（减少频繁切换）
+            if (attackTarget != null)
+            {
+                // 检查当前目标是否还在视野内
+                if (attackTarget == playerTarget || attackTarget == aiPlayerTarget)
+                {
+                    // 小概率切换目标（避免过于固执）
+                    if (Random.Range(0f, 1f) < targetSwitchChance)
+                    {
+                        return attackTarget == playerTarget ? aiPlayerTarget : playerTarget;
+                    }
+                    return attackTarget; // 保持当前目标
+                }
+            }
+
+            // 首次发现或当前目标丢失，按概率选择新目标
+            return Random.Range(0f, 1f) < aiPlayerTargetChance ? aiPlayerTarget : playerTarget;
+        }
+
+        return null;
     }
 
     private void GetNewPatrolPoint()

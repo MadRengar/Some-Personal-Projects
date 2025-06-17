@@ -35,8 +35,6 @@ public class WeaponManager : MonoBehaviour
     public System.Action OnWeaponEmpty; // 武器空弹事件
 
     private bool isEnemy;
-    private ParticleSystem muzzleFlashInstance;
-    private ParticleSystem shellEjectInstance;
     private void Awake()
     {
         if (audioSource == null)
@@ -203,7 +201,7 @@ public class WeaponManager : MonoBehaviour
             }
         }
 
-        // 生成撞击效果
+        // 生成撞击效果 TODO:不同的撞击效果判断
         if (weaponData.bulletImpactPrefab != null)
         {
             Instantiate(weaponData.bulletImpactPrefab, raycastHit.point,
@@ -319,7 +317,7 @@ public class WeaponManager : MonoBehaviour
         // 触发弹药变化事件
         OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
 
-        Debug.Log($"换弹完成！当前: {currentAmmo}/{weaponData.magazineSize}, 备用: {reserveAmmo}");
+        //Debug.Log($"换弹完成！当前: {currentAmmo}/{weaponData.magazineSize}, 备用: {reserveAmmo}");
     }
 
     /// <summary>
@@ -330,7 +328,7 @@ public class WeaponManager : MonoBehaviour
         reserveAmmo = Mathf.Min(reserveAmmo + amount, weaponData.maxReserveAmmo);
         OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
 
-        Debug.Log($"获得 {amount} 发 {weaponData.weaponName} 弹药，当前备用: {reserveAmmo}");
+        //Debug.Log($"获得 {amount} 发 {weaponData.weaponName} 弹药，当前备用: {reserveAmmo}");
     }
     #endregion
 

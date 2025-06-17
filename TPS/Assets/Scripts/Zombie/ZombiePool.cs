@@ -156,7 +156,6 @@ public class ZombiePool : MonoBehaviour
         Transform rootTransform = zombie.transform.Find("Root");
         if (rootTransform != null)
         {
-            Debug.Log($"删除Root节点: {rootTransform.name}");
             DestroyImmediate(rootTransform.gameObject);
         }
 
@@ -173,7 +172,6 @@ public class ZombiePool : MonoBehaviour
 
         if (bodyModel != null)
         {
-            Debug.Log($"删除身体模型: {bodyModel.name}");
             DestroyImmediate(bodyModel.gameObject);
         }
 
@@ -182,8 +180,6 @@ public class ZombiePool : MonoBehaviour
         newModel.transform.localPosition = Vector3.zero;
         newModel.transform.localRotation = Quaternion.identity;
         newModel.transform.localScale = Vector3.one;
-
-        Debug.Log($"添加新模型: {newModel.name}");
 
         // 保持层级一致
         SetLayerRecursively(newModel.transform, zombie.layer);

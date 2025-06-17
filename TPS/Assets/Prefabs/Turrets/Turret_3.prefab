@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 316194022558295960}
   - component: {fileID: 4156546046745809860}
   m_Layer: 0
-  m_Name: SM_Wep_Veh_Harpoon_01
+  m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

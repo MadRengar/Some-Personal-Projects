@@ -5,13 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon Data", menuName = "Weapon System/Weapon Data")]
 public class WeaponData_SO : ScriptableObject
 {
-    [Header("基础信息")]
+    [Header("Basic Setting")]
     public string weaponName = "默认武器";
     public string description = "武器描述";
     public Sprite weaponIcon;
     public GameObject weaponPrefab; // 武器模型预制体
 
-    [Header("射击设置")]
+    [Header("Shooting Setting")]
     public bool isAutomatic = false; // 是否为全自动
     public float fireRate = 1f; // 射击间隔（秒）
     public float cooldown = 0.5f; // 冷却时间
@@ -21,13 +21,13 @@ public class WeaponData_SO : ScriptableObject
     public float range = 100f; // 射程
     public float accuracy = 0.95f; // 精度（0-1）
 
-    [Header("弹药系统")]
+    [Header("Ammo System")]
     public int magazineSize = 30; // 弹夹容量
     public int maxReserveAmmo = 300; // 最大备用子弹数
     public float reloadTime = 2.0f; // 换弹时间
     public bool autoReloadWhenEmpty = true; // 弹夹空时自动换弹
 
-    [Header("音效配置")]
+    [Header("Audio Setting")]
     public AudioClip fireSound; // 射击音效
     public AudioClip autoFireSound; // 全自动射击音效
     public AudioClip reloadSound; // 换弹音效
@@ -37,18 +37,18 @@ public class WeaponData_SO : ScriptableObject
     [Range(0f, 1f)]
     public float soundVolume = 1.0f; // 音效音量
 
-    [Header("视觉效果")]
+    [Header("Visual Effect")]
     public ParticleSystem muzzleFlashPrefab; // 枪口火花预制体
     public ParticleSystem shellEjectPrefab; // 弹壳抛射预制体
     public GameObject bulletTrailPrefab; // 子弹轨迹预制体
     public GameObject bulletImpactPrefab; // 子弹撞击效果预制体
 
-    [Header("动画设置")]
+    [Header("Animation Setting")]
     public RuntimeAnimatorController weaponAnimatorController; // 武器动画控制器
     public float drawTime = 0.5f; // 拔枪时间
     public float holsterTime = 0.3f; // 收枪时间
 
-    [Header("UI设置")]
+    [Header("UI Setting")]
     public Color crosshairColor = Color.white; // 准星颜色
     public float crosshairSize = 1.0f; // 准星大小
     public Sprite ammoIcon; // 弹药图标

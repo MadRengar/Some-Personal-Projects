@@ -42,6 +42,11 @@ public class GameManager : MonoBehaviour
         return player.GetComponent<PlayerStats>();
     }
 
+    public AITeammateState GetAIAgentStats()
+    {
+        return aiTeammate.GetComponent<AITeammateState>();
+    }
+
     public Transform GetPlayerTransform()
     {
         return player.transform;

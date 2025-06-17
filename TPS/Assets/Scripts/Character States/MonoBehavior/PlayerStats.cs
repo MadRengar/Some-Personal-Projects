@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    public PlayerDate_SO playerData;
-    public PlayerAttackData_SO playerAttackData;
+    [Header("Player Data")]
+    public PlayerData_SO playerData;
 
     [Header("Running State")]
     [SerializeField] private int currentHealth; // 当前生命值
@@ -59,7 +59,7 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(int damageValue)
     {
         currentHealth -= damageValue;
-        Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
+        //Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
         OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
     }
 
@@ -68,7 +68,7 @@ public class PlayerStats : MonoBehaviour
         if (currentHealth < playerData.maxHealth)
         {
             currentHealth += healingValue;
-            Debug.Log($"玩家获得{healingValue}点治疗，当前生命值：{currentHealth}");
+            //Debug.Log($"玩家获得{healingValue}点治疗，当前生命值：{currentHealth}");
             if(currentHealth > playerData.maxHealth)
             {
                 currentHealth = playerData.maxHealth;

@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 8757842442241308886}
   - component: {fileID: 2439506832379870303}
   m_Layer: 0
-  m_Name: SM_Wep_Veh_AA_01
+  m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,14 +193,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8608303221728353885}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.63602406, z: -0, w: 0.7716693}
   m_LocalPosition: {x: 0.033950806, y: 0.996, z: -0.063690186}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8265026138264735350}
   m_Father: {fileID: 2721304158328909533}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -78.992, z: 0}
 --- !u!33 &8757842442241308886
 MeshFilter:
   m_ObjectHideFlags: 0

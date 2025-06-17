@@ -102,12 +102,15 @@ public class UIManager : MonoBehaviour
 
     public void ShowAIInfo()
     {
-        Vector3 aiPlayerPos = GameManager.Instance.GetAIAgentTransform().position + Vector3.up * 2.3f;
-        Vector2 aiPlayerInfoPos = Camera.main.WorldToScreenPoint(aiPlayerPos);
-        if (aiPlayerPos.z > 0) // TODO： GameManager需要判断ai玩家是否存活
+        Vector3 aiPlayerPos = GameManager.Instance.GetAIAgentTransform().position + Vector3.up * 2f;
+        Vector3 screenPoint = Camera.main.WorldToScreenPoint(aiPlayerPos);
+        // 检查AI是否在摄像机前方且在屏幕范围内
+        if (screenPoint.z > 0 &&
+            screenPoint.x >= 0 && screenPoint.x <= Screen.width &&
+            screenPoint.y >= 0 && screenPoint.y <= Screen.height)
         {
             currentMaAIInfoUI.gameObject.SetActive(true);
-            currentMaAIInfoUI.position = aiPlayerInfoPos;
+            currentMaAIInfoUI.position = new Vector2(screenPoint.x, screenPoint.y);
         }
         else
         {

@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 3574802540410237300}
   - component: {fileID: 8205725920728771910}
   m_Layer: 0
-  m_Name: SM_Wep_Veh_MiniGun_01
+  m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,14 +109,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3697436436214142689}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.6384834, z: -0, w: 0.7696356}
   m_LocalPosition: {x: 0.035, y: 1.004, z: -0.004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 869404828470102284}
   m_Father: {fileID: 1768967224567681262}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -79.358, z: 0}
 --- !u!33 &3574802540410237300
 MeshFilter:
   m_ObjectHideFlags: 0

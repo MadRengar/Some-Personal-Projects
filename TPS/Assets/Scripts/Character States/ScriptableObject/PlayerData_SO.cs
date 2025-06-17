@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Data", menuName = "Character Stats/Player Data")]
-public class PlayerDate_SO : ScriptableObject
+public class PlayerData_SO : ScriptableObject
 {
     [Header("State Info")]
     public int maxHealth;

@@ -24,9 +24,12 @@ public class PlayerStatusBar : MonoBehaviour
     {
         Health,
         Stamina,
+        AIHealth,
     }
 
     private PlayerStats playerStats;
+    private AITeammateState aITeammateStats;
+
     void Start()
     {
         SubscribeToEvents();
@@ -48,6 +51,10 @@ public class PlayerStatusBar : MonoBehaviour
             case StatusBarType.Stamina: // 体力
                 PlayerStats.OnStaminaChanged += UpdateStatusBar;
                 break;
+            case StatusBarType.AIHealth:
+                // 如果有AI状态事件的话在这里订阅
+                AITeammateState.AIOnHealthChanged += UpdateStatusBar;
+                break;
         }
     }
 
@@ -61,24 +68,37 @@ public class PlayerStatusBar : MonoBehaviour
             case StatusBarType.Stamina:
                 PlayerStats.OnStaminaChanged -= UpdateStatusBar;
                 break;
+            case StatusBarType.AIHealth:
+                AITeammateState.AIOnHealthChanged -= UpdateStatusBar;
+                break;
         }
     }
 
     private void InitializeStatusBar()
     {
-        // 获取PlayerStats引用
-        playerStats = GameManager.Instance?.GetPlayerStats();
-
-        if (playerStats == null)
+        // 根据状态类型决定需要获取哪些引用
+        if (statusType == StatusBarType.Health || statusType == StatusBarType.Stamina)
         {
-            playerStats = FindObjectOfType<PlayerStats>();
+            playerStats = GameManager.Instance?.GetPlayerStats();
+            if (playerStats == null)
+            {
+                playerStats = FindObjectOfType<PlayerStats>();
+            }
+            if (playerStats == null) return; // 只有需要playerStats时才检查
         }
 
-        if (playerStats == null) return;
+        if (statusType == StatusBarType.AIHealth)
+        {
+            aITeammateStats = GameManager.Instance?.GetAIAgentStats();
+            if (aITeammateStats == null)
+            {
+                aITeammateStats = FindObjectOfType<AITeammateState>();
+            }
+            if (aITeammateStats == null) return; // 只有需要AI状态时才检查
+        }
 
         float current = 0;
         float max = 0;
-
         switch (statusType)
         {
             case StatusBarType.Health:
@@ -89,8 +109,15 @@ public class PlayerStatusBar : MonoBehaviour
                 current = playerStats.GetCurrentStamina();
                 max = playerStats.GetMaxStamina();
                 break;
+            case StatusBarType.AIHealth:
+                if (aITeammateStats != null)
+                {
+                    current = aITeammateStats.currentHealth;
+                    max = aITeammateStats.playerData.maxHealth;
+                    Debug.Log($"ai当前生命值：{current}！！！！！");
+                }
+                break;
         }
-
         UpdateStatusBar(current, max);
     }
 

@@ -475,6 +475,11 @@ MonoBehaviour:
   patrolRange: 4.5
   dealDamageRange: 3.5
   berserkSpeed: 10
+  aiPlayerTargetChance: 0.3
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  targetSwitchChance: 0.2
 --- !u!114 &1642324502673355681
 MonoBehaviour:
   m_ObjectHideFlags: 0
