@@ -61,6 +61,13 @@ public class ZombieFSM : MonoBehaviour
     [Range(0f, 1f)]
     public float targetSwitchChance = 0.2f; // 切换目标的概率（比选择概率更低）
 
+    [Header("Berserk Target Selection")]
+    [Range(0f, 1f)]
+    public float berserkPlayerLockChance = 0.8f; // 狂暴状态锁定玩家概率
+    [Range(0f, 1f)]
+    public float berserkTargetSwitchChance = 0.2f; // AI队友→玩家的切换概率
+    public float playerProximityThreshold = 10f; // 玩家和AI队友的距离阈值
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -197,17 +204,54 @@ public class ZombieFSM : MonoBehaviour
 
             if (isBerserk)
             {
+                 // 狂暴模式下立即锁定目标
+            LockBerserkTarget();
                 // 狂暴模式下直接进入狂暴追击状态
                 currentState = ZombieStates.BERSERK_CHASE;
-                if (playerTransform != null)
-                {
-                    attackTarget = playerTransform.gameObject;
-                }
+                //if (playerTransform != null)
+                //{
+                //    attackTarget = playerTransform.gameObject;
+                //}
                 // 设置狂暴速度
                 agent.speed = berserkSpeed;
                 speed = berserkSpeed;
             }
         }
+    }
+
+    /// <summary>
+    /// 狂暴状态下锁定攻击目标（全图搜索）
+    /// </summary>
+    private void LockBerserkTarget()
+    {
+        GameObject player = null;
+        GameObject aiPlayer = null;
+
+        // 获取玩家
+        if (playerTransform != null)
+        {
+            player = playerTransform.gameObject;
+        }
+
+        aiPlayer = GameManager.Instance.GetAIAgentTransform().gameObject;
+
+        // 根据概率锁定目标
+        if (player != null && aiPlayer != null)
+        {
+            // 80%概率锁定玩家，20%概率锁定AI队友
+            bool lockPlayer = Random.Range(0f, 1f) < berserkPlayerLockChance;
+            attackTarget = lockPlayer ? player : aiPlayer;
+        }
+        else if (player != null)
+        {
+            attackTarget = player; // 只有玩家
+        }
+        else if (aiPlayer != null)
+        {
+            attackTarget = aiPlayer; // 只有AI队友
+        }
+
+        Debug.Log($"[ZombieFSM] 狂暴状态锁定目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
     }
 
     /// <summary>
@@ -244,20 +288,30 @@ public class ZombieFSM : MonoBehaviour
         // 确保使用狂暴速度
         agent.speed = berserkSpeed;
 
-        // 直接设置目标为玩家位置，无视距离
-        agent.SetDestination(playerTransform.position);
-        attackTarget = playerTransform.gameObject;
+        // 检查是否需要切换目标（仅当当前目标是AI队友时）
+        CheckBerserkTargetSwitch();
 
-        // 检查是否可以攻击
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-        if (distanceToPlayer <= attackRange && attackCooldownTimer <= 0f)
+        if (attackTarget != null)
         {
-            // 切换到攻击状态
-            currentState = ZombieStates.ATTACK;
-            isInAttackState = true;
-            attackTimer = attackDuration;
-            hasTriggeredAttack = false;
-            hasDealDamage = false;
+            // 直接追击锁定的目标
+            agent.SetDestination(attackTarget.transform.position);
+
+            // 检查是否可以攻击
+            float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
+            if (distanceToTarget <= attackRange && attackCooldownTimer <= 0f)
+            {
+                // 切换到攻击状态
+                currentState = ZombieStates.ATTACK;
+                isInAttackState = true;
+                attackTimer = attackDuration;
+                hasTriggeredAttack = false;
+                hasDealDamage = false;
+            }
+        }
+        else
+        {
+            // 目标丢失，重新锁定
+            LockBerserkTarget();
         }
     }
 
@@ -487,6 +541,34 @@ public class ZombieFSM : MonoBehaviour
         if (col != null)
         {
             col.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// 检查狂暴状态下是否切换目标（AI队友→玩家）
+    /// </summary>
+    private void CheckBerserkTargetSwitch()
+    {
+        // 只有当前目标是AI队友时才考虑切换
+        if (attackTarget == null || !attackTarget.CompareTag("AIPlayer"))
+            return;
+
+        // 检查玩家是否存在
+        if (playerTransform == null)
+            return;
+
+        // 计算AI队友和玩家的距离
+        float distanceToPlayer = Vector3.Distance(attackTarget.transform.position, playerTransform.position);
+
+        // 只有当距离小于阈值时才考虑切换
+        if (distanceToPlayer < playerProximityThreshold)
+        {
+            // 20%概率切换到玩家
+            if (Random.Range(0f, 1f) < berserkTargetSwitchChance)
+            {
+                attackTarget = playerTransform.gameObject;
+                Debug.Log($"[ZombieFSM] 狂暴僵尸切换目标到玩家（距离: {distanceToPlayer:F1}m）");
+            }
         }
     }
 

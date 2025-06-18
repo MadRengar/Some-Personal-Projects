@@ -480,6 +480,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   targetSwitchChance: 0.2
+  berserkPlayerLockChance: 0.7
+  berserkTargetSwitchChance: 0
+  playerProximityThreshold: 20
 --- !u!114 &1642324502673355681
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21478,10 +21478,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 787301270}
+  - component: {fileID: 787301271}
   - component: {fileID: 787301269}
   - component: {fileID: 787301268}
   - component: {fileID: 787301267}
-  - component: {fileID: 787301271}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -21589,6 +21589,10 @@ MonoBehaviour:
   uiCanvas: {fileID: 787301269}
   buildingMenuPanel: {fileID: 2049598762}
   currentMaAIInfoUI: {fileID: 8179530615827999322}
+  subtitlesPanel: {fileID: 5491841597139038024}
+  subtitlesText: {fileID: 572224772418282454}
+  subtitlesTypeText: {fileID: 7683474625227192875}
+  subtitlesAnimator: {fileID: 3176822682616270028}
 --- !u!1001 &797756042
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39665,7 +39669,7 @@ MonoBehaviour:
   aimSensitivity: 0.5
   aimColliderLayerMask:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 64
   aimWeapon: {fileID: 693998429}
   aimHandIK: {fileID: 1089711482}
   aimBody: {fileID: 370598400}
@@ -68217,7 +68221,7 @@ Animator:
   m_GameObject: {fileID: 3573778608948477595}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 014fd6dcba766af4c9dc170b477fd3d9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 948c4a6d70888a244b715726e61fe9a9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -84055,6 +84059,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   targetSwitchChance: 0.2
+  berserkPlayerLockChance: 0.8
+  berserkTargetSwitchChance: 0.2
+  playerProximityThreshold: 10
 --- !u!1 &6378387901502612971
 GameObject:
   m_ObjectHideFlags: 0
@@ -92938,7 +92945,7 @@ GameObject:
   - component: {fileID: 6628094277828943711}
   - component: {fileID: 7683474625227192875}
   m_Layer: 5
-  m_Name: Label_Name
+  m_Name: TipType
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

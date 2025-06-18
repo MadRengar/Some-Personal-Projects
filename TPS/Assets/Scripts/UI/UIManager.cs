@@ -1,20 +1,29 @@
 using PlayerControl;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    public enum TipType { EVENT, HELP}
     public static UIManager Instance { get; private set; }
 
     [Header("Ref")]
     public Canvas uiCanvas;
+
     [Header("Player UI Panel")]
     public GameObject buildingMenuPanel;
+
     [Header("2D AIInfo UI")]
     public RectTransform currentMaAIInfoUI;
-    // 后续你可以在Inspector拖更多的UI面板（血条、Tip等）
+
+    [Header("Tip UI")]
+    public GameObject subtitlesPanel;
+    public TextMeshProUGUI subtitlesText;
+    public TextMeshProUGUI subtitlesTypeText;
+    public Animator subtitlesAnimator;
 
     private PlayerInputSystem playerInputSystem;
     private void Awake()
@@ -117,7 +126,32 @@ public class UIManager : MonoBehaviour
             currentMaAIInfoUI.gameObject.SetActive(false);
         }
     }
-    // 后续拓展
-    // public void ShowTip(string msg) { ... }
-    // public void SetHealth(float val) { ... }
+
+    public void ShowDayNightTip(string msg, TipType tipType) 
+    {
+        SetTipTitle(TipType.EVENT);
+        StartCoroutine(ShowTipCoroutine(msg));
+    }
+
+    private IEnumerator ShowTipCoroutine(string msg)
+    {
+        subtitlesText.text = msg;
+        subtitlesAnimator.SetBool("Active", true);
+        // 等待3秒
+        yield return new WaitForSeconds(2f);
+        subtitlesAnimator.SetBool("Active", false);
+    }
+
+    private void SetTipTitle(TipType tipType)
+    {
+        switch (tipType)
+        {
+            case TipType.EVENT:
+                subtitlesTypeText.text = "Event";
+                break;
+            case TipType.HELP:
+                subtitlesTypeText.text = "Help";
+                break;
+        }
+    }
 }

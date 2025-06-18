@@ -121,7 +121,7 @@ public class GameTimeManager : MonoBehaviour
     private void StartDawnPhase()
     {
         //Debug.Log($"黎明开始 - 第{currentDay}天 {currentHour:F1}时");
-
+        UIManager.Instance.ShowDayNightTip("We are temporarily safe.", UIManager.TipType.EVENT);
         // TODO: 停止大批量僵尸生成
         // ZombieSpawnManager.Instance.StopMassiveSpawn();
 
@@ -138,7 +138,7 @@ public class GameTimeManager : MonoBehaviour
     private void StartNightPhase()
     {
         //Debug.Log($"夜晚开始 - 第{currentDay}天 {currentHour:F1}时");
-
+        UIManager.Instance.ShowDayNightTip("Nihgt fell, they are coming!", UIManager.TipType.EVENT);
         // TODO: 将白天生成的僵尸设为狂暴状态
         // SetAllZombiesRageState(true);
 

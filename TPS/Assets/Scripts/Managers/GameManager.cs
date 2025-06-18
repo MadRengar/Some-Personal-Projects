@@ -15,12 +15,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public string currentCommand;
+
     [Header("Player")]
     public GameObject player;
     public PlayerInputSystem playerInputSystem;
+
     [Header("AI Agent")]
     public GameObject aiTeammate;
     public AIAgentSettings aiAgentSettings;
+
     [Header("Manager")]
     public PingMarkerManager pingMarkerManager;
 
@@ -35,6 +38,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public float GetDistBetweenPlayerAndAIAgent()
+    {
+        Vector3 playerPosition = player.transform.position;
+        Vector3 AIAgentPosition = aiTeammate.transform.position;
+        float dis = Vector3.Distance(playerPosition, AIAgentPosition);
+        return dis;
     }
 
     public PlayerStats GetPlayerStats()
