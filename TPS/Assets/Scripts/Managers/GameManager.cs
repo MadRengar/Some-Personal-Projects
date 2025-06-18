@@ -13,8 +13,21 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    // 游戏状态枚举
+    public enum GameState
+    {
+        Playing,
+        Paused,
+        GameOver,
+        Loading
+    }
+
     public static GameManager Instance { get; private set; }
+    [Header("AIAgent BT")]
     public string currentCommand;
+
+    [Header("Game State")]
+    public GameState currentGameState = GameState.Playing;
 
     [Header("Player")]
     public GameObject player;
@@ -26,6 +39,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Manager")]
     public PingMarkerManager pingMarkerManager;
+
+    // 死亡事件声明
+    public static event System.Action OnPlayerDeath;
+    public static event System.Action OnGameOver;
 
     private string lastCommand = "";
     private void Awake()
@@ -40,6 +57,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // 订阅玩家死亡事件
+        OnPlayerDeath += HandlePlayerDeath;
+    }
+
+    private void OnDestroy()
+    {
+        // 取消订阅防止内存泄漏
+        OnPlayerDeath -= HandlePlayerDeath;
+    }
+
+    #region Getter
     public float GetDistBetweenPlayerAndAIAgent()
     {
         Vector3 playerPosition = player.transform.position;
@@ -81,6 +111,86 @@ public class GameManager : MonoBehaviour
     public PingMarkerManager GetPingMarkerManager()
     {
         return pingMarkerManager;
+    }
+    #endregion
+
+    // 处理玩家死亡
+    private void HandlePlayerDeath()
+    {
+        Debug.Log("[玩家死亡事件]：GameManager 处理玩家死亡逻辑 & 停止时间 & 更改游戏状态 & 触发GameOver事件");
+
+        // 切换游戏状态
+        currentGameState = GameState.GameOver;
+
+        // 停止时间系统
+        if (GameTimeManager.Instance != null)
+        {
+            GameTimeManager.Instance.SetTimeSpeed(0f); // 停止时间流逝
+        }
+        ShowCursor();
+        // 触发游戏结束事件
+        OnGameOver?.Invoke();
+    }
+
+    private void ShowCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Debug.Log("游戏结束：显示光标");
+    }
+
+    // 重新开始游戏
+    public void RestartGame()
+    {
+        Debug.Log("重新开始游戏...");
+        currentGameState = GameState.Loading;
+
+        // 重新加载当前场景
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
+    // 退出游戏
+    public void QuitGame()
+    {
+        Debug.Log("退出游戏...");
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+    }
+
+    // 静态方法：触发玩家死亡事件
+    public static void TriggerPlayerDeath()
+    {
+        OnPlayerDeath?.Invoke();
+    }
+
+    // 获取当前游戏状态
+    public bool IsGameOver()
+    {
+        return currentGameState == GameState.GameOver;
+    }
+
+    // 暂停/恢复游戏
+    public void PauseGame()
+    {
+        if (currentGameState == GameState.Playing)
+        {
+            currentGameState = GameState.Paused;
+            Time.timeScale = 0f;
+        }
+    }
+
+    public void ResumeGame()
+    {
+        if (currentGameState == GameState.Paused)
+        {
+            currentGameState = GameState.Playing;
+            Time.timeScale = 1f;
+        }
     }
 
     public void ReceiveAIBehaviorCommand(string command)

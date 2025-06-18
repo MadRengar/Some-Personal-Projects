@@ -121,7 +121,7 @@ public class ZombieFSM : MonoBehaviour
             if (currentState != ZombieStates.CHASE)
             {
                 currentState = ZombieStates.CHASE;
-                Debug.Log("[ZombieFSM] 发现玩家，切换到追击状态");
+                //Debug.Log("[ZombieFSM] 发现玩家，切换到追击状态");
             }
         }
 
@@ -251,7 +251,7 @@ public class ZombieFSM : MonoBehaviour
             attackTarget = aiPlayer; // 只有AI队友
         }
 
-        Debug.Log($"[ZombieFSM] 狂暴状态锁定目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
+        //Debug.Log($"[ZombieFSM] 狂暴状态锁定目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
     }
 
     /// <summary>
@@ -509,12 +509,29 @@ public class ZombieFSM : MonoBehaviour
         // 再次检查距离
         float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
         if (distanceToTarget <= dealDamageRange)
-        {         
-            PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
-            if (playerStats != null && zombieStats != null && zombieStats.zombieAttackData != null)
+        {
+            if (attackTarget.CompareTag("Player"))
             {
-                int damage = zombieStats.zombieAttackData.attackDamage;
-                playerStats.TakeDamage(damage);
+                // 对玩家造成标准伤害
+                PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
+                if (playerStats != null && zombieStats != null && zombieStats.zombieAttackData != null)
+                {
+                    int damage = zombieStats.zombieAttackData.attackDamage;
+                    playerStats.TakeDamage(damage);
+                    //Debug.Log($"[ZombieFSM] 对玩家造成 {damage} 点伤害！");
+                }
+            }
+            else if (attackTarget.CompareTag("AIPlayer"))
+            {
+                // 对AI队友造成伤害（可以调整倍率）
+                AITeammateState aiPlayerStats = attackTarget.GetComponent<AITeammateState>();
+                if (aiPlayerStats != null && zombieStats != null && zombieStats.zombieAttackData != null)
+                {
+                    int baseDamage = zombieStats.zombieAttackData.attackDamage;
+                    int aiDamage = Mathf.RoundToInt(baseDamage * 1.0f); // 可调整倍率
+                    aiPlayerStats.AITakeDamage(aiDamage);
+                    //Debug.Log($"[ZombieFSM] 对AI队友造成 {aiDamage} 点伤害！");
+                }
             }
         }
     }

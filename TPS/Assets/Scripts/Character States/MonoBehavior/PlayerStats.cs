@@ -29,10 +29,15 @@ public class PlayerStats : MonoBehaviour
     private Coroutine staminaRecoverCoroutine;
 
     private PlayerInputSystem playerInputSystem;
-
+    private Animator animator;
+    private ThirdPersonController controller;
+    private CameraController cameraController;
     private void Awake()
     {
         playerInputSystem = GetComponent<PlayerInputSystem>();
+        animator = GetComponent<Animator>();
+        controller = GetComponent<ThirdPersonController>();
+        cameraController = GetComponent<CameraController>();
         InitializePlayerState();
     }
 
@@ -55,12 +60,21 @@ public class PlayerStats : MonoBehaviour
         OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
     }
 
-
+    #region OnPlayerStateChange
     public void TakeDamage(int damageValue)
     {
+        if (!isAlive || GameManager.Instance.IsGameOver())
+            return; // 已死亡或游戏结束时不再受伤
+
         currentHealth -= damageValue;
         //Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
         OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+
+        // 检查是否死亡
+        if (currentHealth <= 0f && isAlive)
+        {
+            PlayerDie();
+        }
     }
 
     public void GetHealing(int healingValue)
@@ -90,7 +104,9 @@ public class PlayerStats : MonoBehaviour
             OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
         }
     }
+    #endregion
 
+    #region Decay IEnumerator
     /*饱食度衰减协程*/
     public void StartSatietyDecay()
     {
@@ -162,7 +178,7 @@ public class PlayerStats : MonoBehaviour
                     currentStamina = 0;
                     if (playerInputSystem != null)
                     {
-                        Debug.Log("体力耗尽，停止冲刺");
+                        //Debug.Log("体力耗尽，停止冲刺");
                         playerInputSystem.sprint = false;
                     }
                 }
@@ -207,6 +223,28 @@ public class PlayerStats : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    // 玩家死亡处理（Key：触发入口）
+    private void PlayerDie()
+    {
+        isAlive = false;
+        currentHealth = 0;
+
+        Debug.Log("玩家死亡！");
+
+        // 触发全局死亡事件
+        GameManager.TriggerPlayerDeath();
+    }
+
+    // 重置玩家状态（用于重新开始）
+    public void ResetPlayer()
+    {
+        InitializePlayerState();
+        controller.ResetPlayerController();
+        cameraController.ResetDeathCamera();
+    }
+
     // getter方法
     public int GetCurrentHealth() => currentHealth;
     public int GetMaxHealth() => playerData.maxHealth;

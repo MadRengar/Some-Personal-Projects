@@ -10,6 +10,11 @@ using UnityEngine.InputSystem;
 
 public class ThirdPersonShooterController : MonoBehaviour
 {
+    [Header("Reference")]
+    public GameObject aimTarget;
+    public GameObject originShootPosition;
+    [SerializeField] private CameraController cameraController;
+
     [Header("Aim Camera Settings")]
     [SerializeField] private float aimTopClamp = 45.0f;    // 瞄准时向上最大角度
     [SerializeField] private float aimBottomClamp = -10.0f; // 瞄准时向下最大角度
@@ -17,7 +22,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private float normalSensitivity;
     [SerializeField] private float aimSensitivity;
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
-
+   
     [Header("Rig")]
     [SerializeField] private Rig aimWeapon;
     [SerializeField] private Rig aimHandIK;
@@ -40,20 +45,20 @@ public class ThirdPersonShooterController : MonoBehaviour
     private float _idleHandIK_Weight;
     private float _reloading_Weight;
 
-    public GameObject aimTarget;
-
-    public GameObject originShootPosition;
-
     private void Start()
     {
         // 订阅模式切换事件
         PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
+        GameManager.OnPlayerDeath += OnPlayerDeath;
+
+        cameraController.InitializeDeathCamera();
     }
 
     private void OnDestroy()
     {
         // 取消订阅事件
         PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
+        GameManager.OnPlayerDeath -= OnPlayerDeath;
     }
 
     private void Awake()
@@ -63,7 +68,11 @@ public class ThirdPersonShooterController : MonoBehaviour
     }
     void Update()
     {
-        //_playerInputs.aim = true;
+        // 如果玩家已死亡，不执行任何射击控制逻辑
+        if (GameManager.Instance.IsGameOver())
+        {
+            return;
+        }
         // 只在战斗模式下执行射击逻辑
         if (_playerInputs.currentMode != PlayerInputSystem.PlayerMode.Combat)
             return;
@@ -218,5 +227,48 @@ public class ThirdPersonShooterController : MonoBehaviour
             // 尝试换弹
             weapon.StartReload();
         }
+    }
+
+    private void OnPlayerDeath()
+    {
+        // 立即清空所有Rig权重
+        ClearAllRigWeights();
+
+        // 强制退出瞄准状态
+        ForceExitAiming();
+
+        // 禁用武器相关功能
+        if (weapon != null)
+        {
+            // 停止所有射击行为
+            // weapon.StopShooting(); // 如果武器管理器有这个方法的话
+        }
+        // 启动死亡摄像机序列
+        cameraController.StartDeathCameraSequence();
+
+        Debug.Log("[玩家死亡事件]：ThirdPersonShooterController 清空所有Rig权重");
+    }
+
+    private void ClearAllRigWeights()
+    {
+        // 立即将所有权重设为0
+        if (aimWeapon != null) aimWeapon.weight = 0f;
+        if (aimHandIK != null) aimHandIK.weight = 0f;
+        if (aimBody != null) aimBody.weight = 0f;
+        if (idleWeapon != null) idleWeapon.weight = 0f;
+        if (idleHandIK != null) idleHandIK.weight = 0f;
+        if (reloading != null) reloading.weight = 0f;
+
+        // 清空IK约束权重
+        if (aimLeftHandIK != null) aimLeftHandIK.weight = 0f;
+        if (idleLeftHandIK != null) idleLeftHandIK.weight = 0f;
+
+        // 重置内部权重变量
+        _aimWeapon_Weight = 0f;
+        _aimBody_Weight = 0f;
+        _aimHandIK_Weight = 0f;
+        _idleWeapon_Weight = 0f;
+        _idleHandIK_Weight = 0f;
+        _reloading_Weight = 0f;
     }
 }

@@ -95,7 +95,7 @@ public class AIAnimationController : MonoBehaviour
         {
             // 订阅换弹状态变化事件
             weaponManager.OnReloadStateChanged += OnWeaponReloadStateChanged;
-            Debug.Log("AI成功订阅WeaponManager换弹事件");
+            //Debug.Log("AI成功订阅WeaponManager换弹事件");
         }
         else
         {

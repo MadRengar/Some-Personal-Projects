@@ -18,6 +18,7 @@ namespace PlayerControl
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        #region Attributes
         [Header("Player")] // 玩家属性
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f; // 移动速度 (米/秒)
@@ -120,6 +121,8 @@ namespace PlayerControl
         /*瞄准*/
         private int _animIDIsAiming;
         private bool _wasAiming = false;
+        /*死亡动画*/
+        private int _animIDDeath;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput; // 新输入系统对象
@@ -148,7 +151,7 @@ namespace PlayerControl
 #endif
             }
         }
-
+        #endregion
         private void Awake()
         {
             // 获取主摄像机引用 (通过 Tag 查找)
@@ -179,16 +182,33 @@ namespace PlayerControl
 
             // 订阅模式切换事件
             PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
+
+            // 订阅玩家死亡事件
+            GameManager.OnPlayerDeath += OnPlayerDeath;
+        }
+
+        private void OnDestroy()
+        {
+            // 取消订阅事件，防止内存泄漏
+            PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
+            // 取消订阅死亡事件
+            GameManager.OnPlayerDeath -= OnPlayerDeath;
         }
 
         private void Update()
         {
+            // 如果玩家已死亡，不执行任何移动逻辑
+            if (GameManager.Instance != null && GameManager.Instance.IsGameOver())
+            {
+                return;
+            }
+
             _hasAnimator = TryGetComponent(out _animator); // 每帧更新 Animator 状态
 
             JumpAndGravity(); // 处理跳跃和重力
             GroundedCheck(); // 检测地面
             Move(); // 处理移动
-            //UpdateRigWeights(); // 处理rig权重切换
+
         }
 
         private void LateUpdate()
@@ -212,6 +232,9 @@ namespace PlayerControl
             _animIDStartAutoFire = Animator.StringToHash("StartAutoFire");
             _animIDStopShooting = Animator.StringToHash("StopShooting");
             _animIDIsAiming = Animator.StringToHash("IsAiming");
+
+            // 死亡动画参数
+            _animIDDeath = Animator.StringToHash("Death"); 
         }
 
         private void GroundedCheck()
@@ -569,12 +592,6 @@ namespace PlayerControl
             isAimingMode = false;
         }
 
-        private void OnDestroy()
-        {
-            // 取消订阅事件，防止内存泄漏
-            PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
-        }
-
         private void OnPlayerModeChanged(PlayerInputSystem.PlayerMode newMode)
         {
             switch (newMode)
@@ -592,6 +609,55 @@ namespace PlayerControl
                     enabled = true;
                     break;
             }
+        }
+
+        // 处理玩家死亡动画
+        private void OnPlayerDeath()
+        {
+            if (_hasAnimator)
+            {
+                Debug.Log("[玩家死亡事件]：ThirdPersonController 禁用玩家控制 & 重置Animator");
+                // 设置死亡状态
+                _animator.SetTrigger(_animIDDeath);
+
+                // 停止所有移动相关的动画参数
+                _animator.SetFloat(_animIDSpeed, 0f);
+                _animator.SetFloat(_animIDMotionSpeed, 0f);
+                _animator.SetBool(_animIDGrounded, true);
+                _animator.SetBool(_animIDJump, false);
+                _animator.SetBool(_animIDFreeFall, false);
+                _animator.SetBool(_animIDIsAiming, false);
+
+                // 重置所有Trigger
+                _animator.ResetTrigger(_animIDStartShooting);
+                _animator.ResetTrigger(_animIDStartAutoFire);
+                _animator.ResetTrigger(_animIDStopShooting);
+            }
+
+            // 禁用角色控制器
+            if (_controller != null)
+            {
+                _controller.enabled = false;
+            }
+
+            // 禁用此组件，停止所有移动逻辑
+            this.enabled = false;
+        }
+
+        // 重置玩家状态（用于重新开始游戏）
+        public void ResetPlayerController()
+        {
+            if (_hasAnimator)
+            {
+                _animator.ResetTrigger(_animIDDeath);
+            }
+
+            if (_controller != null)
+            {
+                _controller.enabled = true;
+            }
+
+            this.enabled = true;
         }
     }
 }
