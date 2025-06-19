@@ -4,7 +4,7 @@ using PlayerControl;
 
 /// <summary>
 /// 建筑菜单UI控制脚本
-/// 挂载在建筑菜单面板(buildingMenuPanel)上
+/// 挂载在建筑菜单面板(buildingMenuPanelUI)上
 /// </summary>
 public class BuildingMenuUI : MonoBehaviour
 {

@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
 
     // 死亡事件声明
     public static event System.Action OnPlayerDeath;
-    public static event System.Action OnGameOver;
+    //public static event System.Action OnGameOver;
 
     private string lastCommand = "";
     private void Awake()
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         }
         ShowCursor();
         // 触发游戏结束事件
-        OnGameOver?.Invoke();
+        //OnGameOver?.Invoke();
     }
 
     private void ShowCursor()

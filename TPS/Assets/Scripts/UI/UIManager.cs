@@ -12,9 +12,11 @@ public class UIManager : MonoBehaviour
 
     [Header("Ref")]
     public Canvas uiCanvas;
+    public GameObject playerGameScreenUI;
+    public GameObject gameOverMenuUI;
 
     [Header("Player UI Panel")]
-    public GameObject buildingMenuPanel;
+    public GameObject buildingMenuPanelUI;
 
     [Header("2D AIInfo UI")]
     public RectTransform currentMaAIInfoUI;
@@ -25,7 +27,13 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI subtitlesTypeText;
     public Animator subtitlesAnimator;
 
+    [Header("PlayerDeath FadeToBlack")]
+    [SerializeField] private GameObject screenFadeUI;
+    [SerializeField] private Animator screenFadeAnimator;
+    private bool _isDeathFadeActive = false;
+
     private PlayerInputSystem playerInputSystem;
+
     private void Awake()
     {
         if (Instance == null)
@@ -39,22 +47,27 @@ public class UIManager : MonoBehaviour
             Debug.LogError("UIManager: 找不到PlayerInputSystem组件！");
         }
     }
+
     private void Start()
     {
         // 订阅玩家模式切换事件
         PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
 
+        GameManager.OnPlayerDeath += OnPlayerDeath;
         // 初始化UI状态
         InitializeUI();
     }
-    private void Update()
-    {
-        ShowAIInfo();
-    }
+
     private void OnDestroy()
     {
         // 取消订阅事件，防止内存泄漏
         PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
+        GameManager.OnPlayerDeath -= OnPlayerDeath;
+    }
+
+    private void Update()
+    {
+        ShowAIInfo();
     }
 
     /// <summary>
@@ -82,31 +95,42 @@ public class UIManager : MonoBehaviour
         Debug.Log($"UIManager: UI状态已切换至 {newMode} 模式");
     }
 
+
     /// <summary>
     /// 初始化UI状态
     /// </summary>
     private void InitializeUI()
     {
         // 确保建筑菜单初始状态为隐藏
-        if (buildingMenuPanel != null)
+        if (buildingMenuPanelUI != null)
         {
-            buildingMenuPanel.SetActive(false);
+            buildingMenuPanelUI.SetActive(false);
         }
 
-        // 初始化其他UI面板状态..
+        if (screenFadeAnimator != null)
+        {
+            screenFadeUI.SetActive(false);
+            // 确保初始状态为透明
+            screenFadeAnimator.SetBool("Active", false);           
+        }
+
+        if (gameOverMenuUI != null)
+        {
+            gameOverMenuUI.SetActive(false);
+        }
     }
 
 
     public void ShowBuildingMenu()
     {
-        if (buildingMenuPanel != null)
-            buildingMenuPanel.SetActive(true);
+        if (buildingMenuPanelUI != null)
+            buildingMenuPanelUI.SetActive(true);
     }
 
     public void HideBuildingMenu()
     {
-        if (buildingMenuPanel != null)
-            buildingMenuPanel.SetActive(false);
+        if (buildingMenuPanelUI != null)
+            buildingMenuPanelUI.SetActive(false);
     }
 
     public void ShowAIInfo()
@@ -153,5 +177,43 @@ public class UIManager : MonoBehaviour
                 subtitlesTypeText.text = "Help";
                 break;
         }
+    }
+
+    private void OnPlayerDeath()
+    {
+        // 立即激活渐变UI对象
+        if (screenFadeUI != null)
+        {
+            screenFadeUI.SetActive(true);
+        }
+
+        // 立即设置动画标志位为true，进入"in"状态
+        if (screenFadeAnimator != null)
+        {
+            screenFadeAnimator.SetBool("Active", true);
+        }
+    }
+
+    private void ShowGameOverUI()
+    {
+        // 立即激活渐变UI对象
+        if (playerGameScreenUI != null)
+        {
+            playerGameScreenUI.SetActive(false);
+        }
+        if (gameOverMenuUI != null)
+        {
+            gameOverMenuUI.SetActive(true);
+        }
+        if (screenFadeUI != null)
+        {
+            screenFadeUI.SetActive(false);
+        }
+    }
+
+    public void OnScreenFadeComplete()
+    {
+        // 这个方法会被动画事件调用
+        ShowGameOverUI();
     }
 }
