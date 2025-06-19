@@ -157,31 +157,6 @@ public class BuildingMenuUI : MonoBehaviour
     }
     
     /// <summary>
-    /// 更新按钮视觉效果
-    /// </summary>
-    private void UpdateButtonVisual(Button button, bool canBuild)
-    {
-        if (button != null)
-        {
-            // 设置按钮透明度
-            var buttonImage = button.GetComponent<Image>();
-            if (buttonImage != null)
-            {
-                Color color = buttonImage.color;
-                color.a = canBuild ? 1f : 0.5f;
-                buttonImage.color = color;
-            }
-            
-            // 设置文本颜色
-            var buttonText = button.GetComponentInChildren<Text>();
-            if (buttonText != null)
-            {
-                buttonText.color = canBuild ? Color.white : Color.gray;
-            }
-        }
-    }
-    
-    /// <summary>
     /// 选择建筑
     /// </summary>
     private void SelectBuilding(int buildingIndex)

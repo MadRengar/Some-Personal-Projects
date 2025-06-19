@@ -473,7 +473,7 @@ MonoBehaviour:
   lookAtTime: 3
   sightRadius: 6.64
   patrolRange: 4.5
-  dealDamageRange: 3.5
+  dealDamageRange: 4
   berserkSpeed: 10
   aiPlayerTargetChance: 0.3
   targetLayerMask:

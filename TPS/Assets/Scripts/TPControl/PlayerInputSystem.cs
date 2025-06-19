@@ -28,8 +28,7 @@ namespace PlayerControl
         [Header("Movement Settings")]
 		public bool analogMovement;
 
-		[Header("Mouse Cursor Settings")] // 如果cursorLocked = true，SetCursorState(true) 就会让鼠标隐藏+锁定在屏幕中央；否则恢复正常鼠标。
-        public bool cursorLocked = true; // 当前是否锁定鼠标（一般指是否让鼠标“消失/定在屏幕中央”），默认是 true，代表一开局就把鼠标锁定。
+		[Header("Mouse Cursor Settings")] // 如果cursorLocked = true，SetCursorState(true) 就会让鼠标隐藏+锁定在屏幕中央；否则恢复正常鼠标
         /*
          * 是否允许通过鼠标移动来控制角色视角/镜头。如果是true，OnLook()输入事件才响应鼠标操作，
          * 适合“战斗/射击”状态。进入建筑/菜单/对话/操作UI等模式时一般会关闭（false）。
@@ -87,6 +86,8 @@ namespace PlayerControl
             _lastFrameShootHeld = currentFrameShootHeld;
         }
 #if ENABLE_INPUT_SYSTEM
+
+        #region Player regular Keyboard Input
         public void OnMove(InputValue value)
 		{
             MoveInput(value.Get<Vector2>());
@@ -162,7 +163,7 @@ namespace PlayerControl
             if (currentMode != PlayerMode.Combat) return; // 只在战斗模式下允许换弹
             ReloadInput(value.isPressed);
         }
-
+        #endregion
 
 #endif
         // 处理取消输入的逻辑
@@ -265,16 +266,6 @@ namespace PlayerControl
             }
         }
 
-        private void OnApplicationFocus(bool hasFocus)
-		{
-			SetCursorState(cursorLocked);
-		}
-
-		private void SetCursorState(bool newState)
-		{
-			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
-		}
-
         /*
          * 输入模式切换
          * 摄像机Look/角色转向/瞄准/射击等操作，都应该用currentMode判断：只在Combat和Placing响应，BuildMenu时全部禁止。
@@ -296,11 +287,13 @@ namespace PlayerControl
         {
             PlayerMode previousMode = currentMode;
             currentMode = PlayerMode.BuildMenu;
-            cursorLocked = false;
             cursorInputForLook = false;
-            SetCursorState(cursorLocked);
-            Cursor.visible = true;
             openBuildMenu = true;
+
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.ShowCursor();
+            }
 
             // 触发模式切换事件
             OnModeChanged?.Invoke(currentMode);
@@ -311,11 +304,14 @@ namespace PlayerControl
         {
             PlayerMode previousMode = currentMode;
             currentMode = PlayerMode.Combat;
-            cursorLocked = true;
+
             cursorInputForLook = true;
-            SetCursorState(cursorLocked);
-            Cursor.visible = false;
             openBuildMenu = false;
+
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.HideCursor();
+            }
 
             // 重置所有输入状态
             ResetInputStates();
@@ -329,12 +325,12 @@ namespace PlayerControl
         {
             PlayerMode previousMode = currentMode;
             currentMode = PlayerMode.Placing;
-            cursorLocked = true;
             cursorInputForLook = true;
-            SetCursorState(cursorLocked);
-            Cursor.visible = false;
             openBuildMenu = false;
-
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.HideCursor();
+            }
             // 触发模式切换事件
             OnModeChanged?.Invoke(currentMode);
             Debug.Log($"Mode switched from {previousMode} to {currentMode}");
