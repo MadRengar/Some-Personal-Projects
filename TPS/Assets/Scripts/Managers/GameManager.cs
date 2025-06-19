@@ -2,6 +2,7 @@ using BehaviorDesigner.Runtime;
 using PlayerControl;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -143,11 +144,18 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         Debug.Log("重新开始游戏...");
-        currentGameState = GameState.Loading;
 
-        // 重新加载当前场景
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.delayCall += () =>
+        {
+            UnityEditor.EditorApplication.isPlaying = true;
+        };
+#else
+    Time.timeScale = 1f;
+    UnityEngine.SceneManagement.SceneManager.LoadScene(
+        UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+#endif
     }
 
     // 退出游戏
