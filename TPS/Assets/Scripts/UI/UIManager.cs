@@ -92,7 +92,6 @@ public class UIManager : MonoBehaviour
                 //ShowPlacingUI();
                 break;
         }
-        Debug.Log($"UIManager: UI状态已切换至 {newMode} 模式");
     }
 
 

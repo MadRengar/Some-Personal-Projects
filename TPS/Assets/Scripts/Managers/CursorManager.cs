@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem;
 
 public class CursorManager : MonoBehaviour
 {
@@ -40,4 +42,5 @@ public class CursorManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
 }

@@ -103,7 +103,7 @@ public class TurretController : MonoBehaviour
         continuousFireDuration = turretData.continuousFireDuration;
         restDuration = turretData.restDuration;
 
-        Debug.Log($"防御塔数据加载完成: {gameObject.name}");
+        //Debug.Log($"防御塔数据加载完成: {gameObject.name}");
     }
 
     /// <summary>
@@ -397,7 +397,7 @@ public class TurretController : MonoBehaviour
         firingTimer = 0f;
         restTimer = 0f;
         cooldown = 0f;
-        Debug.Log("[TurretController] 切换到空闲状态");
+        //Debug.Log("[TurretController] 切换到空闲状态");
         // 继续敌人检测
     }
 
@@ -406,7 +406,7 @@ public class TurretController : MonoBehaviour
         currentState = TurretState.Firing;
         firingTimer = 0f;
         cooldown = 0f; // 立即开始射击
-        Debug.Log("[TurretController] 切换到开火状态");
+        //Debug.Log("[TurretController] 切换到开火状态");
         // 继续敌人检测以便切换目标
     }
 
@@ -414,7 +414,7 @@ public class TurretController : MonoBehaviour
     {
         currentState = TurretState.Resting;
         restTimer = 0f;
-        Debug.Log("[TurretController] 切换到休息状态");
+        //Debug.Log("[TurretController] 切换到休息状态");
         // 保持敌人检测，但休息时不会切换状态
     }
 

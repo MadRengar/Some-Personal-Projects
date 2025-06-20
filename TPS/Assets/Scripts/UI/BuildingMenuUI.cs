@@ -18,18 +18,8 @@ public class BuildingMenuUI : MonoBehaviour
     [Header("UI Settings")]
     public string[] buildingNames; // 建筑名称数组（用于显示）
     public Sprite[] buildingIcons; // 建筑图标数组（可选）
-    
-    private PlayerInputSystem playerInputSystem;
-    
-    private void Awake()
-    {
-        // 获取PlayerInputSystem引用
-        playerInputSystem = FindObjectOfType<PlayerInputSystem>();
-        if (playerInputSystem == null)
-        {
-            Debug.LogError("BuildingMenuUI: 找不到PlayerInputSystem组件！");
-        }
-    }
+
+    public PlayerInputSystem playerInputSystem; // 可在 Inspector 中拖引用
 
     private void Start()
     {
@@ -72,15 +62,7 @@ public class BuildingMenuUI : MonoBehaviour
     /// </summary>
     private void SetupBuildingButton(Button button, int index)
     {
-        // 设置建筑名称
-        //if (index < buildingNames.Length)
-        //{
-        //    var buttonText = button.GetComponentInChildren<Text>();
-        //    if (buttonText != null)
-        //    {
-        //        buttonText.text = buildingNames[index];
-        //    }
-        //}
+        // 可能会 设置建筑名称
         
         // 设置建筑图标
         if (index < buildingIcons.Length && buildingIcons[index] != null)
@@ -89,7 +71,7 @@ public class BuildingMenuUI : MonoBehaviour
             if (iconImage != null)
             {
                 iconImage.sprite = buildingIcons[index];
-                Debug.Log($"成功设置按钮 {index} ({button.name}) 的图标: {buildingIcons[index].name}");
+                //Debug.Log($"成功设置按钮 {index} ({button.name}) 的图标: {buildingIcons[index].name}");
             }
             else
             {
@@ -107,7 +89,6 @@ public class BuildingMenuUI : MonoBehaviour
             Image iconImage = iconTransform.GetComponent<Image>();
             if (iconImage != null)
             {
-                Debug.Log($"通过名称'Icon'找到图标组件: {button.name}/Icon");
                 return iconImage;
             }
         }
@@ -131,8 +112,6 @@ public class BuildingMenuUI : MonoBehaviour
                 bool canBuild = CanBuildBuilding(i);
                 buildingButtons[i].interactable = canBuild;
                 
-                // 可以根据可建造状态改变按钮颜色等
-                //UpdateButtonVisual(buildingButtons[i], canBuild);
             }
         }
     }
@@ -183,21 +162,9 @@ public class BuildingMenuUI : MonoBehaviour
             //UIManager.Instance?.ShowTip("资源不足或建筑未解锁", 2f);
             return;
         }
-        
-        Debug.Log($"BuildingMenuUI: 选择建造 {(buildingIndex < buildingNames.Length ? buildingNames[buildingIndex] : "建筑" + buildingIndex)}");
-        
-        // 这里需要通知建筑系统开始放置模式
-        // 你可能需要一个BuildingManager来处理具体的建筑放置逻辑
+       
         StartBuildingPlacement(buildingIndex);
-        
-        // 切换到放置模式
-        if (playerInputSystem != null)
-        {
-            playerInputSystem.EnterPlacingMode();
-        }
-        
-        // 可选：显示提示信息
-        //UIManager.Instance?.ShowTip($"开始放置 {(buildingIndex < buildingNames.Length ? buildingNames[buildingIndex] : "建筑")}", 2f);
+       
     }
     
     /// <summary>
@@ -205,29 +172,28 @@ public class BuildingMenuUI : MonoBehaviour
     /// </summary>
     private void StartBuildingPlacement(int buildingIndex)
     {
-        // 这里需要与你的建筑放置系统集成
-        // 示例代码：
-        
-        /*
-        var buildingManager = FindObjectOfType<BuildingManager>();
-        if (buildingManager != null)
+
+        playerInputSystem.EnterPlacingMode();
+        Debug.Log("StartBuildingPlacement() 被调用，index=" + buildingIndex);
+        BuildingSystem buildingSystem = FindObjectOfType<BuildingSystem>();
+        if (buildingSystem != null)
         {
-            buildingManager.StartPlacement(buildingPrefabs[buildingIndex]);
+            buildingSystem.StartPlacement(buildingPrefabs[buildingIndex]);
         }
         else
         {
-            Debug.LogError("BuildingMenuUI: 找不到BuildingManager组件！");
+            Debug.LogError("BuildingMenuUI: 找不到BuildingSystem组件！");
         }
-        */
-        
+
         // 临时代码 - 直接在玩家位置创建建筑（仅用于测试）
-        var player = FindObjectOfType<ThirdPersonController>();
-        if (player != null)
-        {
-            Vector3 spawnPosition = player.transform.position + player.transform.forward * 3f;
-            Instantiate(buildingPrefabs[buildingIndex], spawnPosition, Quaternion.identity);
-            Debug.Log($"已在玩家前方放置 {buildingNames[buildingIndex]}（测试模式）");
-        }
+        //var player = FindObjectOfType<ThirdPersonController>();
+        //if (player != null)
+        //{
+        //    Vector3 spawnPosition = player.transform.position + player.transform.forward * 3f;
+        //    Instantiate(buildingPrefabs[buildingIndex], spawnPosition, Quaternion.identity);
+        //    Debug.Log($"已在玩家前方放置 {buildingNames[buildingIndex]}（测试模式）");
+        //}
+
     }
     
     /// <summary>
@@ -247,14 +213,6 @@ public class BuildingMenuUI : MonoBehaviour
             // 备用方案：直接通过UIManager关闭
             UIManager.Instance?.HideBuildingMenu();
         }
-    }
-    
-    /// <summary>
-    /// 处理ESC键输入（由PlayerInputSystem调用）
-    /// </summary>
-    public void OnCancelInput()
-    {
-        CloseBuildingMenu();
     }
     
     private void OnDestroy()

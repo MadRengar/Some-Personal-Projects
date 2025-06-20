@@ -47,17 +47,12 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private void Start()
     {
-        // 订阅模式切换事件
-        PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
         GameManager.OnPlayerDeath += OnPlayerDeath;
-
         cameraController.InitializeDeathCamera();
     }
 
     private void OnDestroy()
     {
-        // 取消订阅事件
-        PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
         GameManager.OnPlayerDeath -= OnPlayerDeath;
     }
 
@@ -196,27 +191,6 @@ public class ThirdPersonShooterController : MonoBehaviour
         aimHandIK.weight = Mathf.Lerp(aimHandIK.weight, _aimHandIK_Weight, Time.deltaTime * 20f);
         aimBody.weight = Mathf.Lerp(aimBody.weight, _aimBody_Weight, Time.deltaTime * 20f);
         idleWeapon.weight = Mathf.Lerp(idleWeapon.weight, _idleWeapon_Weight, Time.deltaTime * 20f);
-    }
-
-    private void OnPlayerModeChanged(PlayerInputSystem.PlayerMode newMode)
-    {
-        switch (newMode)
-        {
-            case PlayerInputSystem.PlayerMode.Combat:
-                // 启用射击控制
-                enabled = true;
-                break;
-            case PlayerInputSystem.PlayerMode.BuildMenu:
-            case PlayerInputSystem.PlayerMode.Placing:
-                // 在建筑相关模式下禁用射击
-                enabled = false;
-                // 重置瞄准状态
-                if (_aimVirtualCamera != null)
-                {
-                    _aimVirtualCamera.gameObject.SetActive(false);
-                }
-                break;
-        }
     }
 
     // 新增换弹输入处理方法

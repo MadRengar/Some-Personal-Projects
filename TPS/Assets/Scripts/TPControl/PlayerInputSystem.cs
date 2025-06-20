@@ -38,10 +38,6 @@ namespace PlayerControl
         [Header("Voice Input Settings")]
         public bool voiceInput; // true 表示正在按下语音键
 
-        [Header("Building System")]
-        public bool isBuildingMode = false; // 是否建筑模式
-        [HideInInspector] public bool openBuildMenu;
-
         [Header("Cancel Input")]
         [HideInInspector] public bool cancelPressed;
 
@@ -54,6 +50,9 @@ namespace PlayerControl
         // 添加内部状态跟踪
         private bool _lastFrameShootHeld = false;
         public bool IsShootHeld => shootAction.action.IsPressed();
+
+        [Header("Building System")]
+        [SerializeField] private BuildingSystem buildingSystem;
         private void Awake()
         {
             // 射击输入处理
@@ -71,6 +70,12 @@ namespace PlayerControl
         {
             // 更新射击输入状态
             UpdateShootingInput();
+            if (currentMode == PlayerMode.Placing)
+            {
+                HandlePlacingInput();
+            }
+            Debug.Log("当前输入模式: " + currentMode);
+
         }
         private void UpdateShootingInput()
         {
@@ -95,7 +100,7 @@ namespace PlayerControl
 
 		public void OnLook(InputValue value)
 		{
-			if(cursorInputForLook)
+            if (cursorInputForLook)
 			{
 				LookInput(value.Get<Vector2>());
 			}
@@ -154,6 +159,7 @@ namespace PlayerControl
         {
             if (value.isPressed)
             {
+                Debug.Log("调用Cancel!!!!");
                 cancelPressed = true;
                 HandleCancelInput();
             }
@@ -175,7 +181,7 @@ namespace PlayerControl
                     EnterCombatMode();
                     break;
                 case PlayerMode.Placing:
-                    EnterBuildMenu();
+                    EnterCombatMode();
                     break;
                 case PlayerMode.Combat:
                     // 在战斗模式下，ESC 可以打开暂停菜单或其他UI
@@ -190,8 +196,8 @@ namespace PlayerControl
 
 		public void LookInput(Vector2 newLookDirection)
 		{
-			look = newLookDirection;
-		}
+            look = newLookDirection;
+        }
 
 		public void JumpInput(bool newJumpState)
 		{
@@ -288,7 +294,6 @@ namespace PlayerControl
             PlayerMode previousMode = currentMode;
             currentMode = PlayerMode.BuildMenu;
             cursorInputForLook = false;
-            openBuildMenu = true;
 
             if (CursorManager.Instance != null)
             {
@@ -297,7 +302,6 @@ namespace PlayerControl
 
             // 触发模式切换事件
             OnModeChanged?.Invoke(currentMode);
-            Debug.Log($"Mode switched from {previousMode} to {currentMode}");
         }
 
         public void EnterCombatMode()
@@ -306,7 +310,6 @@ namespace PlayerControl
             currentMode = PlayerMode.Combat;
 
             cursorInputForLook = true;
-            openBuildMenu = false;
 
             if (CursorManager.Instance != null)
             {
@@ -318,22 +321,22 @@ namespace PlayerControl
 
             // 触发模式切换事件
             OnModeChanged?.Invoke(currentMode);
-            Debug.Log($"Mode switched from {previousMode} to {currentMode}");
         }
 
         public void EnterPlacingMode()
         {
             PlayerMode previousMode = currentMode;
             currentMode = PlayerMode.Placing;
+
             cursorInputForLook = true;
-            openBuildMenu = false;
+
             if (CursorManager.Instance != null)
             {
                 CursorManager.Instance.HideCursor();
             }
+
             // 触发模式切换事件
             OnModeChanged?.Invoke(currentMode);
-            Debug.Log($"Mode switched from {previousMode} to {currentMode}");
         }
 
         // 重置输入状态
@@ -346,6 +349,34 @@ namespace PlayerControl
             shootPressed = false;
             shootHeld = false;
             shootReleased = false;
+        }
+
+        /// <summary>
+        /// 处理放置模式下的输入
+        /// </summary>
+        private void HandlePlacingInput()
+        {
+            if (buildingSystem == null || !buildingSystem.IsPlacing()) return;
+
+            // 左键确认放置
+            if (shootPressed) // 使用现有的射击输入作为确认
+            {
+                Debug.Log("[PlayerInputSystem] 左键确认放置");
+                buildingSystem.ConfirmPlacement();
+
+                // 放置完成后返回战斗模式
+                EnterCombatMode();
+            }
+
+            // 右键取消放置
+            if (Input.GetMouseButtonDown(1)) // 检测鼠标右键
+            {
+                Debug.Log("[PlayerInputSystem] 右键取消放置");
+                buildingSystem.CancelPlacement();
+
+                // 取消后返回战斗模式
+                EnterCombatMode();
+            }
         }
 
         // 公共方法，供其他脚本调用
