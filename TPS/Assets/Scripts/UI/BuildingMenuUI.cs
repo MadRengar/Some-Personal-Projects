@@ -14,7 +14,8 @@ public class BuildingMenuUI : MonoBehaviour
 
     [Header("Building Prefabs")]
     public GameObject[] buildingPrefabs; // 对应的建筑预制体数组
-    
+    public GameObject[] previewPrefabs;  // 透明模型 prefab 数组
+
     [Header("UI Settings")]
     public string[] buildingNames; // 建筑名称数组（用于显示）
     public Sprite[] buildingIcons; // 建筑图标数组（可选）
@@ -178,22 +179,12 @@ public class BuildingMenuUI : MonoBehaviour
         BuildingSystem buildingSystem = FindObjectOfType<BuildingSystem>();
         if (buildingSystem != null)
         {
-            buildingSystem.StartPlacement(buildingPrefabs[buildingIndex]);
+            buildingSystem.StartPlacement(buildingPrefabs[buildingIndex], previewPrefabs[buildingIndex]);
         }
         else
         {
             Debug.LogError("BuildingMenuUI: 找不到BuildingSystem组件！");
         }
-
-        // 临时代码 - 直接在玩家位置创建建筑（仅用于测试）
-        //var player = FindObjectOfType<ThirdPersonController>();
-        //if (player != null)
-        //{
-        //    Vector3 spawnPosition = player.transform.position + player.transform.forward * 3f;
-        //    Instantiate(buildingPrefabs[buildingIndex], spawnPosition, Quaternion.identity);
-        //    Debug.Log($"已在玩家前方放置 {buildingNames[buildingIndex]}（测试模式）");
-        //}
-
     }
     
     /// <summary>
