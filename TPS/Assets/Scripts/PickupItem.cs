@@ -1,4 +1,5 @@
 using PlayerControl;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.EditorTools;
@@ -15,6 +16,7 @@ public class PickupItem : MonoBehaviour
     public ResourceType poolType;
     public bool isConsuming;
 
+  
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && playerInputSystem.pickUp)
@@ -72,7 +74,7 @@ public class PickupItem : MonoBehaviour
             {
                 //Destroy(gameObject);
                 ReturnToPool();
-                Debug.Log($"AI拾取成功：{resourceData.resourceName} x{amount} 当前AI背包重量：{inventoryManager.GetAICurrentWeight()}");
+                Debug.Log($"AI拾取成功：{resourceData.resourceName} x{amount} 当前AI背包重量：{inventoryManager.GetAICurrentWeight()}");               
                 return true;
             }
             else

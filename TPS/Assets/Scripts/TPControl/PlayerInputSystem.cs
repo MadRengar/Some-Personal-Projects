@@ -358,14 +358,27 @@ namespace PlayerControl
         {
             if (buildingSystem == null || !buildingSystem.IsPlacing()) return;
 
-            // 左键确认放置
-            if (shootPressed) // 使用现有的射击输入作为确认
+            if (shootPressed)
             {
-                Debug.Log("[PlayerInputSystem] 左键确认放置");
-                buildingSystem.ConfirmPlacement();
+                TurretData_SO buildingData = buildingSystem.GetCurrentBuildingData();
+                if (buildingData != null)
+                {
+                    InventoryManager inventory = FindObjectOfType<InventoryManager>();
+                    bool resourceConsumed = inventory.TryConsuming(
+                        buildingData.requiredWoodNum,
+                        buildingData.requiredIronNum
+                    );
 
-                // 放置完成后返回战斗模式
-                EnterCombatMode();
+                    if (resourceConsumed)
+                    {
+                        buildingSystem.ConfirmPlacement();
+                        EnterCombatMode();
+                    }
+                    else
+                    {
+                        Debug.Log("资源不足，无法放置建筑");
+                    }
+                }
             }
 
             // 右键取消放置

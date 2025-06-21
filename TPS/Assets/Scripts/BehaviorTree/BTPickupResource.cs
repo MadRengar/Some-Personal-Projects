@@ -41,31 +41,8 @@ public class BTPickupResource : Action
         }
 
         // 执行拾取，TryAdd自动判断背包重量、回收对象
-        bool pickSuccess = false;
-        if (pickup.inventoryManager != null)
-        {
-            pickSuccess = pickup.inventoryManager.TryAddAI(pickup.resourceData, pickup.amount);
-            if (pickSuccess)
-            {
-                // 回收或销毁
-                if (pickup.TryGetComponent<ResourcePoolManager>(out var poolManager))
-                    pickup.ReturnToPool();
-                else
-                    GameObject.Destroy(pickup.gameObject);
+        pickup.TryPickupByAI();
 
-                Debug.Log($"AI成功拾取 {pickup.resourceData.resourceName} x{pickup.amount}");
-                nearestResource.Value = null; // 清空目标（避免重复操作）
-                return TaskStatus.Success;
-            }
-            else
-            {
-                Debug.Log("AI背包已满，拾取失败！");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("BTPickupResource: 拾取对象未绑定InventoryManager！");
-        }
 
         nearestResource.Value = null;
         return TaskStatus.Failure;

@@ -172,14 +172,23 @@ public class BuildingMenuUI : MonoBehaviour
     /// 开始建筑放置
     /// </summary>
     private void StartBuildingPlacement(int buildingIndex)
-    {
-
-        playerInputSystem.EnterPlacingMode();
-        Debug.Log("StartBuildingPlacement() 被调用，index=" + buildingIndex);
+    { 
+        TurretData_SO turretData = buildingPrefabs[buildingIndex].GetComponent<TurretController>().turretData;
         BuildingSystem buildingSystem = FindObjectOfType<BuildingSystem>();
         if (buildingSystem != null)
         {
-            buildingSystem.StartPlacement(buildingPrefabs[buildingIndex], previewPrefabs[buildingIndex]);
+            if(buildingSystem.CheckResourcesIsEnough(turretData))
+            {
+                playerInputSystem.EnterPlacingMode();
+                buildingSystem.StartPlacement(buildingPrefabs[buildingIndex], previewPrefabs[buildingIndex]);                
+            }
+            else
+            {
+                // TODO: 弹出提示
+                Debug.Log("资源数量不足！");
+                return;
+            }
+            
         }
         else
         {

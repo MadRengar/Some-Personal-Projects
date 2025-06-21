@@ -8,17 +8,21 @@ public class BuildingSystem : MonoBehaviour
     [Header("Raycast Settings")]
     public LayerMask groundLayer = 1;           // 地面图层
 
+    [Header("Manager Ref")]
+    [SerializeField] private InventoryManager inventoryManager;
+
     [Header("Debug")]
     public bool enableDebugLog = true;
-
+    [Header("Running Data(From InventoryManager)")]
+    [SerializeField] private int woodCount;
+    [SerializeField] private int ironCount;
     // 运行时变量
     private Camera playerCamera;                // 主摄像机（运行时获取）
     private GameObject currentPreview;          // 当前预览的建筑
     private GameObject previewPrefab;           // 透明模型
     private GameObject buildPrefab;          // 要放置的建筑预制体
-
+    private TurretData_SO currentBuildingData;
     private bool isPlacing = false;             // 是否处于放置状态
-
     private void Start()
     {
         // 获取主摄像机（Cinemachine会控制这个摄像机）
@@ -37,18 +41,55 @@ public class BuildingSystem : MonoBehaviour
         {
             UpdatePreviewPosition();
         }
+        GetResourcesFromInventoryManager();
     }
+
+    /// <summary>
+    /// 从 InventoryManager拿到目前的资源数
+    /// </summary>
+    public void GetResourcesFromInventoryManager()
+    {
+        woodCount = inventoryManager.GetTotalResourceByType(ResourceType.Wood);
+        ironCount = inventoryManager.GetTotalResourceByType(ResourceType.Iron);
+    }
+
+    /// <summary>
+    /// 检查资源是否足够
+    /// </summary>
+    public bool CheckResourcesIsEnough(TurretData_SO buildingData)
+    {
+        if (buildingData.requiredWoodNum <= woodCount && buildingData.requiredIronNum <= ironCount)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 扣除资源
+    /// </summary>
+    public void ConsumingResources(TurretData_SO buildingData)
+    {
+
+    }
+
 
     /// <summary>
     /// 开始放置模式
     /// </summary>
     public void StartPlacement(GameObject realBuild, GameObject preview)
     {
-        if (realBuild == null || preview == null)
+        if (realBuild == null || preview == null) return;
+
+        TurretController turretController = realBuild.GetComponent<TurretController>();
+        if (turretController != null)
         {
-            Debug.LogError("[BuildingSystem] 建筑 prefab 或 预览 prefab 为空！");
-            return;
+            currentBuildingData = turretController.turretData;
         }
+
 
         buildPrefab = realBuild;
         previewPrefab = preview;
@@ -144,5 +185,10 @@ public class BuildingSystem : MonoBehaviour
     public bool IsPlacing()
     {
         return isPlacing;
+    }
+
+    public TurretData_SO GetCurrentBuildingData()
+    {
+        return currentBuildingData;
     }
 }

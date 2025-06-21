@@ -8,10 +8,6 @@ public class AITeammateState : MonoBehaviour
     public PlayerData_SO playerData;
     public InventoryManager inventoryManager;
 
-    [Header("Resource Data")]
-    public ResourceData_SO woodResourceData;
-    public ResourceData_SO ironResourceData;
-
     [Header("Running State")]
     public int currentHealth; // 当前生命值
     public float aiPlayerCurrentWeight; // 当前物资重量
@@ -42,8 +38,8 @@ public class AITeammateState : MonoBehaviour
     {
         if (inventoryManager == null) return (0, 0);
 
-        int woodAmount = inventoryManager.GetAIMount(woodResourceData);
-        int ironAmount = inventoryManager.GetAIMount(ironResourceData);
+        int woodAmount = inventoryManager.GetAIResourceByType(ResourceType.Wood);
+        int ironAmount = inventoryManager.GetAIResourceByType(ResourceType.Iron);
 
         return (woodAmount, ironAmount);
     }

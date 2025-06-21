@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,21 @@ public class InventoryManager : MonoBehaviour
     public List<ResourceSlot> aiPlayerResourceSlots = new List<ResourceSlot>();
     public float aiPlayerMaxWeight = 100f;
 
+    [Header("Running Data(Read Only)")]
+    [SerializeField] private int woodCount = 0;
+    [SerializeField] private int ironCount = 0;
+    [SerializeField] private float playerCurrentWeight = 0f;
+    [SerializeField] private float aiCurrentWeight = 0f;
+
+    public static event Action OnResourcesChanged;
+    private ResourcesUIController resourcesUIController;
+
+    private void Start()
+    {
+        resourcesUIController = GetComponent<ResourcesUIController>();
+    }
+
+    #region Getter
     // 获取玩家当前背包重量
     public float GetPlayerCurrentWeight()
     {
@@ -43,20 +59,42 @@ public class InventoryManager : MonoBehaviour
         return total;
     }
 
-    // 获取玩家某资源数量
-    public int GetPlayerAmount(ResourceData_SO data)
+    // 根据资源类型获取玩家资源数量
+    public int GetPlayerResourceByType(ResourceType type)
     {
-        var slot = playerResourceSlots.Find(s => s.data == data);
-        return slot != null ? slot.quantity : 0;
+        int total = 0;
+        foreach (var slot in playerResourceSlots)
+        {
+            if (slot.data != null && slot.data.type == type)
+            {
+                total += slot.quantity;
+            }
+        }
+        return total;
     }
 
-    // 获取AI某资源数量
-    public int GetAIMount(ResourceData_SO data)
+    // 根据资源类型获取AI资源数量
+    public int GetAIResourceByType(ResourceType type)
     {
-        var slot = aiPlayerResourceSlots.Find(s => s.data == data);
-        return slot != null ? slot.quantity : 0;
+        int total = 0;
+        foreach (var slot in aiPlayerResourceSlots)
+        {
+            if (slot.data != null && slot.data.type == type)
+            {
+                total += slot.quantity;
+            }
+        }
+        return total;
     }
 
+    // 获取玩家+AI的总资源数量（按类型）
+    public int GetTotalResourceByType(ResourceType type)
+    {
+        return GetPlayerResourceByType(type) + GetAIResourceByType(type);
+    }
+    #endregion
+
+    #region TryAdd Logic
     /// <summary>
     /// 尝试给玩家加资源
     /// </summary>
@@ -75,6 +113,13 @@ public class InventoryManager : MonoBehaviour
         {
             playerResourceSlots.Add(new ResourceSlot { data = data, quantity = amount });
         }
+
+        woodCount = GetTotalResourceByType(ResourceType.Wood);
+        ironCount = GetTotalResourceByType(ResourceType.Iron);
+        playerCurrentWeight = GetPlayerCurrentWeight();
+
+        OnResourcesChanged?.Invoke();
+
         return true;
     }
 
@@ -97,21 +142,83 @@ public class InventoryManager : MonoBehaviour
         {
             aiPlayerResourceSlots.Add(new ResourceSlot { data = data, quantity = amount });
         }
+        
+        woodCount = GetTotalResourceByType(ResourceType.Wood);
+        ironCount = GetTotalResourceByType(ResourceType.Iron);
+        aiCurrentWeight = GetAICurrentWeight();
+
+        OnResourcesChanged?.Invoke();
+        return true;
+    }
+    #endregion
+
+    public bool TryConsuming(int consumingWoodCount, int consumingIronCount)
+    {
+        // 检查资源是否足够
+        int totalWood = GetTotalResourceByType(ResourceType.Wood);
+        int totalIron = GetTotalResourceByType(ResourceType.Iron);
+
+        if (totalWood < consumingWoodCount || totalIron < consumingIronCount)
+        {
+            Debug.LogWarning($"资源不足！木材需要{consumingWoodCount}，拥有{totalWood}；铁需要{consumingIronCount}，拥有{totalIron}");
+            return false;
+        }
+
+        // 消耗木材
+        ConsumeResourceByType(ResourceType.Wood, consumingWoodCount);
+        // 消耗铁
+        ConsumeResourceByType(ResourceType.Iron, consumingIronCount);
+
+        OnResourcesChanged?.Invoke();
+        // 更新显示数据
+        woodCount = GetTotalResourceByType(ResourceType.Wood);
+        ironCount = GetTotalResourceByType(ResourceType.Iron);
+        playerCurrentWeight = GetPlayerCurrentWeight();
+        aiCurrentWeight = GetAICurrentWeight();
+        OnResourcesChanged?.Invoke();
         return true;
     }
 
-    // 可选：尝试给指定目标加资源（便于后期扩展更多AI或NPC）
-    public enum InventoryTarget { Player, AI }
-    public bool TryAdd(ResourceData_SO data, int amount, InventoryTarget target)
+    private void ConsumeResourceByType(ResourceType resourceType, int needAmount)
     {
-        switch (target)
+        int remaining = needAmount;
+
+        // 从玩家背包消耗
+        for (int i = playerResourceSlots.Count - 1; i >= 0; i--)
         {
-            case InventoryTarget.Player:
-                return TryAddPlayer(data, amount);
-            case InventoryTarget.AI:
-                return TryAddAI(data, amount);
+            var slot = playerResourceSlots[i];
+            if (slot.data != null && slot.data.type == resourceType && remaining > 0)
+            {
+                int consumeAmount = Mathf.Min(slot.quantity, remaining);
+                slot.quantity -= consumeAmount;
+                remaining -= consumeAmount;
+
+                if (slot.quantity <= 0)
+                {
+                    playerResourceSlots.RemoveAt(i);
+                }
+            }
         }
-        return false;
+
+        // 从AI背包消耗
+        for (int i = aiPlayerResourceSlots.Count - 1; i >= 0; i--)
+        {
+            var slot = aiPlayerResourceSlots[i];
+            if (slot.data != null && slot.data.type == resourceType && remaining > 0)
+            {
+                int consumeAmount = Mathf.Min(slot.quantity, remaining);
+                slot.quantity -= consumeAmount;
+                remaining -= consumeAmount;
+
+                if (slot.quantity <= 0)
+                {
+                    aiPlayerResourceSlots.RemoveAt(i);
+                }
+            }
+        }
     }
+
+
+    public enum InventoryTarget { Player, AI }
 }
 
