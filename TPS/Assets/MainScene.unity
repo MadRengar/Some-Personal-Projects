@@ -18928,7 +18928,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 28.267353, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &673654637
@@ -22407,7 +22407,7 @@ MonoBehaviour:
   - resourceData: {fileID: 11400000, guid: 7305176a964c42340b91414ae155c95c, type: 2}
     resourcePrefab: {fileID: 3981172742875772530, guid: 7d36d06f9b3545849b62e6a79cdfc963, type: 3}
     maxAmountPerPile: 10
-    spawnWeight: 17
+    spawnWeight: 39
   - resourceData: {fileID: 11400000, guid: 74a3a068085d1f5469a3381f2633e9b7, type: 2}
     resourcePrefab: {fileID: 8561005586879356685, guid: 0a4724012511843429c257c8ccbf5528, type: 3}
     maxAmountPerPile: 15
@@ -22415,11 +22415,11 @@ MonoBehaviour:
   - resourceData: {fileID: 11400000, guid: e11d88e2fe6edf347b9e1527f3644575, type: 2}
     resourcePrefab: {fileID: 4518788732947812346, guid: 9e748dd297e52c24986cc7d3ac187d40, type: 3}
     maxAmountPerPile: 1
-    spawnWeight: 13
+    spawnWeight: 10
   - resourceData: {fileID: 11400000, guid: 281ef75aea8b2df48844be6f484b1506, type: 2}
     resourcePrefab: {fileID: 4791540327544588399, guid: 97215e3cf4af1ec4cbd1819cd4d174cc, type: 3}
     maxAmountPerPile: 1
-    spawnWeight: 14
+    spawnWeight: 8
   minPileCount: 30
   maxPileCount: 40
   minDistanceBetweenPiles: 1
@@ -40399,7 +40399,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 6.2758327, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1484439282
@@ -52621,6 +52621,8 @@ MonoBehaviour:
     m_Bits: 9
   inventoryManager: {fileID: 1251094335}
   enableDebugLog: 1
+  canBuildMaterial: {fileID: 2100000, guid: 0e02f06934cf27540ba68a1872bce82a, type: 2}
+  cantBuildMaterial: {fileID: 2100000, guid: a621e5a501b18b240959ff1f8a8ba8c7, type: 2}
   woodCount: 0
   ironCount: 0
 --- !u!4 &1962324659
@@ -55203,7 +55205,7 @@ Transform:
   m_GameObject: {fileID: 2080789216}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 251.6, y: 0.31, z: 218.9}
+  m_LocalPosition: {x: 251.6, y: 0.09, z: 218.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

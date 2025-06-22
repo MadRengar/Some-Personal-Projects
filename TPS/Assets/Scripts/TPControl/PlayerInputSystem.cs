@@ -363,6 +363,17 @@ namespace PlayerControl
                 TurretData_SO buildingData = buildingSystem.GetCurrentBuildingData();
                 if (buildingData != null)
                 {
+                    // 检查是否在营地内
+                    Vector3 buildPos = buildingSystem.GetCurrentPreview().transform.position;
+                    bool isInCamp = CampZoneManager.Instance?.IsPositionInCamp(buildPos) ?? false;
+                    if (!isInCamp)
+                    {
+                        Debug.Log("无法建造：必须在营地范围内建造防御塔");
+                        // 不进入战斗模式，继续保持放置模式
+                        return;
+                    }
+
+                    // 检查扣除资源
                     InventoryManager inventory = FindObjectOfType<InventoryManager>();
                     bool resourceConsumed = inventory.TryConsuming(
                         buildingData.requiredWoodNum,

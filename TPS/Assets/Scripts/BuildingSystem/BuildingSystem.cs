@@ -13,6 +13,11 @@ public class BuildingSystem : MonoBehaviour
 
     [Header("Debug")]
     public bool enableDebugLog = true;
+
+    [Header("Preview Materials")]
+    public Material canBuildMaterial;
+    public Material cantBuildMaterial;
+
     [Header("Running Data(From InventoryManager)")]
     [SerializeField] private int woodCount;
     [SerializeField] private int ironCount;
@@ -23,6 +28,7 @@ public class BuildingSystem : MonoBehaviour
     private GameObject buildPrefab;          // 要放置的建筑预制体
     private TurretData_SO currentBuildingData;
     private bool isPlacing = false;             // 是否处于放置状态
+
     private void Start()
     {
         // 获取主摄像机（Cinemachine会控制这个摄像机）
@@ -66,14 +72,6 @@ public class BuildingSystem : MonoBehaviour
         {
             return false;
         }
-    }
-
-    /// <summary>
-    /// 扣除资源
-    /// </summary>
-    public void ConsumingResources(TurretData_SO buildingData)
-    {
-
     }
 
 
@@ -124,6 +122,37 @@ public class BuildingSystem : MonoBehaviour
         {
             // 更新预览位置到射线击中点
             currentPreview.transform.position = hit.point;
+            // 添加营地检测
+            bool isInCamp = CampZoneManager.Instance?.IsPositionInCamp(hit.point) ?? false;
+
+            ChangePreviewColor(isInCamp);
+        }
+    }
+
+    /// <summary>
+    /// 改变预览颜色指示是否可建造
+    /// </summary>
+    /// <summary>
+    /// 改变预览颜色指示是否可建造
+    /// </summary>
+    private void ChangePreviewColor(bool canBuild)
+    {
+        if (currentPreview == null) return;
+
+        Material targetMaterial = canBuild ? canBuildMaterial : cantBuildMaterial;
+        if (targetMaterial == null) return;
+
+        Renderer[] renderers = currentPreview.GetComponentsInChildren<Renderer>();
+
+        foreach (var renderer in renderers)
+        {
+            // 替换所有材质为目标材质
+            Material[] materials = new Material[renderer.materials.Length];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i] = targetMaterial;
+            }
+            renderer.materials = materials;
         }
     }
 
@@ -190,5 +219,11 @@ public class BuildingSystem : MonoBehaviour
     public TurretData_SO GetCurrentBuildingData()
     {
         return currentBuildingData;
+    }
+
+    // 在BuildingSystem.cs中添加getter
+    public GameObject GetCurrentPreview()
+    {
+        return currentPreview;
     }
 }
