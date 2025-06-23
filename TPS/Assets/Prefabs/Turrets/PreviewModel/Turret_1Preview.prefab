@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8265026138264735350}
   - component: {fileID: 1335508607765974333}
   - component: {fileID: 2895270096168144541}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Veh_AA_Handle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,9 +94,11 @@ GameObject:
   - component: {fileID: 2721304158328909533}
   - component: {fileID: 3891140453691490006}
   - component: {fileID: 7256030167428831411}
-  m_Layer: 0
+  - component: {fileID: 4871312396203646341}
+  - component: {fileID: 1236352026014007730}
+  m_Layer: 10
   m_Name: Turret_1Preview
-  m_TagString: Untagged
+  m_TagString: BuildingPreview
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -167,6 +169,49 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4871312396203646341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377561701843905276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17b01ad4a296eb143aadea38041f47c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  finalBuildingPrefab: {fileID: 7377561701843905276, guid: dcb48093350df7f479f972a4d88206fb, type: 3}
+  maxProgress: 100
+  progressPerHit: 20
+  progressCanvas: {fileID: 0}
+  progressSlider: {fileID: 0}
+  progressUI: {fileID: 0}
+  hitEffect: {fileID: 0}
+  buildingHitSound: {fileID: 0}
+  buildingCompleteSound: {fileID: 0}
+  enableDebugLog: 1
+--- !u!65 &1236352026014007730
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377561701843905276}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1934974, y: 1.5193288, z: 1.1654816}
+  m_Center: {x: -0.007318616, y: 0.7596644, z: -0.094841}
 --- !u!1 &8608303221728353885
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +223,7 @@ GameObject:
   - component: {fileID: 1260198606653900264}
   - component: {fileID: 8757842442241308886}
   - component: {fileID: 2439506832379870303}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

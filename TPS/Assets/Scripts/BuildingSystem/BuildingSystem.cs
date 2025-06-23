@@ -166,12 +166,35 @@ public class BuildingSystem : MonoBehaviour
         Vector3 pos = currentPreview.transform.position;
         Quaternion rot = currentPreview.transform.rotation;
 
-        GameObject building = Instantiate(buildPrefab, pos, rot);
+        //GameObject building = Instantiate(buildPrefab, pos, rot);
+        GameObject buildingPreview = CreateBuildablePreview(pos, rot);
 
-        if (enableDebugLog)
-            Debug.Log($"[BuildingSystem] 建筑已放置: {building.name} at {pos}");
+    if (enableDebugLog)
+        Debug.Log($"[BuildingSystem] 建筑预览已放置，等待建造: {buildingPreview.name} at {pos}");
 
         EndPlacement();
+    }
+
+    private GameObject CreateBuildablePreview(Vector3 position, Quaternion rotation)
+    {
+        // 使用相同的预览预制体，但这次是永久的
+        GameObject buildingPreview = Instantiate(previewPrefab, position, rotation);
+
+        // 添加或获取 BuildingProgress 组件
+        BuildingProgress buildingProgress = buildingPreview.GetComponent<BuildingProgress>();
+        if (buildingProgress == null)
+        {
+            buildingProgress = buildingPreview.AddComponent<BuildingProgress>();
+        }
+
+        // 设置建造数据
+        buildingProgress.SetFinalBuildingPrefab(buildPrefab);
+        buildingProgress.SetProgressSettings(100f, 10f); // 100% 总进度，每次 20%
+
+        // 确保有正确的标签
+        buildingPreview.tag = "BuildingPreview";
+
+        return buildingPreview;
     }
 
     /// <summary>

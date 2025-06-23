@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Resource
   - AIPlayer
+  - BuildingPreview
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Survivor
   - AirWall
   - CampZone
-  - 
+  - Building
   - 
   - 
   - 

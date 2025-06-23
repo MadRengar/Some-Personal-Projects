@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
 
     [Header("Player UI Panel")]
     public GameObject buildingMenuPanelUI;
+    [SerializeField] private GameObject gunAmmoPanel;    // GunAmmo UI 面板
+    [SerializeField] private GameObject hammerPanel;     // Hammer UI 面板
 
     [Header("2D AIInfo UI")]
     public RectTransform currentMaAIInfoUI;
@@ -52,6 +54,8 @@ public class UIManager : MonoBehaviour
     {
         // 订阅玩家模式切换事件
         PlayerInputSystem.OnModeChanged += OnPlayerModeChanged;
+        // 监听武器切换事件
+        WeaponSwitcher.OnWeaponChanged += OnWeaponChanged;
 
         GameManager.OnPlayerDeath += OnPlayerDeath;
         // 初始化UI状态
@@ -63,6 +67,7 @@ public class UIManager : MonoBehaviour
         // 取消订阅事件，防止内存泄漏
         PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
         GameManager.OnPlayerDeath -= OnPlayerDeath;
+        WeaponSwitcher.OnWeaponChanged -= OnWeaponChanged;
     }
 
     private void Update()
@@ -118,7 +123,6 @@ public class UIManager : MonoBehaviour
             gameOverMenuUI.SetActive(false);
         }
     }
-
 
     public void ShowBuildingMenu()
     {
@@ -214,5 +218,54 @@ public class UIManager : MonoBehaviour
     {
         // 这个方法会被动画事件调用
         ShowGameOverUI();
+    }
+
+    private void OnWeaponChanged(WeaponType newWeaponType)
+    {
+        UpdateWeaponUI(newWeaponType);
+    }
+
+    private void UpdateWeaponUI(WeaponType weaponType)
+    {
+        switch (weaponType)
+        {
+            case WeaponType.Rifle:
+                ShowGunUI();
+                break;
+
+            case WeaponType.Hammer:
+                ShowHammerUI();
+                break;
+        }
+    }
+
+    private void ShowGunUI()
+    {
+        // 显示枪械弹药面板
+        if (gunAmmoPanel != null)
+        {
+            gunAmmoPanel.SetActive(true);
+        }
+
+        // 隐藏锤子面板
+        if (hammerPanel != null)
+        {
+            hammerPanel.SetActive(false);
+        }
+    }
+
+    private void ShowHammerUI()
+    {
+        // 隐藏枪械弹药面板
+        if (gunAmmoPanel != null)
+        {
+            gunAmmoPanel.SetActive(false);
+        }
+
+        // 显示锤子面板
+        if (hammerPanel != null)
+        {
+            hammerPanel.SetActive(true);
+        }
     }
 }

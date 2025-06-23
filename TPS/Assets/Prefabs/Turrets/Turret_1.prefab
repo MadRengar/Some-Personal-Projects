@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 3891140453691490006}
   - component: {fileID: 7256030167428831411}
   - component: {fileID: 4372588776977661159}
+  - component: {fileID: 256181077630221352}
   m_Layer: 0
   m_Name: Turret_1
   m_TagString: Untagged
@@ -237,6 +238,27 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   cooldown: 0
   showFireTrajectory: 1
+--- !u!65 &256181077630221352
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377561701843905276}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1934974, y: 1.4548829, z: 1.2089038}
+  m_Center: {x: -0.007318616, y: 0.72744143, z: -0.08944726}
 --- !u!1 &8608303221728353885
 GameObject:
   m_ObjectHideFlags: 0

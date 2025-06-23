@@ -24,6 +24,9 @@ namespace PlayerControl
         [HideInInspector] public bool openStatusPanel;
         [HideInInspector] public bool ping;
         [HideInInspector] public bool reload; // 添加换弹输入
+        [Header("Weapon Switch Input")]
+        [HideInInspector] public bool weaponSwitchPressed;
+        [HideInInspector] public Vector2 weaponSwitchValue;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -51,6 +54,9 @@ namespace PlayerControl
         private bool _lastFrameShootHeld = false;
         public bool IsShootHeld => shootAction.action.IsPressed();
 
+        private WeaponSwitcher weaponSwitcher;
+        private WeaponType currentWeaponType = WeaponType.Rifle;
+
         [Header("Building System")]
         [SerializeField] private BuildingSystem buildingSystem;
         private void Awake()
@@ -64,6 +70,12 @@ namespace PlayerControl
             // 确保UI Action Map始终启用
             var inputActions = GetComponent<PlayerInput>().actions;
             inputActions.FindActionMap("UI").Enable();
+
+            // 获取 WeaponSwitcher 引用
+            weaponSwitcher = GetComponent<WeaponSwitcher>();
+
+            // 监听武器切换事件
+            WeaponSwitcher.OnWeaponChanged += OnWeaponTypeChanged;
         }
 
         private void Update()
@@ -74,7 +86,7 @@ namespace PlayerControl
             {
                 HandlePlacingInput();
             }
-            Debug.Log("当前输入模式: " + currentMode);
+            //Debug.Log("当前输入模式: " + currentMode);
 
         }
         private void UpdateShootingInput()
@@ -93,6 +105,32 @@ namespace PlayerControl
 #if ENABLE_INPUT_SYSTEM
 
         #region Player regular Keyboard Input
+        /// <summary>
+        /// 新增：处理武器切换输入
+        /// </summary>
+        public void OnSwitchWeapon(InputValue value)
+        {
+            if (currentMode != PlayerMode.Combat) return; // 只在战斗模式下允许切换武器
+
+            Vector2 scrollValue = value.Get<Vector2>();
+            weaponSwitchValue = scrollValue;
+
+            if (scrollValue.y > 0f) // 向上滚
+            {
+                if (weaponSwitcher != null)
+                {
+                    weaponSwitcher.SwitchToNextWeapon();
+                }
+            }
+            else if (scrollValue.y < 0f) // 向下滚
+            {
+                if (weaponSwitcher != null)
+                {
+                    weaponSwitcher.SwitchToPreviousWeapon();
+                }
+            }
+        }
+
         public void OnMove(InputValue value)
 		{
             MoveInput(value.Get<Vector2>());
@@ -118,7 +156,8 @@ namespace PlayerControl
 
         public void OnAim(InputValue value)
         {
-            if (currentMode != PlayerMode.Combat) return; // 只有战斗模式下才能瞄准
+            // 只有步枪模式才允许瞄准
+            if (currentMode != PlayerMode.Combat || currentWeaponType != WeaponType.Rifle) return;
             AimInput(value.isPressed);
         }
 
@@ -159,7 +198,7 @@ namespace PlayerControl
         {
             if (value.isPressed)
             {
-                Debug.Log("调用Cancel!!!!");
+                //Debug.Log("调用Cancel!!!!");
                 cancelPressed = true;
                 HandleCancelInput();
             }
@@ -403,10 +442,44 @@ namespace PlayerControl
             }
         }
 
+        /// <summary>
+        /// 新增：响应武器类型变化
+        /// </summary>
+        private void OnWeaponTypeChanged(WeaponType newWeaponType)
+        {
+            currentWeaponType = newWeaponType;
+            //Debug.Log($"[PlayerInputSystem] 武器切换为: {newWeaponType}");
+
+            // 根据武器类型调整输入行为
+            switch (newWeaponType)
+            {
+                case WeaponType.Rifle:
+                    // 步枪模式：保持原有的战斗输入
+                    break;
+
+                case WeaponType.Hammer:
+                    // 锤子模式：禁用瞄准功能
+                    aim = false; // 强制取消瞄准状态
+                    break;
+            }
+        }
+
         // 公共方法，供其他脚本调用
         public bool IsInCombatMode() => currentMode == PlayerMode.Combat;
         public bool IsInBuildMenuMode() => currentMode == PlayerMode.BuildMenu;
         public bool IsInPlacingMode() => currentMode == PlayerMode.Placing;
+        public WeaponType GetCurrentWeaponType()
+        {
+            return currentWeaponType;
+        }
+        public bool IsHoldingRifle()
+        {
+            return currentWeaponType == WeaponType.Rifle;
+        }
+        public bool IsHoldingHammer()
+        {
+            return currentWeaponType == WeaponType.Hammer;
+        }
 
         // 在LateUpdate中重置换弹输入
         private void LateUpdate()
@@ -415,6 +488,12 @@ namespace PlayerControl
             shootPressed = false;
             shootReleased = false;
             reload = false; // 重置换弹输入
+        }
+
+        private void OnDestroy()
+        {
+            // 取消监听武器切换事件
+            WeaponSwitcher.OnWeaponChanged -= OnWeaponTypeChanged;
         }
     }
 

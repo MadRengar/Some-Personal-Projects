@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class AmmoUIController : MonoBehaviour
 {
-    [Header("UI引用")]
+    [Header("UI Ref")]
     public TextMeshProUGUI currentAmmoText; // 当前弹药文本
     public TextMeshProUGUI totalAmmoText;   // 总弹药文本
 
-    [Header("武器引用")]
+    [Header("Weapon Ref")]
     public WeaponManager weaponManager; // 武器管理器引用
 
     private void Start()

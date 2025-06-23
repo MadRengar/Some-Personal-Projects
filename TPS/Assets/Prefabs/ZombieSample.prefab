@@ -474,7 +474,7 @@ MonoBehaviour:
   sightRadius: 6.64
   patrolRange: 4.5
   dealDamageRange: 4
-  berserkSpeed: 10
+  berserkSpeed: 6
   aiPlayerTargetChance: 0.3
   targetLayerMask:
     serializedVersion: 2

@@ -76,7 +76,7 @@ public class CampZoneManager : MonoBehaviour
         if (!campZones.Contains(zone))
         {
             campZones.Add(zone);
-            Debug.Log($"注册营地区域: {zone.name}");
+            //Debug.Log($"注册营地区域: {zone.name}");
         }
     }
 
@@ -88,7 +88,7 @@ public class CampZoneManager : MonoBehaviour
         if (campZones.Contains(zone))
         {
             campZones.Remove(zone);
-            Debug.Log($"注销营地区域: {zone.name}");
+            //Debug.Log($"注销营地区域: {zone.name}");
         }
     }
 
