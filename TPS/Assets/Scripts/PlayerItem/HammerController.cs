@@ -204,13 +204,6 @@ public class HammerController : MonoBehaviour
                 Debug.Log($"[HammerController] 建造进度更新 - 之前: {progressBefore}, 之后: {progressAfter}, 百分比: {progressPercent:F1}%, 是否完成: {buildingProgress.IsCompleted()}");
             }
         }
-        else
-        {
-            if (enableDebugLog)
-            {
-                Debug.LogError($"[HammerController] 建筑预览 {buildingPreview.name} 没有 BuildingProgress 组件！");
-            }
-        }
     }
 
     /// <summary>

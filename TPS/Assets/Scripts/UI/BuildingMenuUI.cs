@@ -12,6 +12,13 @@ public class BuildingMenuUI : MonoBehaviour
     public Button closeButton; // 关闭按钮
     public Button[] buildingButtons; // 建筑选择按钮数组
 
+    [Header("Category System")]
+    public Button[] categoryButtons; // TURRET, GENERATOR等分类按钮
+    public GameObject[] categoryPanels; // 对应每个分类的建筑按钮面板
+
+    [Header("Current Category")]
+    private int currentCategoryIndex = 0; // 当前选中的分类
+
     [Header("Building Prefabs")]
     public GameObject[] buildingPrefabs; // 对应的建筑预制体数组
     public GameObject[] previewPrefabs;  // 透明模型 prefab 数组
@@ -19,6 +26,7 @@ public class BuildingMenuUI : MonoBehaviour
     [Header("UI Settings")]
     public string[] buildingNames; // 建筑名称数组（用于显示）
     public Sprite[] buildingIcons; // 建筑图标数组（可选）
+
 
     public PlayerInputSystem playerInputSystem; // 可在 Inspector 中拖引用
 
@@ -43,7 +51,10 @@ public class BuildingMenuUI : MonoBehaviour
         {
             closeButton.onClick.AddListener(CloseBuildingMenu);
         }
-        
+
+        // 设置分类按钮
+        SetupCategoryButtons();
+
         // 设置建筑选择按钮事件
         for (int i = 0; i < buildingButtons.Length; i++)
         {
@@ -56,6 +67,9 @@ public class BuildingMenuUI : MonoBehaviour
                 SetupBuildingButton(buildingButtons[i], buildingIndex);
             }
         }
+
+        // 默认显示第一个分类
+        ShowCategory(0);
     }
     
     /// <summary>
@@ -96,6 +110,84 @@ public class BuildingMenuUI : MonoBehaviour
         Debug.LogWarning($"未能在按钮 {button.name} 中找到合适的图标Image组件");
         return null;
     }
+    /// <summary>
+    /// 设置分类按钮
+    /// </summary>
+    private void SetupCategoryButtons()
+    {
+        Debug.Log($"设置分类按钮，总数: {categoryButtons.Length}");
+        for (int i = 0; i < categoryButtons.Length; i++)
+        {
+            if (categoryButtons[i] != null)
+            {
+                Debug.Log($"设置分类按钮 {i}: {categoryButtons[i].name}");
+                int categoryIndex = i;
+                categoryButtons[i].onClick.AddListener(() => {
+                    Debug.Log($"点击了分类按钮: {categoryIndex}");
+                    ShowCategory(categoryIndex);
+                });
+            }
+            else
+            {
+                Debug.LogError($"分类按钮 {i} 为空!");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 显示指定分类
+    /// </summary>
+    private void ShowCategory(int categoryIndex)
+    {
+        if (categoryIndex < 0 || categoryIndex >= categoryPanels.Length) return;
+
+        currentCategoryIndex = categoryIndex;
+
+        // 隐藏所有分类面板
+        for (int i = 0; i < categoryPanels.Length; i++)
+        {
+            if (categoryPanels[i] != null)
+            {
+                categoryPanels[i].SetActive(false);
+            }
+        }
+
+        // 显示当前分类面板
+        if (categoryPanels[categoryIndex] != null)
+        {
+            categoryPanels[categoryIndex].SetActive(true);
+        }
+
+        // 更新分类按钮状态（高亮当前选中的）
+        UpdateCategoryButtonStates(categoryIndex);
+
+        Debug.Log($"切换到分类: {categoryIndex}");
+    }
+
+    /// <summary>
+    /// 更新分类按钮的视觉状态
+    /// </summary>
+    private void UpdateCategoryButtonStates(int selectedIndex)
+    {
+        for (int i = 0; i < categoryButtons.Length; i++)
+        {
+            if (categoryButtons[i] != null)
+            {
+                // 可以通过修改按钮颜色或其他方式来表示选中状态
+                var colors = categoryButtons[i].colors;
+                if (i == selectedIndex)
+                {
+                    colors.normalColor = Color.yellow; // 选中状态颜色
+                }
+                else
+                {
+                    colors.normalColor = Color.white; // 未选中状态颜色
+                }
+                categoryButtons[i].colors = colors;
+            }
+        }
+    }
+
 
     /// <summary>
     /// 刷新UI显示

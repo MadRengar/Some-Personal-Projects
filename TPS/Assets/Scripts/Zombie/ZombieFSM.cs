@@ -691,7 +691,7 @@ public class ZombieFSM : MonoBehaviour
         {
             attackRange = zombieStats.zombieAttackData.attackRange;
             attackCD = zombieStats.zombieAttackData.attackCD;
-            Debug.Log($"¼ÓÔØ¹¥»÷Êı¾İ£º·¶Î§={attackRange}, ÀäÈ´={attackCD}");
+            //Debug.Log($"¼ÓÔØ¹¥»÷Êı¾İ£º·¶Î§={attackRange}, ÀäÈ´={attackCD}");
         }
         else
         {
