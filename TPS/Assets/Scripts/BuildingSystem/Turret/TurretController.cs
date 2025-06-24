@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurretController : MonoBehaviour
+public class TurretController : MonoBehaviour, IBuildingController
 {
     [Header("Turret Data")]
     public TurretData_SO turretData;
@@ -43,7 +43,7 @@ public class TurretController : MonoBehaviour
     [Header("Current State")]
     [SerializeField] private TurretState currentState = TurretState.Idle;
     [SerializeField] private Transform currentTarget;
-
+    [SerializeField] private int currentHealth;
     // 射击控制变量(仿照WeaponManager)
     [HideInInspector] public float cooldown = 0f; // 当前冷却时间
     private float firingTimer = 0f; // 连续开火计时器
@@ -59,6 +59,8 @@ public class TurretController : MonoBehaviour
     private Vector3 lastFireStartPoint;
     private Vector3 lastFireEndPoint;
     private bool hasLastFireData = false;
+
+    public BuildingData_SO GetBuildingData() => turretData;
 
     private void Start()
     {
@@ -92,7 +94,8 @@ public class TurretController : MonoBehaviour
         // 读取建造信息
         requiredWoodNum = turretData.requiredWoodNum;
         requiredIronNum = turretData.requiredIronNum;
-        requiredBuildingTime = turretData.requiredBuidlingTime;
+        requiredBuildingTime = turretData.requiredBuildingTime;
+        currentHealth = turretData.maxHealth;
 
         // 读取攻击信息
         attackDamage = turretData.attackDamage;
@@ -104,6 +107,28 @@ public class TurretController : MonoBehaviour
         restDuration = turretData.restDuration;
 
         //Debug.Log($"防御塔数据加载完成: {gameObject.name}");
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log($"炮台受到 {damage} 点伤害，剩余血量: {currentHealth}");
+
+        if (currentHealth <= 0)
+        {
+            DestroyTurret();
+        }
+    }
+
+    public bool IsDestroyed()
+    {
+        return currentHealth <= 0;
+    }
+
+    private void DestroyTurret()
+    {
+        Debug.Log("炮台被摧毁！");
+        Destroy(gameObject);
     }
 
     /// <summary>

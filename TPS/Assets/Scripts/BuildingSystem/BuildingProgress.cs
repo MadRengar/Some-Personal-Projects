@@ -5,7 +5,6 @@ public class BuildingProgress : MonoBehaviour
 {
     [Header("Building Settings")]
     [SerializeField] private GameObject finalBuildingPrefab;  // 最终建筑预制体（带 TurretController 的）
-    [SerializeField] private float maxProgress = 100f;       // 最大建造进度
     [SerializeField] private float progressPerHit = 20f;     // 每次锤击增加的进度
 
     [Header("Progress UI")]
@@ -22,6 +21,7 @@ public class BuildingProgress : MonoBehaviour
     [SerializeField] private bool enableDebugLog = true;
 
     // 当前建造进度
+    private float maxProgress = 100f; // 从BuildingData_SO.requiredBuildingTime读取 
     private float currentProgress = 0f;
     private bool isCompleted = false;
     private AudioSource audioSource;
@@ -199,16 +199,31 @@ public class BuildingProgress : MonoBehaviour
     }
 
     /// <summary>
-    /// 设置进度参数
+    /// 从BuildingData设置建造进度
     /// </summary>
-    public void SetProgressSettings(float maxProg, float progPerHit)
+    public void InitializeFromBuildingData(GameObject finalBuilding)
     {
-        maxProgress = maxProg;
-        progressPerHit = progPerHit;
+        finalBuildingPrefab = finalBuilding;
 
-        if (enableDebugLog)
+        // 从建筑数据中读取建造时间作为最大进度
+        IBuildingController buildingController = finalBuilding.GetComponent<IBuildingController>();
+        if (buildingController != null)
         {
-            Debug.Log($"[BuildingProgress] 设置进度参数 - 最大进度: {maxProgress}, 每次增加: {progressPerHit}");
+            BuildingData_SO buildingData = buildingController.GetBuildingData();
+            maxProgress = buildingData.requiredBuildingTime;
+
+            if (enableDebugLog)
+            {
+                Debug.Log($"[BuildingProgress] 从{buildingData.buildingName}读取建造进度: {maxProgress}");
+            }
         }
+        else
+        {
+            Debug.LogWarning("[BuildingProgress] 建筑没有实现IBuildingController接口，使用默认进度100");
+            maxProgress = 100f;
+        }
+
+        // 更新UI
+        UpdateProgressUI();
     }
 }

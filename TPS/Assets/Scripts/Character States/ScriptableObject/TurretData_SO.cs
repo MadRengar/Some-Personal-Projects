@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.PostProcessing.SubpixelMorphologicalAntialiasing;
 
-[CreateAssetMenu(fileName = "New Data", menuName = "Turret/Turret Data")]
-public class TurretData_SO : ScriptableObject
+[CreateAssetMenu(fileName = "TurretData", menuName = "Turret/Turret Data")]
+public class TurretData_SO : BuildingData_SO
 {
-    [Header("Turret Building Info")]
-    public int requiredWoodNum;
-    public int requiredIronNum;
-    public float requiredBuidlingTime;
-
     [Header("Turret Attack Info")]
     public int attackDamage;
     public float firerate;
@@ -19,4 +14,10 @@ public class TurretData_SO : ScriptableObject
     [Header("Fire Pattern")]
     public float continuousFireDuration = 3f;  // 连续开火持续时间
     public float restDuration = 2f;            // 休息时间
+
+    // 构造函数中设置建筑类型
+    private void OnEnable()
+    {
+        buildingType = BuildingType.Turret;
+    }
 }

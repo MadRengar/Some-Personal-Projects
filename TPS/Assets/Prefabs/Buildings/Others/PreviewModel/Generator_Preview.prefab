@@ -118,8 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17b01ad4a296eb143aadea38041f47c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finalBuildingPrefab: {fileID: 0}
-  maxProgress: 100
+  finalBuildingPrefab: {fileID: 138366401793041971, guid: 7fd3084775ef73c41be5d3db9554da51, type: 3}
   progressPerHit: 20
   progressCanvas: {fileID: 0}
   progressSlider: {fileID: 0}

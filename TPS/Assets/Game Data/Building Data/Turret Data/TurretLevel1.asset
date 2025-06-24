@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17433ab56c6e78b40bdbb2117ca77650, type: 3}
+  m_Name: TurretLevel1
+  m_EditorClassIdentifier: 
+  buildingName: 
+  requiredWoodNum: 10
+  requiredIronNum: 10
+  requiredBuildingTime: 100
+  maxHealth: 100
+  buildingType: 0
+  attackDamage: 5
+  firerate: 0.1
+  attackRange: 30
+  continuousFireDuration: 3
+  restDuration: 1

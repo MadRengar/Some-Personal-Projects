@@ -28,8 +28,8 @@ public class BuildingMenuUI : MonoBehaviour
     public Sprite[] buildingIcons; // 建筑图标数组（可选）
 
 
-    public PlayerInputSystem playerInputSystem; // 可在 Inspector 中拖引用
-
+    public PlayerInputSystem playerInputSystem;
+    public BuildingSystem buildingSystem;
     private void Start()
     {
         SetupUI();
@@ -264,12 +264,16 @@ public class BuildingMenuUI : MonoBehaviour
     /// 开始建筑放置
     /// </summary>
     private void StartBuildingPlacement(int buildingIndex)
-    { 
-        TurretData_SO turretData = buildingPrefabs[buildingIndex].GetComponent<TurretController>().turretData;
-        BuildingSystem buildingSystem = FindObjectOfType<BuildingSystem>();
+    {
+        GameObject buildingPrefab = buildingPrefabs[buildingIndex];
+
+        IBuildingController buildingController = buildingPrefab.GetComponent<IBuildingController>();
+
         if (buildingSystem != null)
         {
-            if(buildingSystem.CheckResourcesIsEnough(turretData))
+            BuildingData_SO buildingData = buildingController.GetBuildingData();
+
+            if (buildingSystem.CheckResourcesIsEnough(buildingData))
             {
                 playerInputSystem.EnterPlacingMode();
                 buildingSystem.StartPlacement(buildingPrefabs[buildingIndex], previewPrefabs[buildingIndex]);                

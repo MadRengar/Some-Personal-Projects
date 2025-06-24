@@ -62,7 +62,7 @@ public class BuildingSystem : MonoBehaviour
     /// <summary>
     /// 检查资源是否足够
     /// </summary>
-    public bool CheckResourcesIsEnough(TurretData_SO buildingData)
+    public bool CheckResourcesIsEnough(BuildingData_SO buildingData)
     {
         if (buildingData.requiredWoodNum <= woodCount && buildingData.requiredIronNum <= ironCount)
         {
@@ -189,7 +189,7 @@ public class BuildingSystem : MonoBehaviour
 
         // 设置建造数据
         buildingProgress.SetFinalBuildingPrefab(buildPrefab);
-        buildingProgress.SetProgressSettings(100f, 10f); // 100% 总进度，每次 20%
+        buildingProgress.InitializeFromBuildingData(buildPrefab);
 
         // 确保有正确的标签
         buildingPreview.tag = "BuildingPreview";
@@ -248,5 +248,13 @@ public class BuildingSystem : MonoBehaviour
     public GameObject GetCurrentPreview()
     {
         return currentPreview;
+    }
+
+    /// <summary>
+    /// 获取当前建筑prefab
+    /// </summary>
+    public GameObject GetCurrentBuildingPrefab()
+    {
+        return buildPrefab;
     }
 }

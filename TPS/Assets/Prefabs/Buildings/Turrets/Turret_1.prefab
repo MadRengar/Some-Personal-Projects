@@ -236,6 +236,7 @@ MonoBehaviour:
   shellEjectPrefab: {fileID: 7431387619674387055}
   currentState: 0
   currentTarget: {fileID: 0}
+  currentHealth: 0
   cooldown: 0
   showFireTrajectory: 1
 --- !u!65 &256181077630221352

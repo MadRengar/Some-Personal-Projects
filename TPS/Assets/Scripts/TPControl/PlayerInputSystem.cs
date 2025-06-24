@@ -399,40 +399,49 @@ namespace PlayerControl
 
             if (shootPressed)
             {
-                TurretData_SO buildingData = buildingSystem.GetCurrentBuildingData();
-                if (buildingData != null)
+                // 使用基类接口获取建筑数据
+                GameObject currentPreview = buildingSystem.GetCurrentPreview();
+                if (currentPreview == null) return;
+
+                Vector3 buildPos = currentPreview.transform.position;
+                bool isInCamp = CampZoneManager.Instance?.IsPositionInCamp(buildPos) ?? false;
+
+                if (!isInCamp)
                 {
-                    // 检查是否在营地内
-                    Vector3 buildPos = buildingSystem.GetCurrentPreview().transform.position;
-                    bool isInCamp = CampZoneManager.Instance?.IsPositionInCamp(buildPos) ?? false;
-                    if (!isInCamp)
-                    {
-                        Debug.Log("无法建造：必须在营地范围内建造防御塔");
-                        // 不进入战斗模式，继续保持放置模式
-                        return;
-                    }
+                    Debug.Log("无法建造：必须在营地范围内建造");
+                    return;
+                }
 
-                    // 检查扣除资源
-                    InventoryManager inventory = FindObjectOfType<InventoryManager>();
-                    bool resourceConsumed = inventory.TryConsuming(
-                        buildingData.requiredWoodNum,
-                        buildingData.requiredIronNum
-                    );
+                // 获取建筑prefab并检查其建筑数据
+                GameObject buildingPrefab = buildingSystem.GetCurrentBuildingPrefab();
+                if (buildingPrefab == null) return;
 
-                    if (resourceConsumed)
-                    {
-                        buildingSystem.ConfirmPlacement();
-                        EnterCombatMode();
-                    }
-                    else
-                    {
-                        Debug.Log("资源不足，无法放置建筑");
-                    }
+                IBuildingController buildingController = buildingPrefab.GetComponent<IBuildingController>();
+                if (buildingController == null) return;
+
+                BuildingData_SO buildingData = buildingController.GetBuildingData();
+                if (buildingData == null) return;
+
+                // 检查资源
+                InventoryManager inventory = FindObjectOfType<InventoryManager>();
+                bool resourceConsumed = inventory.TryConsuming(
+                    buildingData.requiredWoodNum,
+                    buildingData.requiredIronNum
+                );
+
+                if (resourceConsumed)
+                {
+                    // 资源足够且在营地内，执行建造
+                    buildingSystem.ConfirmPlacement();
+                    EnterCombatMode();
+                }
+                else
+                {
+                    Debug.Log("资源不足，无法放置建筑");
                 }
             }
-
-            // 右键取消放置
-            if (Input.GetMouseButtonDown(1)) // 检测鼠标右键
+                // 右键取消放置
+                if (Input.GetMouseButtonDown(1)) // 检测鼠标右键
             {
                 Debug.Log("[PlayerInputSystem] 右键取消放置");
                 buildingSystem.CancelPlacement();
