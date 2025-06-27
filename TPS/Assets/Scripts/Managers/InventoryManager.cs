@@ -21,10 +21,25 @@ public class InventoryManager : MonoBehaviour
     public float aiPlayerMaxWeight = 100f;
 
     [Header("Running Data(Read Only)")]
-    [SerializeField] private int woodCount = 0;
-    [SerializeField] private int ironCount = 0;
     [SerializeField] private float playerCurrentWeight = 0f;
     [SerializeField] private float aiCurrentWeight = 0f;
+
+    [Header("Storage Management")]
+    public List<StorageController> allStorages = new List<StorageController>();
+
+    [Header("Storage Debug Info (Read Only)")]
+    [SerializeField] private List<StorageDebugInfo> storageDebugList = new List<StorageDebugInfo>();
+
+    [System.Serializable]
+    public class StorageDebugInfo
+    {
+        public string storageName;
+        public int woodAmount;
+        public int ironAmount;
+        public float usedWeight;
+        public float remainingCapacity;
+        public float totalCapacity;
+    }
 
     public static event Action OnResourcesChanged;
     private ResourcesUIController resourcesUIController;
@@ -114,8 +129,6 @@ public class InventoryManager : MonoBehaviour
             playerResourceSlots.Add(new ResourceSlot { data = data, quantity = amount });
         }
 
-        woodCount = GetTotalResourceByType(ResourceType.Wood);
-        ironCount = GetTotalResourceByType(ResourceType.Iron);
         playerCurrentWeight = GetPlayerCurrentWeight();
 
         OnResourcesChanged?.Invoke();
@@ -143,8 +156,6 @@ public class InventoryManager : MonoBehaviour
             aiPlayerResourceSlots.Add(new ResourceSlot { data = data, quantity = amount });
         }
         
-        woodCount = GetTotalResourceByType(ResourceType.Wood);
-        ironCount = GetTotalResourceByType(ResourceType.Iron);
         aiCurrentWeight = GetAICurrentWeight();
 
         OnResourcesChanged?.Invoke();
@@ -152,6 +163,7 @@ public class InventoryManager : MonoBehaviour
     }
     #endregion
 
+    #region TryConsuming Logic
     public bool TryConsuming(int consumingWoodCount, int consumingIronCount)
     {
         // 检查资源是否足够
@@ -169,10 +181,7 @@ public class InventoryManager : MonoBehaviour
         // 消耗铁
         ConsumeResourceByType(ResourceType.Iron, consumingIronCount);
 
-        OnResourcesChanged?.Invoke();
         // 更新显示数据
-        woodCount = GetTotalResourceByType(ResourceType.Wood);
-        ironCount = GetTotalResourceByType(ResourceType.Iron);
         playerCurrentWeight = GetPlayerCurrentWeight();
         aiCurrentWeight = GetAICurrentWeight();
         OnResourcesChanged?.Invoke();
@@ -217,8 +226,118 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Storage Resource Methods
+
+    /// <summary>
+    /// 获取所有仓库中指定类型资源的总数量
+    /// </summary>
+    public int GetAllStorageResourceByType(ResourceType type)
+    {
+        int total = 0;
+        StorageController[] allStorages = FindObjectsOfType<StorageController>();
+
+        foreach (var storage in allStorages)
+        {
+            switch (type)
+            {
+                case ResourceType.Wood:
+                    total += storage.GetStoredWood();
+                    break;
+                case ResourceType.Iron:
+                    total += storage.GetStoredIron();
+                    break;
+            }
+        }
+
+        return total;
+    }
+
+    /// <summary>
+    /// 获取所有仓库中的木头总数量
+    /// </summary>
+    public int GetAllStorageWood()
+    {
+        return GetAllStorageResourceByType(ResourceType.Wood);
+    }
+
+    /// <summary>
+    /// 获取所有仓库中的铁块总数量
+    /// </summary>
+    public int GetAllStorageIron()
+    {
+        return GetAllStorageResourceByType(ResourceType.Iron);
+    }
+
+    /// <summary>
+    /// 获取玩家背包+AI背包+所有仓库的资源总数量
+    /// </summary>
+    public int GetTotalResourceIncludingAllStorage(ResourceType type)
+    {
+        int inventoryTotal = GetTotalResourceByType(type); // 玩家+AI背包
+        int storageTotal = GetAllStorageResourceByType(type); // 所有仓库
+        return inventoryTotal + storageTotal;
+    }
 
 
+    /// <summary>
+    /// 注册仓库到管理器中
+    /// </summary>
+    public void RegisterStorage(StorageController storage)
+    {
+        if (storage != null && !allStorages.Contains(storage))
+        {
+            allStorages.Add(storage);
+            Debug.Log($"注册仓库: {storage.name}");
+            UpdateStorageDebugInfo();
+        }
+    }
+
+    /// <summary>
+    /// 从管理器中移除仓库
+    /// </summary>
+    public void UnregisterStorage(StorageController storage)
+    {
+        if (storage != null && allStorages.Contains(storage))
+        {
+            allStorages.Remove(storage);
+            Debug.Log($"移除仓库: {storage.name}");
+            UpdateStorageDebugInfo();
+        }
+    }
+
+    /// <summary>
+    /// 更新仓库调试信息（在Inspector中显示）
+    /// </summary>
+    public void UpdateStorageDebugInfo()
+    {
+        storageDebugList.Clear();
+
+        for (int i = 0; i < allStorages.Count; i++)
+        {
+            var storage = allStorages[i];
+            if (storage != null)
+            {
+                var debugInfo = new StorageDebugInfo
+                {
+                    storageName = storage.name,
+                    woodAmount = storage.GetStoredWood(),
+                    ironAmount = storage.GetStoredIron(),
+                    usedWeight = storage.GetCurrentUsedWeight(),
+                    remainingCapacity = storage.GetRemainingCapacity(),
+                    totalCapacity = storage.GetStorageCapacity()
+                };
+                storageDebugList.Add(debugInfo);
+            }
+        }
+    }
+    #endregion
     public enum InventoryTarget { Player, AI }
+
+    public void TriggerResourcesChangedEvent()
+    {
+        OnResourcesChanged?.Invoke();
+    }
 }
 

@@ -9,7 +9,7 @@ namespace PlayerControl
 	public class PlayerInputSystem : MonoBehaviour
 	{
         public PlayerStats playerStats;
-        public enum PlayerMode { Combat, BuildMenu, Placing }
+        public enum PlayerMode { Combat, BuildMenu, Placing, Interact }
         public PlayerMode currentMode = PlayerMode.Combat;
         // 模式切换事件
         public static event Action<PlayerMode> OnModeChanged;
@@ -24,6 +24,7 @@ namespace PlayerControl
         [HideInInspector] public bool openStatusPanel;
         [HideInInspector] public bool ping;
         [HideInInspector] public bool reload; // 添加换弹输入
+        [HideInInspector] public bool interact;
         [Header("Weapon Switch Input")]
         [HideInInspector] public bool weaponSwitchPressed;
         [HideInInspector] public Vector2 weaponSwitchValue;
@@ -57,6 +58,9 @@ namespace PlayerControl
         private WeaponSwitcher weaponSwitcher;
         private WeaponType currentWeaponType = WeaponType.Rifle;
 
+        private bool _interactHeldLastFrame = false;
+        private bool _interactHeldCurrentFrame = false;
+
         [Header("Building System")]
         [SerializeField] private BuildingSystem buildingSystem;
         private void Awake()
@@ -82,11 +86,16 @@ namespace PlayerControl
         {
             // 更新射击输入状态
             UpdateShootingInput();
+
             if (currentMode == PlayerMode.Placing)
             {
                 HandlePlacingInput();
             }
             //Debug.Log("当前输入模式: " + currentMode);
+
+            // 交互标志
+            interact = _interactHeldCurrentFrame && !_interactHeldLastFrame;
+            _interactHeldLastFrame = _interactHeldCurrentFrame;
 
         }
         private void UpdateShootingInput()
@@ -188,6 +197,11 @@ namespace PlayerControl
             OpenBuildMenuInput(value.isPressed);
         }
 
+        public void OnInteract(InputValue value)
+        {
+            _interactHeldCurrentFrame = value.isPressed;
+        }
+
         public void OnPing(InputValue value)
         {
             PingInput(value.isPressed);
@@ -221,6 +235,9 @@ namespace PlayerControl
                     break;
                 case PlayerMode.Placing:
                     EnterCombatMode();
+                    break;
+                case PlayerMode.Interact:
+                    ExitInteractMode();
                     break;
                 case PlayerMode.Combat:
                     // 在战斗模式下，ESC 可以打开暂停菜单或其他UI
@@ -328,6 +345,13 @@ namespace PlayerControl
                 // 在Placing模式下不响应B（只能右键/esc退出）
             }
         }
+        public void InteractInput(bool newInteractState)
+        {
+            interact = newInteractState;
+        }
+
+
+        #region Enter Mode
         public void EnterBuildMenu()
         {
             PlayerMode previousMode = currentMode;
@@ -377,6 +401,31 @@ namespace PlayerControl
             // 触发模式切换事件
             OnModeChanged?.Invoke(currentMode);
         }
+
+        public void EnterInteractMode()
+        {
+            PlayerMode previousMode = currentMode;
+            currentMode = PlayerMode.Interact;
+            cursorInputForLook = false;
+
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.ShowCursor();
+            }
+
+            // 重置输入状态，防止其他输入干扰
+            ResetInputStates();
+
+            // 触发模式切换事件
+            OnModeChanged?.Invoke(currentMode);
+        }
+        public void ExitInteractMode()
+        {
+            EnterCombatMode(); // 退出存储模式时回到战斗模式
+        }
+
+        #endregion
+
 
         // 重置输入状态
         private void ResetInputStates()
@@ -497,6 +546,7 @@ namespace PlayerControl
             shootPressed = false;
             shootReleased = false;
             reload = false; // 重置换弹输入
+            _interactHeldCurrentFrame = false; // 重置交互输入
         }
 
         private void OnDestroy()

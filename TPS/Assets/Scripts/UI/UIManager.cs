@@ -29,6 +29,11 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI subtitlesTypeText;
     public Animator subtitlesAnimator;
 
+    [Header("Interaction UI")]
+    public GameObject interactionTipUI; // 拖拽交互提示UI到这里
+    [Header("Storage UI")]
+    public GameObject storagePanel;
+
     [Header("PlayerDeath FadeToBlack")]
     [SerializeField] private GameObject screenFadeUI;
     [SerializeField] private Animator screenFadeAnimator;
@@ -58,6 +63,11 @@ public class UIManager : MonoBehaviour
         WeaponSwitcher.OnWeaponChanged += OnWeaponChanged;
 
         GameManager.OnPlayerDeath += OnPlayerDeath;
+
+        // 订阅仓库交互事件
+        StorageController.OnPlayerEnterStorageRange += OnPlayerEnterStorageRange;
+        StorageController.OnPlayerExitStorageRange += OnPlayerExitStorageRange;
+        StorageController.OnPlayerInteractWithStorage += OnPlayerInteractWithStorage;
         // 初始化UI状态
         InitializeUI();
     }
@@ -68,6 +78,9 @@ public class UIManager : MonoBehaviour
         PlayerInputSystem.OnModeChanged -= OnPlayerModeChanged;
         GameManager.OnPlayerDeath -= OnPlayerDeath;
         WeaponSwitcher.OnWeaponChanged -= OnWeaponChanged;
+        StorageController.OnPlayerEnterStorageRange -= OnPlayerEnterStorageRange;
+        StorageController.OnPlayerExitStorageRange -= OnPlayerExitStorageRange;
+        StorageController.OnPlayerInteractWithStorage -= OnPlayerInteractWithStorage;
     }
 
     private void Update()
@@ -268,4 +281,75 @@ public class UIManager : MonoBehaviour
             hammerPanel.SetActive(true);
         }
     }
+
+    #region Storage Functions
+    private void OnPlayerEnterStorageRange()
+    {
+        ShowInteractionTip();
+    }
+
+    /// <summary>
+    /// 处理玩家离开仓库范围事件
+    /// </summary>
+    private void OnPlayerExitStorageRange()
+    {
+        HideInteractionTip();
+        HideStoragePanel();
+    }
+
+    public void ShowInteractionTip()
+    {
+        if (interactionTipUI != null)
+        {
+            interactionTipUI.SetActive(true);
+        }
+    }
+
+    public void HideInteractionTip()
+    {
+        if (interactionTipUI != null)
+        {
+            interactionTipUI.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 处理玩家与仓库交互事件
+    /// </summary>
+    private void OnPlayerInteractWithStorage(StorageController storage)
+    {
+        ShowStoragePanel(storage);
+    }
+
+    /// <summary>
+    /// 显示仓库面板
+    /// </summary>
+    public void ShowStoragePanel(StorageController storage = null)
+    {
+        if (storagePanel != null)
+        {
+            storagePanel.SetActive(true);
+
+            // 设置当前仓库引用
+            StorageUIController uiController = storagePanel.GetComponent<StorageUIController>();
+            if (uiController != null && storage != null)
+            {
+                uiController.SetCurrentStorage(storage);
+            }
+
+            HideInteractionTip();
+        }
+    }
+
+    /// <summary>
+    /// 隐藏仓库面板
+    /// </summary>
+    public void HideStoragePanel()
+    {
+        if (storagePanel != null)
+        {
+            storagePanel.SetActive(false);
+        }
+    }
+    #endregion
 }

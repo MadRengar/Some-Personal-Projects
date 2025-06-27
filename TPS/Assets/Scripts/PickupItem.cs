@@ -61,6 +61,15 @@ public class PickupItem : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player") && playerInputSystem != null)
+        {
+            playerInputSystem.pickUp = false;
+        }
+    }
+
+
     /// <summary>
     /// 供AI调用：AI拾取该资源
     /// </summary>

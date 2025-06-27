@@ -36,9 +36,9 @@ public class ResourcesUIController : MonoBehaviour
             return;
         }
 
-        // 直接获取总资源数量（玩家+AI）
-        woodCount = inventoryManager.GetTotalResourceByType(ResourceType.Wood);
-        ironCount = inventoryManager.GetTotalResourceByType(ResourceType.Iron);
+        // 直接获取总资源数量（玩家+AI+仓库）
+        woodCount = inventoryManager.GetTotalResourceIncludingAllStorage(ResourceType.Wood);
+        ironCount = inventoryManager.GetTotalResourceIncludingAllStorage(ResourceType.Iron);
 
         // 更新UI显示
         if (woodNumUI != null)

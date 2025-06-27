@@ -34,6 +34,9 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerInputSystem playerInputSystem;
 
+    [Header("Inventory")]
+    public InventoryManager inventoryManager;
+
     [Header("AI Agent")]
     public GameObject aiTeammate;
     public AIAgentSettings aiAgentSettings;
@@ -112,6 +115,11 @@ public class GameManager : MonoBehaviour
     public PingMarkerManager GetPingMarkerManager()
     {
         return pingMarkerManager;
+    }
+
+    public InventoryManager GetInventoryManager()
+    {
+        return inventoryManager;
     }
     #endregion
 
