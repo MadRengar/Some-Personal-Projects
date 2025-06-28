@@ -33,6 +33,8 @@ public class UIManager : MonoBehaviour
     public GameObject interactionTipUI; // 拖拽交互提示UI到这里
     [Header("Storage UI")]
     public GameObject storagePanel;
+    [Header("Ammo Workbench UI")]
+    public GameObject ammoWorkbenchPanel; // 拖拽弹药工作台面板UI到这里
 
     [Header("PlayerDeath FadeToBlack")]
     [SerializeField] private GameObject screenFadeUI;
@@ -68,6 +70,7 @@ public class UIManager : MonoBehaviour
         StorageController.OnPlayerEnterStorageRange += OnPlayerEnterStorageRange;
         StorageController.OnPlayerExitStorageRange += OnPlayerExitStorageRange;
         StorageController.OnPlayerInteractWithStorage += OnPlayerInteractWithStorage;
+        AmmoWorkbenchController.OnPlayerInteractWithWorkbench += OnPlayerInteractWithWorkbench;
         // 初始化UI状态
         InitializeUI();
     }
@@ -81,6 +84,8 @@ public class UIManager : MonoBehaviour
         StorageController.OnPlayerEnterStorageRange -= OnPlayerEnterStorageRange;
         StorageController.OnPlayerExitStorageRange -= OnPlayerExitStorageRange;
         StorageController.OnPlayerInteractWithStorage -= OnPlayerInteractWithStorage;
+
+        AmmoWorkbenchController.OnPlayerInteractWithWorkbench -= OnPlayerInteractWithWorkbench;
     }
 
     private void Update()
@@ -349,6 +354,36 @@ public class UIManager : MonoBehaviour
         if (storagePanel != null)
         {
             storagePanel.SetActive(false);
+        }
+    }
+    #endregion
+
+    #region Ammo Workbench Functions
+    private void OnPlayerInteractWithWorkbench()
+    {
+        ShowAmmoWorkbenchPanel();
+    }
+
+    /// <summary>
+    /// 显示弹药工作台面板
+    /// </summary>
+    public void ShowAmmoWorkbenchPanel()
+    {
+        if (ammoWorkbenchPanel != null)
+        {
+            ammoWorkbenchPanel.SetActive(true);
+            HideInteractionTip();
+        }
+    }
+
+    /// <summary>
+    /// 隐藏弹药工作台面板
+    /// </summary>
+    public void HideAmmoWorkbenchPanel()
+    {
+        if (ammoWorkbenchPanel != null)
+        {
+            ammoWorkbenchPanel.SetActive(false);
         }
     }
     #endregion

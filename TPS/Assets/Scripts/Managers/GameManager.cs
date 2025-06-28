@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     [Header("Player")]
     public GameObject player;
     public PlayerInputSystem playerInputSystem;
+    public WeaponManager playerWeaponManager;
 
     [Header("Inventory")]
     public InventoryManager inventoryManager;
@@ -120,6 +121,11 @@ public class GameManager : MonoBehaviour
     public InventoryManager GetInventoryManager()
     {
         return inventoryManager;
+    }
+
+    public WeaponManager GetPlayerWeaponManager()
+    {
+        return playerWeaponManager;
     }
     #endregion
 

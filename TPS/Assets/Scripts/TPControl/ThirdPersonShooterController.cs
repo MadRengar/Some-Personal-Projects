@@ -36,6 +36,10 @@ public class ThirdPersonShooterController : MonoBehaviour
     [Header("Weapon")]
     [SerializeField] public WeaponManager weapon;
 
+    [Header("Aim Target Adjustment")]
+    [SerializeField] private Vector3 aimTargetOffset = Vector3.zero; // 在Inspector中调整
+    [SerializeField] private bool useManualOffset = true;
+
     [Header("Animation Layers")]
     [SerializeField] private int rifleLayerIndex = 1;      // Base Layer
     [SerializeField] private int aimingLayerIndex = 2;    // Aiming Layer  
@@ -88,22 +92,7 @@ public class ThirdPersonShooterController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
         {
-            float hitDistanceFromCamera = Vector3.Distance(Camera.main.transform.position, raycastHit.point);
-            float safeDistance = 2.5f;
-
-            if (hitDistanceFromCamera > safeDistance)
-            {
-                // 距离相机足够远，正常设置
-                aimTarget.transform.position = raycastHit.point;
-            }
-            else
-            {
-                // 距离太近，延长
-                Debug.Log("命中点离相机太近，延长至安全距离");
-                Vector3 direction = ray.direction.normalized;
-                Vector3 safePosition = Camera.main.transform.position + direction * safeDistance;
-                aimTarget.transform.position = safePosition;
-            }
+            aimTarget.transform.position = raycastHit.point + aimTargetOffset;            
         }
 
         /*是否能开启瞄准*/

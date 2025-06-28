@@ -18,8 +18,13 @@ public class StorageUIController : MonoBehaviour
     public TMP_InputField ironInputField;       // 铁块输入框
 
     [Header("Buttons")]
-    public Button confirmButton;                // 确认按钮
+    public Button depositButton;                // 确认按钮
+    public Button retrieveButton;                // 确认按钮
     public Button cancelButton;                 // 取消按钮
+
+    [Header("Resource Data")]
+    public ResourceData_SO woodResourceData; 
+    public ResourceData_SO ironResourceData;
 
     [Header("References")]
     private StorageController currentStorage;     // 当前操作的仓库
@@ -53,14 +58,18 @@ public class StorageUIController : MonoBehaviour
     /// </summary>
     private void SetupButtons()
     {
-        if (confirmButton != null)
+        if (depositButton != null)
         {
-            confirmButton.onClick.AddListener(OnConfirmButtonClicked);
+            depositButton.onClick.AddListener(OnDepositButtonClicked);
         }
 
         if (cancelButton != null)
         {
             cancelButton.onClick.AddListener(OnCancelButtonClicked);
+        }
+        if (retrieveButton != null)
+        {
+            retrieveButton.onClick.AddListener(OnRetrieveButtonClicked);
         }
     }
 
@@ -100,7 +109,7 @@ public class StorageUIController : MonoBehaviour
     /// <summary>
     /// 确认按钮点击事件
     /// </summary>
-    private void OnConfirmButtonClicked()
+    private void OnDepositButtonClicked()
     {
         // 获取输入的数量
         int woodAmount = GetInputAmount(woodInputField);
@@ -113,7 +122,7 @@ public class StorageUIController : MonoBehaviour
         }
 
         // 尝试存储资源
-        bool success = TryStoreResources(woodAmount, ironAmount);
+        bool success = TryDepositResources(woodAmount, ironAmount);
 
         if (success)
         {
@@ -132,10 +141,39 @@ public class StorageUIController : MonoBehaviour
         CloseStoragePanel();
     }
 
+    private void OnRetrieveButtonClicked()
+    {
+        // 获取输入的数量
+        int woodAmount = GetInputAmount(woodInputField);
+        int ironAmount = GetInputAmount(ironInputField);
+
+        if (woodAmount <= 0 && ironAmount <= 0)
+        {
+            Debug.Log("请输入要取出的资源数量");
+            return;
+        }
+
+        // 尝试取出资源
+        bool success = TryRetrieveResources(woodAmount, ironAmount);
+
+        if (success)
+        {
+            Debug.Log($"成功取出 {woodAmount} 木头, {ironAmount} 铁块");
+            RefreshStorageUI();
+            ClearInputFields();
+
+            // 立即刷新InventoryManager的调试信息
+            if (inventoryManager != null)
+            {
+                inventoryManager.UpdateStorageDebugInfo();
+            }
+        }
+    }
+
     /// <summary>
     /// 尝试存储资源
     /// </summary>
-    private bool TryStoreResources(int woodAmount, int ironAmount)
+    private bool TryDepositResources(int woodAmount, int ironAmount)
     {
         if (inventoryManager == null || currentStorage == null)
         {
@@ -187,6 +225,107 @@ public class StorageUIController : MonoBehaviour
         return true;
     }
 
+    private bool TryRetrieveResources(int woodAmount, int ironAmount)
+    {
+        if (inventoryManager == null || currentStorage == null)
+        {
+            Debug.LogError("InventoryManager 或 CurrentStorage 为空");
+            return false;
+        }
+
+        // 1. 检查仓库是否有足够的资源
+        int storageWood = currentStorage.GetStoredWood();
+        int storageIron = currentStorage.GetStoredIron();
+
+        if (storageWood < woodAmount)
+        {
+            Debug.Log($"仓库木头不足！需要: {woodAmount}, 拥有: {storageWood}");
+            return false;
+        }
+
+        if (storageIron < ironAmount)
+        {
+            Debug.Log($"仓库铁块不足！需要: {ironAmount}, 拥有: {storageIron}");
+            return false;
+        }
+
+        // 2. 检查玩家背包重量是否足够容纳这些资源
+        float additionalWeight = woodAmount * 1f + ironAmount * 2f; // 木头1kg/个，铁块2kg/个
+        float currentPlayerWeight = inventoryManager.GetPlayerCurrentWeight();
+
+        if (currentPlayerWeight + additionalWeight > inventoryManager.playerMaxWeight)
+        {
+            Debug.Log($"玩家背包重量不足！需要: {additionalWeight}kg, 剩余容量: {inventoryManager.playerMaxWeight - currentPlayerWeight}kg");
+            return false;
+        }
+
+        // 3. 从仓库取出资源
+        bool retrieveSuccess = currentStorage.TryRetrieveResources(woodAmount, ironAmount);
+        if (!retrieveSuccess)
+        {
+            Debug.LogError("从仓库取出资源失败");
+            return false;
+        }
+
+        // 4. 将资源添加到玩家背包
+        bool addSuccess = AddResourcesToPlayerInventory(woodAmount, ironAmount);
+        if (!addSuccess)
+        {
+            Debug.LogError("添加资源到玩家背包失败！需要回滚仓库资源");
+            // 回滚：将资源放回仓库
+            currentStorage.TryStoreResources(woodAmount, ironAmount);
+            return false;
+        }
+
+        Debug.Log($"成功完成资源取出: {woodAmount} 木头, {ironAmount} 铁块 从仓库取出到玩家背包");
+        return true;
+    }
+
+    private bool AddResourcesToPlayerInventory(int woodAmount, int ironAmount)
+    {
+        bool success = true;
+
+        // 添加木头到玩家背包
+        if (woodAmount > 0)
+        {
+            if (woodResourceData != null)
+            {
+                bool woodAdded = inventoryManager.TryAddPlayer(woodResourceData, woodAmount);
+                if (!woodAdded)
+                {
+                    Debug.LogError("添加木头到玩家背包失败");
+                    success = false;
+                }
+            }
+            else
+            {
+                Debug.LogError("木头ResourceData_SO未设置");
+                success = false;
+            }
+        }
+
+        // 添加铁块到玩家背包
+        if (ironAmount > 0 && success)
+        {
+            if (ironResourceData != null)
+            {
+                bool ironAdded = inventoryManager.TryAddPlayer(ironResourceData, ironAmount);
+                if (!ironAdded)
+                {
+                    Debug.LogError("添加铁块到玩家背包失败");
+                    success = false;
+                }
+            }
+            else
+            {
+                Debug.LogError("铁块ResourceData_SO未设置");
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
     /// <summary>
     /// 获取输入框的数量
     /// </summary>
@@ -226,8 +365,8 @@ public class StorageUIController : MonoBehaviour
     private void OnDestroy()
     {
         // 清理按钮事件
-        if (confirmButton != null)
-            confirmButton.onClick.RemoveAllListeners();
+        if (depositButton != null)
+            depositButton.onClick.RemoveAllListeners();
 
         if (cancelButton != null)
             cancelButton.onClick.RemoveAllListeners();

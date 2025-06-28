@@ -219,6 +219,35 @@ public class StorageController : MonoBehaviour, IBuildingController
         GameManager.Instance.GetInventoryManager().TriggerResourcesChangedEvent();
         return true;
     }
+
+    /// <summary>
+    /// 尝试从仓库取出资源
+    /// </summary>
+    public bool TryRetrieveResources(int woodAmount, int ironAmount)
+    {
+        // 检查是否有足够的资源可以取出
+        if (currentWoodAmount < woodAmount || currentIronAmount < ironAmount)
+        {
+            Debug.Log("仓库中资源不足，无法取出指定数量");
+            return false;
+        }
+
+        // 取出资源
+        currentWoodAmount -= woodAmount;
+        currentIronAmount -= ironAmount;
+
+        Debug.Log($"成功从仓库取出: {woodAmount} 木头, {ironAmount} 铁块");
+        Debug.Log($"仓库剩余存储: {currentWoodAmount} 木头, {currentIronAmount} 铁块");
+
+        // 触发资源变化事件
+        InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
+        if (inventoryManager != null)
+        {
+            inventoryManager.TriggerResourcesChangedEvent();
+        }
+
+        return true;
+    }
     #endregion
 
 

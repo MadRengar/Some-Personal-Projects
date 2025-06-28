@@ -325,10 +325,10 @@ public class WeaponManager : MonoBehaviour
     /// </summary>
     public void AddReserveAmmo(int amount)
     {
-        reserveAmmo = Mathf.Min(reserveAmmo + amount, weaponData.maxReserveAmmo);
+        reserveAmmo += amount;
         OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
 
-        //Debug.Log($"获得 {amount} 发 {weaponData.weaponName} 弹药，当前备用: {reserveAmmo}");
+        Debug.Log($"获得 {amount} 发 {weaponData.weaponName} 弹药，当前备用: {reserveAmmo}");
     }
     #endregion
 
