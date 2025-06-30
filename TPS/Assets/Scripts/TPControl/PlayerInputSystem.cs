@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using UnityEngine.InputSystem.LowLevel;
+
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -92,6 +94,8 @@ namespace PlayerControl
                 HandlePlacingInput();
             }
             //Debug.Log("当前输入模式: " + currentMode);
+
+            HandleCharacterPanelInput();
 
             // 交互标志
             interact = _interactHeldCurrentFrame && !_interactHeldLastFrame;
@@ -310,8 +314,10 @@ namespace PlayerControl
 
         public void OpenStatusPanelInput(bool newStatusPanelInputState)
         {
-            openStatusPanel = newStatusPanelInputState;
-
+            if (newStatusPanelInputState) // 只在按下时触发
+            {
+                openStatusPanel = true;
+            }
         }
 
         public void PingInput(bool newPingInputState)
@@ -522,6 +528,26 @@ namespace PlayerControl
             }
         }
 
+
+        private void HandleCharacterPanelInput()
+        {
+            // Tab键全局响应，切换角色面板的显示/隐藏
+            if (openStatusPanel)
+            {
+                UIManager.Instance?.ToggleCharacterPanel();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
         // 公共方法，供其他脚本调用
         public bool IsInCombatMode() => currentMode == PlayerMode.Combat;
         public bool IsInBuildMenuMode() => currentMode == PlayerMode.BuildMenu;
@@ -547,6 +573,7 @@ namespace PlayerControl
             shootReleased = false;
             reload = false; // 重置换弹输入
             _interactHeldCurrentFrame = false; // 重置交互输入
+            openStatusPanel = false; // 重置角色面板输入
         }
 
         private void OnDestroy()

@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public GameObject buildingMenuPanelUI;
     [SerializeField] private GameObject gunAmmoPanel;    // GunAmmo UI 面板
     [SerializeField] private GameObject hammerPanel;     // Hammer UI 面板
+    public GameObject characterStatePanelUI; // 角色状态面板
 
     [Header("2D AIInfo UI")]
     public RectTransform currentMaAIInfoUI;
@@ -139,6 +140,12 @@ public class UIManager : MonoBehaviour
         if (gameOverMenuUI != null)
         {
             gameOverMenuUI.SetActive(false);
+        }
+
+        // 确保角色状态面板初始状态为隐藏
+        if (characterStatePanelUI != null)
+        {
+            characterStatePanelUI.SetActive(false);
         }
     }
 
@@ -284,6 +291,65 @@ public class UIManager : MonoBehaviour
         if (hammerPanel != null)
         {
             hammerPanel.SetActive(true);
+        }
+    }
+
+    // 添加角色面板切换方法：
+    /// <summary>
+    /// 切换角色状态面板的显示/隐藏
+    /// </summary>
+    public void ToggleCharacterPanel()
+    {
+        if (characterStatePanelUI != null)
+        {
+            bool isActive = characterStatePanelUI.activeSelf;
+
+            if (isActive)
+            {
+                HideCharacterPanel();
+            }
+            else
+            {
+                ShowCharacterPanel();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 显示角色状态面板
+    /// </summary>
+    public void ShowCharacterPanel()
+    {
+        if (characterStatePanelUI != null)
+        {
+            characterStatePanelUI.SetActive(true);
+
+            // 更新面板数据
+            UpdateCharacterPanelData();
+        }
+    }
+
+    /// <summary>
+    /// 隐藏角色状态面板
+    /// </summary>
+    public void HideCharacterPanel()
+    {
+        if (characterStatePanelUI != null)
+        {
+            characterStatePanelUI.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 更新角色面板数据
+    /// </summary>
+    private void UpdateCharacterPanelData()
+    {
+        // 获取角色状态面板控制器并更新数据
+        CharacterStatePanelController panelController = characterStatePanelUI?.GetComponent<CharacterStatePanelController>();
+        if (panelController != null)
+        {
+            panelController.UpdatePanelData();
         }
     }
 
