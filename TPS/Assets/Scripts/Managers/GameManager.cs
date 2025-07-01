@@ -217,7 +217,6 @@ public class GameManager : MonoBehaviour
 
     public void ReceiveAIBehaviorCommand(string command)
     {
-        if (command == currentCommand) return; // 不重复设置
         currentCommand = command;
         // 同步一次行为树变量
         var tree = aiTeammate.GetComponent<BehaviorTree>();

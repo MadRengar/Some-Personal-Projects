@@ -16,7 +16,23 @@ public class AIAgentSettings : MonoBehaviour
     public float patrolWaitTime = 1.5f; // AI 在每个巡逻点等待的时间
     public float sightRadius = 20f; // AI感知/射击范围
     public float minDistanceToPing = 3.0f; // 可选：与玩家的最小距离，避免 AI 原地执行
-    
+
+    [Header("Combat Distance Settings")]
+    public float optimalCombatDistance = 8f;     // 理想战斗距离
+    public float minCombatDistance = 5f;         // 最小战斗距离（小于这个距离要后退）
+    public float maxCombatDistance = 15f;        // 最大战斗距离（大于这个距离要前进）
+    public float combatRetreatSpeed = 1.2f;     // 战斗后退速度倍数
+
+    [Header("Tactical Movement Settings")]
+    public float tacticalSafeDistance = 6f;          // 战术移动时与敌人的安全距离
+    public float playerFollowWeight = 0.7f;          // 跟随玩家的权重 (0-1)
+    public float enemyAvoidWeight = 0.3f;            // 避开敌人的权重 (0-1)  
+    public float tacticalUpdateInterval = 0.15f;     // 战术移动更新间隔
+
+    [Header("AI Commands")]
+    public bool isFollowingPlayer = false;       // 是否收到跟随指令
+    public bool prioritizePlayerFollow = false;  // 是否优先跟随玩家（即使在战斗中）
+
     /*TODO：容忍ai错误寻路时间
       由于一些原因阻止ai代理无法真正的到达目标点，从而在目标点附近附近持续转圈
      */
@@ -130,6 +146,13 @@ public class AIAgentSettings : MonoBehaviour
 
         transform.position = rootPosition;
         agent.nextPosition = rootPosition;
-        // 可选：同步旋转（若动画有 root rotation）
+    }
+
+    // 新增：设置跟随指令
+    public void SetFollowPlayerCommand(bool follow, bool prioritize = false)
+    {
+        isFollowingPlayer = follow;
+        prioritizePlayerFollow = prioritize;
+        Debug.Log($"AI收到跟随指令: {follow}, 优先级: {prioritize}");
     }
 }

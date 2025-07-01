@@ -49,8 +49,23 @@ public class AIAnimationController : MonoBehaviour
     public string isFiringParameter = "IsFiring";
     public string isAimingParameter = "IsAiming";
     public string isReloadingParameter = "IsReloading";
+    public string isMovingParameter = "IsMoving"; // 新增移动参数
 
-    // AI状态枚举
+    // 新的状态标志位系统
+    [System.Flags]
+    public enum AIStateFlags
+    {
+        None = 0,
+        Moving = 1,
+        Aiming = 2,
+        Firing = 4,
+        Reloading = 8
+    }
+
+    [Header("Multi-State Support")]
+    [SerializeField] private AIStateFlags currentStateFlags = AIStateFlags.None;
+
+    // 保留旧的状态枚举用于兼容
     public enum AIState
     {
         Idle,
@@ -59,43 +74,158 @@ public class AIAnimationController : MonoBehaviour
         Reloading
     }
 
-    [Header("Current State")]
+    [Header("Current State (Legacy - for compatibility)")]
     [SerializeField] private AIState currentState = AIState.Idle;
-    [SerializeField] private AIState targetState = AIState.Idle;
 
     [Header("Reload Settings")]
     public bool isReloading = false;
 
-    private AIState stateBeforeReload = AIState.Idle; // 记录换弹前的状态
-    // Start is called before the first frame update
+    private AIState stateBeforeReload = AIState.Idle;
+
     void Start()
     {
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        // 查找并订阅WeaponManager事件
         FindAndSubscribeToWeaponManager();
-
-        // 初始化所有Rig权重
         InitializeRigWeights();
 
-        // 设置初始状态
-        ChangeState(AIState.Idle);
+        // 初始状态设置
+        SetStateFlag(AIStateFlags.None, true);
     }
 
-    // Update is called once per frame
     void Update()
     {
         HandleReloadAnimation();
-        UpdateRigWeights();      
+        UpdateRigWeights();
+        UpdateAnimatorParameters(); // 每帧更新动画参数
     }
+
+    #region 新的状态管理系统
+
+    /// <summary>
+    /// 设置状态标志位
+    /// </summary>
+    public void SetStateFlag(AIStateFlags flag, bool value)
+    {
+        if (value)
+        {
+            currentStateFlags |= flag;
+        }
+        else
+        {
+            currentStateFlags &= ~flag;
+        }
+
+        Debug.Log($"AI状态更新: {currentStateFlags}");
+    }
+
+    /// <summary>
+    /// 检查是否有指定状态标志
+    /// </summary>
+    public bool HasStateFlag(AIStateFlags flag)
+    {
+        return (currentStateFlags & flag) != 0;
+    }
+
+    /// <summary>
+    /// 获取当前所有状态标志
+    /// </summary>
+    public AIStateFlags GetCurrentStateFlags()
+    {
+        return currentStateFlags;
+    }
+
+    /// <summary>
+    /// 更新动画参数 - 基于状态标志位
+    /// </summary>
+    private void UpdateAnimatorParameters()
+    {
+        if (animator == null) return;
+
+        // 根据状态标志位设置动画参数
+        animator.SetBool(isMovingParameter, HasStateFlag(AIStateFlags.Moving));
+        animator.SetBool(isAimingParameter, HasStateFlag(AIStateFlags.Aiming));
+        animator.SetBool(isFiringParameter, HasStateFlag(AIStateFlags.Firing));
+        animator.SetBool(isReloadingParameter, HasStateFlag(AIStateFlags.Reloading));
+    }
+
+    #endregion
+
+    #region 兼容旧系统的方法 (保留以防需要)
+
+    public void ChangeState(AIState newState)
+    {
+        if (currentState == newState) return;
+
+        Debug.Log($"AI状态切换 (Legacy): {currentState} -> {newState}");
+        currentState = newState;
+
+        // 根据旧状态设置新的标志位
+        switch (newState)
+        {
+            case AIState.Idle:
+                SetStateFlag(AIStateFlags.Aiming | AIStateFlags.Firing, false);
+                break;
+            case AIState.Aiming:
+                SetStateFlag(AIStateFlags.Aiming, true);
+                SetStateFlag(AIStateFlags.Firing, false);
+                break;
+            case AIState.Firing:
+                SetStateFlag(AIStateFlags.Aiming | AIStateFlags.Firing, true);
+                break;
+            case AIState.Reloading:
+                SetStateFlag(AIStateFlags.Reloading, true);
+                SetStateFlag(AIStateFlags.Aiming | AIStateFlags.Firing, false);
+                break;
+        }
+    }
+
+    #endregion
+
+    #region 公共接口方法 - 使用新的状态系统
+
+    public void SetMoving(bool moving)
+    {
+        SetStateFlag(AIStateFlags.Moving, moving);
+    }
+
+    public void SetAiming(bool aiming)
+    {
+        SetStateFlag(AIStateFlags.Aiming, aiming);
+    }
+
+    public void SetFiring(bool firing)
+    {
+        SetStateFlag(AIStateFlags.Firing, firing);
+    }
+
+    public void SetReloading(bool reloading)
+    {
+        SetStateFlag(AIStateFlags.Reloading, reloading);
+        isReloading = reloading;
+    }
+
+    // 保留旧的接口用于兼容
+    public void SetIdle() => ChangeState(AIState.Idle);
+    public void OnStartAiming() => SetAiming(true);
+    public void OnStartFiring() => SetFiring(true);
+    public void OnStopFiring() => SetFiring(false);
+    public void OnLostEnemyTarget()
+    {
+        SetAiming(false);
+        SetFiring(false);
+    }
+
+    #endregion
+
+    #region 原有的逻辑保持不变
+
     private void FindAndSubscribeToWeaponManager()
     {
         if (weaponManager != null)
         {
-            // 订阅换弹状态变化事件
             weaponManager.OnReloadStateChanged += OnWeaponReloadStateChanged;
-            //Debug.Log("AI成功订阅WeaponManager换弹事件");
         }
         else
         {
@@ -107,8 +237,7 @@ public class AIAnimationController : MonoBehaviour
     {
         if (isReloadingNow)
         {
-            // 换弹开始：记录当前状态
-            if (currentState != AIState.Reloading)
+            if (!HasStateFlag(AIStateFlags.Reloading))
             {
                 stateBeforeReload = currentState;
                 Debug.Log($"换弹开始，记录换弹前状态: {stateBeforeReload}");
@@ -116,33 +245,27 @@ public class AIAnimationController : MonoBehaviour
         }
         else
         {
-            // 换弹结束：快速恢复到换弹前的状态
-            Debug.Log($"换弹结束，快速恢复到状态: {stateBeforeReload}");
+            Debug.Log($"换弹结束，考虑恢复到状态: {stateBeforeReload}");
             QuickRestoreFromReload();
         }
     }
 
     private void QuickRestoreFromReload()
     {
-        isReloading = false;
-
-        // 立即切换回换弹前的状态
+        SetReloading(false);
         ChangeState(stateBeforeReload);
     }
-
 
     private void HandleReloadAnimation()
     {
         bool isReloading = weaponManager != null && weaponManager.IsReloading();
         if (isReloading)
         {
-            SetReloading();
-            isReloading = true;
-            Debug.Log("AI队友在换弹！！！！！！！！");
+            SetReloading(true);
+            Debug.Log("AI正在在换弹！！！！！！！！！");
         }
     }
 
-    /* 初始化所有Rig权重为0 */
     private void InitializeRigWeights()
     {
         SetRigWeights(IdleState, 0f);
@@ -150,97 +273,43 @@ public class AIAnimationController : MonoBehaviour
         SetRigWeights(firingState, 0f);
     }
 
-    /* 改变AI状态 */
-    public void ChangeState(AIState newState)
-    {
-        if (targetState == newState) return;
-
-        //Debug.Log($"AI状态切换: {currentState} -> {newState}");
-        targetState = newState;
-
-        // 设置动画参数
-        SetAnimatorParameters(newState);
-    }
-
-    /// <summary>
-    /// 设置动画参数
-    /// </summary>
-    private void SetAnimatorParameters(AIState state)
-    {
-        if (animator == null) return;
-
-        // 重置所有布尔参数
-        animator.SetBool(isFiringParameter, false);
-        animator.SetBool(isAimingParameter, false);
-        animator.SetBool(isReloadingParameter, false);
-
-        // 根据状态设置参数
-        switch (state)
-        {
-            case AIState.Idle:
-                break;
-            case AIState.Aiming:
-                animator.SetBool(isAimingParameter, true);
-                break;
-            case AIState.Firing:
-                animator.SetBool(isFiringParameter, true);
-                animator.SetBool(isAimingParameter, true);
-                break;
-            case AIState.Reloading:
-                animator.SetBool(isReloadingParameter, true);
-                break;
-        }
-    }
-
-    /// <summary>
-    /// 更新Rig权重
-    /// </summary>
     private void UpdateRigWeights()
     {
-        // 根据目标状态设置Rig权重
-        switch (targetState)
+        // 根据状态标志位更新Rig权重
+        if (HasStateFlag(AIStateFlags.Firing))
         {
-            case AIState.Idle:
-                UpdateStateRigWeights(IdleState, 1f);
-                UpdateStateRigWeights(aimingState, 0f);
-                UpdateStateRigWeights(firingState, 0f);
-                break;
-
-            case AIState.Aiming:
-                UpdateStateRigWeights(IdleState, 0f);
-                UpdateStateRigWeights(aimingState, 1f);
-                UpdateStateRigWeights(firingState, 0f);
-                break;
-
-            case AIState.Firing:
-                UpdateStateRigWeights(IdleState, 0f);
-                UpdateStateRigWeights(aimingState, 0f);
-                UpdateStateRigWeights(firingState, 1f);
-                break;
-            case AIState.Reloading:
-                UpdateStateRigWeights(IdleState, 0f);
-                UpdateStateRigWeights(aimingState, 0f);
-                UpdateStateRigWeights(firingState, 0f);
-                break;
+            UpdateStateRigWeights(IdleState, 0f);
+            UpdateStateRigWeights(aimingState, 0f);
+            UpdateStateRigWeights(firingState, 1f);
+        }
+        else if (HasStateFlag(AIStateFlags.Aiming))
+        {
+            UpdateStateRigWeights(IdleState, 0f);
+            UpdateStateRigWeights(aimingState, 1f);
+            UpdateStateRigWeights(firingState, 0f);
+        }
+        else
+        {
+            UpdateStateRigWeights(IdleState, 1f);
+            UpdateStateRigWeights(aimingState, 0f);
+            UpdateStateRigWeights(firingState, 0f);
         }
 
-        // 检查是否完成过渡
-        if (IsRigTransitionComplete())
+        // 换弹时清空所有Rig
+        if (HasStateFlag(AIStateFlags.Reloading))
         {
-            currentState = targetState;
+            UpdateStateRigWeights(IdleState, 0f);
+            UpdateStateRigWeights(aimingState, 0f);
+            UpdateStateRigWeights(firingState, 0f);
         }
     }
 
-    /// <summary>
-    /// 更新单个状态的Rig权重
-    /// </summary>
     private void UpdateStateRigWeights(AnimationState state, float targetWeight)
     {
         state.currentRigWeight = Mathf.Lerp(state.currentRigWeight,
                                            targetWeight * state.rigWeight,
                                            Time.deltaTime * rigTransitionSpeed);
 
-        // 应用到所有Rig
         foreach (var rig in state.rigs)
         {
             if (rig != null)
@@ -248,9 +317,6 @@ public class AIAnimationController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 设置Rig权重（立即）
-    /// </summary>
     private void SetRigWeights(AnimationState state, float weight)
     {
         state.currentRigWeight = weight;
@@ -258,28 +324,6 @@ public class AIAnimationController : MonoBehaviour
         {
             if (rig != null)
                 rig.weight = weight;
-        }
-    }
-
-    /// <summary>
-    /// 检查Rig过渡是否完成
-    /// </summary>
-    private bool IsRigTransitionComplete()
-    {
-        float threshold = 0.01f;
-
-        switch (targetState)
-        {
-            case AIState.Idle:
-                return Mathf.Abs(IdleState.currentRigWeight - IdleState.rigWeight) < threshold;
-
-            case AIState.Aiming:
-                return Mathf.Abs(aimingState.currentRigWeight - aimingState.rigWeight) < threshold;
-
-            case AIState.Firing:
-                return Mathf.Abs(firingState.currentRigWeight - firingState.rigWeight) < threshold;
-            default:
-                return true;
         }
     }
 
@@ -291,57 +335,10 @@ public class AIAnimationController : MonoBehaviour
         }
     }
 
-
-    // 公共接口方法
-    public void SetIdle() => ChangeState(AIState.Idle);
-    public void SetAiming() => ChangeState(AIState.Aiming);
-    public void SetFiring() => ChangeState(AIState.Firing);
-    public void SetReloading() => ChangeState(AIState.Reloading);
-
-    // 状态查询
+    // 状态查询方法
     public AIState GetCurrentState() => currentState;
-    public AIState GetTargetState() => targetState;
     public bool IsInState(AIState state) => currentState == state;
-    public bool IsTransitioningTo(AIState state) => targetState == state;
+    public bool IsReloading() => HasStateFlag(AIStateFlags.Reloading) || isReloading;
 
-    // 特殊方法：用于行为树
-    public void OnLostEnemyTarget() => SetIdle();
-    public void OnStartAiming() => SetAiming();
-    public void OnStartFiring() => SetFiring();
-    public void OnStopFiring() => SetIdle();
-    public void OnStartReloading()
-    {
-        isReloading = true;
-        SetReloading();
-    }
-    public void OnStopReloading()
-    {
-        isReloading = false;
-        SetIdle();
-    }
-
-    // 新增：供WeaponManager调用的换弹控制方法
-    public void StartReload()
-    {
-        if (!isReloading)
-        {
-            isReloading = true;
-            Debug.Log("AI开始换弹动画");
-        }
-    }
-
-    public void StopReload()
-    {
-        if (isReloading)
-        {
-            isReloading = false;
-            Debug.Log("AI换弹动画结束");
-        }
-    }
-
-    // 检查是否正在换弹
-    public bool IsReloading()
-    {
-        return isReloading || currentState == AIState.Reloading;
-    }
+    #endregion
 }

@@ -13,10 +13,12 @@ public class BTMoveToPosition : Action
 
     private NavMeshAgent agent;
     private AIAgentSettings settings;
+    private AIAnimationController animController;
     public override void OnStart()
     {
         agent = GetComponent<NavMeshAgent>();
         settings = GetComponent<AIAgentSettings>();
+        animController = GetComponent<AIAnimationController>();
     }
 
     public override TaskStatus OnUpdate()
@@ -40,11 +42,13 @@ public class BTMoveToPosition : Action
             if(pingCommandActive.Value) // 如果指令没有被玩家取消
             {
                 agent.SetDestination(pingPosition.Value);
+                animController.SetMoving(true);
                 return TaskStatus.Running;
             }
             else // 指令在agent移动中取消，停在原地
             {
                 agent.ResetPath();
+                animController.SetMoving(false);
                 currentCommand.Value = "";
                 Debug.LogError("指令取消！");
                 return TaskStatus.Failure;
@@ -53,6 +57,7 @@ public class BTMoveToPosition : Action
         else // 到达目的地
         {
             Debug.Log("到达目的地！");
+            animController.SetMoving(false);
             agent.ResetPath(); // 停下来，不再持续 SetDestination
             currentCommand.Value = "";
             return TaskStatus.Success;

@@ -8,7 +8,7 @@ using System.Linq;
 public class BTFindNearestEnemy : Conditional
 {
     public SharedTransform nearestEnemy;
-    public float sightRadius = 20f; // AI感知/射击范围
+    public float sightRadius; // AI感知/射击范围
     public LayerMask enemyLayer;    // 仅检测敌人
     private AIAgentSettings agentSettings;
     private AIAnimationController animController;
@@ -50,8 +50,9 @@ public class BTFindNearestEnemy : Conditional
         {
             nearestEnemy.Value = target;
             // 发现敌人，切换到战斗待机状态
-            if (animController != null)
-                animController.OnStartAiming();
+            //if (animController != null)
+            //    animController.OnStartAiming();
+            // 发现敌人时不再强制切换到瞄准状态，让BTAimAtEnemy节点来处理
             return TaskStatus.Success;
         }
         else
@@ -60,7 +61,12 @@ public class BTFindNearestEnemy : Conditional
             //Debug.Log("BackToMove!");
             // 没有敌人，切换到idle状态
             if (animController != null)
-                animController.OnLostEnemyTarget();
+            {
+                animController.SetAiming(false);
+                animController.SetFiring(false);
+                Debug.Log("失去敌人目标 - 清除Aiming和Firing标志");
+            }
+            //animController.OnLostEnemyTarget();
             return TaskStatus.Failure;
         }
     }

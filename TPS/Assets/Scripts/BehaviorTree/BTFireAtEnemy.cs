@@ -15,7 +15,10 @@ public class BTFireAtEnemy : Action
         animController = GetComponent<AIAnimationController>();
         // ¿ªÊ¼Éä»÷
         if (animController != null)
+        {
             animController.OnStartFiring();
+        }
+            
     }
     public override TaskStatus OnUpdate()
     {

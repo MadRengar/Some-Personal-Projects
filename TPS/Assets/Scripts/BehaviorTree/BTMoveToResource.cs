@@ -12,11 +12,13 @@ public class BTMoveToResource : Action
 
     private NavMeshAgent agent;
     private AIAgentSettings agentSettings;
+    private AIAnimationController animController;
 
     public override void OnStart()
     {
         agent = GetComponent<NavMeshAgent>();
         agentSettings = GetComponent<AIAgentSettings>();
+        animController = GetComponent<AIAnimationController>();
     }
 
     public override TaskStatus OnUpdate()
@@ -43,12 +45,23 @@ public class BTMoveToResource : Action
         if (dist > stopDistance)
         {
             agent.SetDestination(nearestResource.Value.position);
+            animController.SetMoving(true);
             return TaskStatus.Running;
         }
         else
         {
             agent.ResetPath();
+            animController.SetMoving(true);
             return TaskStatus.Success;
+        }
+    }
+    public override void OnEnd()
+    {
+        // 确保在节点结束时清除移动状态
+        if (animController != null)
+        {
+            animController.SetMoving(false);
+            Debug.Log("BTMoveToResource结束 - 清除Moving标志");
         }
     }
 }

@@ -16,11 +16,13 @@ public class BTFollowPlayer : Action
      */
     private float stopDistance; // 跟随玩家的距离
     private AIAgentSettings agentSettings;
+    private AIAnimationController animController;
 
     public override void OnStart()
     {
         agent = GetComponent<NavMeshAgent>();
         agentSettings = GetComponent<AIAgentSettings>();
+        animController = GetComponent<AIAnimationController>();
     }
 
     public override TaskStatus OnUpdate()
@@ -48,11 +50,21 @@ public class BTFollowPlayer : Action
         if (dist > stopDistance)
         {
             agent.SetDestination(player.Value.position);
-            return TaskStatus.Running;
+            // 设置移动状态标志
+            if (animController != null)
+            {
+                animController.SetMoving(true);
+            }
+            return TaskStatus.Success;
         }
         else
         {
             agent.ResetPath(); // 停下来，不再持续 SetDestination
+
+            if (animController != null)
+            {
+                animController.SetMoving(false);
+            }
             return TaskStatus.Success;
         }
     }
