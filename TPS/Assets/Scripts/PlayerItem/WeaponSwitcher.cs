@@ -58,7 +58,7 @@ public class WeaponSwitcher : MonoBehaviour
         // 触发武器切换事件
         OnWeaponChanged?.Invoke(currentWeapon);
 
-        Debug.Log($"[WeaponSwitcher] 切换到武器: {currentWeapon}");
+        //Debug.Log($"[WeaponSwitcher] 切换到武器: {currentWeapon}");
     }
 
     /// <summary>

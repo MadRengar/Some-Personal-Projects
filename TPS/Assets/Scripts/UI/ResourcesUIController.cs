@@ -47,6 +47,6 @@ public class ResourcesUIController : MonoBehaviour
         if (ironNumUI != null)
             ironNumUI.text = ironCount.ToString();
 
-        Debug.Log($"UI更新：木材={woodCount}, 铁矿={ironCount}");
+        //Debug.Log($"UI更新：木材={woodCount}, 铁矿={ironCount}");
     }
 }

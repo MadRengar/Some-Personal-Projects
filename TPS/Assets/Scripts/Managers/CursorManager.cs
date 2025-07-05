@@ -22,7 +22,6 @@ public class CursorManager : MonoBehaviour
 
         // 游戏开始时隐藏并锁定光标
         HideCursor();
-        Debug.Log("开局隐藏光标");
     }
 
     /// <summary>

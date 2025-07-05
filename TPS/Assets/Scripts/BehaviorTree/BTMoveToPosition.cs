@@ -42,13 +42,15 @@ public class BTMoveToPosition : Action
             if(pingCommandActive.Value) // 如果指令没有被玩家取消
             {
                 agent.SetDestination(pingPosition.Value);
-                animController.SetMoving(true);
+                //animController.SetMoveDirection(1f);
+                animController.SetMoving(true, 8f);
                 return TaskStatus.Running;
             }
             else // 指令在agent移动中取消，停在原地
             {
                 agent.ResetPath();
-                animController.SetMoving(false);
+                //animController.SetMoveDirection(0);
+                animController.SetMoving(false, 0);
                 currentCommand.Value = "";
                 Debug.LogError("指令取消！");
                 return TaskStatus.Failure;
@@ -57,7 +59,7 @@ public class BTMoveToPosition : Action
         else // 到达目的地
         {
             Debug.Log("到达目的地！");
-            animController.SetMoving(false);
+            animController.SetMoving(false, 0);
             agent.ResetPath(); // 停下来，不再持续 SetDestination
             currentCommand.Value = "";
             return TaskStatus.Success;

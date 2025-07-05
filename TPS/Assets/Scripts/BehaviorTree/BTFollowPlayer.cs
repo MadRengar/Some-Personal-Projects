@@ -53,7 +53,7 @@ public class BTFollowPlayer : Action
             // 设置移动状态标志
             if (animController != null)
             {
-                animController.SetMoving(true);
+                animController.SetMoving(true, 10f);
             }
             return TaskStatus.Success;
         }
@@ -63,7 +63,7 @@ public class BTFollowPlayer : Action
 
             if (animController != null)
             {
-                animController.SetMoving(false);
+                animController.SetMoving(false, 0);
             }
             return TaskStatus.Success;
         }

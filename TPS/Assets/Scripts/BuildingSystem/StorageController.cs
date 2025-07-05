@@ -51,7 +51,7 @@ public class StorageController : MonoBehaviour, IBuildingController
         currentWoodAmount = 0;
         currentIronAmount = 0;
 
-        Debug.Log($"仓库 {gameObject.name} 初始化完成，容量: {storageCapacity}kg");
+        //Debug.Log($"仓库 {gameObject.name} 初始化完成，容量: {storageCapacity}kg");
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class StorageController : MonoBehaviour, IBuildingController
         // 读取仓库特有属性
         storageCapacity = storageData.storageCapacity;
 
-        Debug.Log($"仓库数据加载完成: {gameObject.name}, 容量: {storageCapacity}");
+        //Debug.Log($"仓库数据加载完成: {gameObject.name}, 容量: {storageCapacity}");
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public class StorageController : MonoBehaviour, IBuildingController
 
         if (playerInputSystem.interact)
         {
-            Debug.Log("玩家与仓库交互！");
+            //Debug.Log("玩家与仓库交互！");
             // 打开UI
             OnPlayerInteractWithStorage?.Invoke(this);
             playerInputSystem.EnterInteractMode(); // 进入存储模式
@@ -154,7 +154,7 @@ public class StorageController : MonoBehaviour, IBuildingController
     public void PlayerEnterRange()
     {
         playerInRange = true;
-        Debug.Log("玩家进入仓库交互范围");
+        //Debug.Log("玩家进入仓库交互范围");
         // 这里后面可以显示交互提示UI
     }
 
@@ -164,7 +164,7 @@ public class StorageController : MonoBehaviour, IBuildingController
     public void PlayerExitRange()
     {
         playerInRange = false;
-        Debug.Log("玩家离开仓库交互范围");
+        //Debug.Log("玩家离开仓库交互范围");
         // 这里后面可以隐藏交互提示UI
     }
 

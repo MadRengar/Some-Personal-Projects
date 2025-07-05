@@ -289,7 +289,7 @@ public class InventoryManager : MonoBehaviour
         if (storage != null && !allStorages.Contains(storage))
         {
             allStorages.Add(storage);
-            Debug.Log($"×¢²á²Ö¿â: {storage.name}");
+            //Debug.Log($"×¢²á²Ö¿â: {storage.name}");
             UpdateStorageDebugInfo();
         }
     }
@@ -302,7 +302,7 @@ public class InventoryManager : MonoBehaviour
         if (storage != null && allStorages.Contains(storage))
         {
             allStorages.Remove(storage);
-            Debug.Log($"ÒÆ³ý²Ö¿â: {storage.name}");
+            //Debug.Log($"ÒÆ³ý²Ö¿â: {storage.name}");
             UpdateStorageDebugInfo();
         }
     }

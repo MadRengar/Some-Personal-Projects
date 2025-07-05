@@ -1948,63 +1948,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126000587}
   m_Mesh: {fileID: 4300000, guid: e53af04ca99c9a245b35457bb33c09a5, type: 3}
---- !u!1 &130837961
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 130837962}
-  - component: {fileID: 130837963}
-  m_Layer: 7
-  m_Name: Aiming_Left
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &130837962
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130837961}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 707110300}
-  m_Father: {fileID: 666498842}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &130837963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130837961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Weight: 1
-  m_Data:
-    m_Root: {fileID: 4895319325925031}
-    m_Mid: {fileID: 4495126226969405}
-    m_Tip: {fileID: 4224685924643501}
-    m_Target: {fileID: 1279912042}
-    m_Hint: {fileID: 707110300}
-    m_TargetPositionWeight: 1
-    m_TargetRotationWeight: 1
-    m_HintWeight: 1
-    m_MaintainTargetPositionOffset: 0
-    m_MaintainTargetRotationOffset: 0
 --- !u!1 &132369241
 GameObject:
   m_ObjectHideFlags: 0
@@ -9904,69 +9847,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &666498840
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 666498842}
-  - component: {fileID: 666498841}
-  m_Layer: 7
-  m_Name: RigLayer_Aiming
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &666498841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 666498840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Weight: 1
-  m_Effectors:
-  - m_Transform: {fileID: 1279912042}
-    m_Style:
-      shape: {fileID: 0}
-      color: {r: 1, g: 0, b: 0, a: 0.5}
-      size: 0.1
-      position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0, y: 0, z: 0}
-    m_Visible: 1
-  - m_Transform: {fileID: 707110300}
-    m_Style:
-      shape: {fileID: 0}
-      color: {r: 1, g: 0, b: 0, a: 0.5}
-      size: 0.1
-      position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0, y: 0, z: 0}
-    m_Visible: 1
---- !u!4 &666498842
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 666498840}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 130837962}
-  m_Father: {fileID: 4000984843440671}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &673654635
 GameObject:
   m_ObjectHideFlags: 0
@@ -10535,37 +10415,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 706355338}
   m_CullTransparentMesh: 1
---- !u!1 &707110299
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 707110300}
-  m_Layer: 7
-  m_Name: Aiming_Left_hint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &707110300
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 707110299}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5182648, y: 0.9365587, z: -0.46636963}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 130837962}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &710686467
 GameObject:
   m_ObjectHideFlags: 0
@@ -29712,7 +29561,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -29825,20 +29674,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e546fa0e8f736439c2a7c784e0fc0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopDistance: 5
-  idleDurationBeforePatrol: 3
-  patrolRadiusAroundPlayer: 5
-  patrolWaitTime: 1.5
+  stopDistance: 2
   sightRadius: 12
   minDistanceToPing: 3
+  defaultCombatMoveSpeed: 12
   optimalCombatDistance: 8
   minCombatDistance: 5
-  maxCombatDistance: 12
-  combatRetreatSpeed: 1.2
+  maxCombatDistance: 10
+  combatRetreatSpeed: 1.5
+  tacticalMoveSpeed: 12
   tacticalSafeDistance: 8
   playerFollowWeight: 0.7
   enemyAvoidWeight: 0.3
-  tacticalUpdateInterval: 0.15
+  tacticalUpdateInterval: 0.05
   isFollowingPlayer: 0
   prioritizePlayerFollow: 0
   timeToFindPathCount: 0
@@ -29858,8 +29706,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RigLayers:
   - m_Rig: {fileID: 447957423}
-    m_Active: 1
-  - m_Rig: {fileID: 666498841}
     m_Active: 1
   - m_Rig: {fileID: 1291627002}
     m_Active: 1
@@ -51935,7 +51781,6 @@ Transform:
   - {fileID: 4993748221647669}
   - {fileID: 4051583059392115}
   - {fileID: 447957424}
-  - {fileID: 666498842}
   - {fileID: 1291627003}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -55929,7 +55774,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1765723900030677}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.8683764, y: 0.46174645, z: 0.03154199, w: -0.1780951}
+  m_LocalRotation: {x: 0.8683732, y: 0.4617531, z: 0.03154491, w: -0.17809275}
   m_LocalPosition: {x: 0.38591367, y: 0.00000015248492, z: -0.00000086916407}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -55960,8 +55805,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1246385980061637}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.67027, y: 0.09630872, z: -0.05800707, w: 0.7335516}
-  m_LocalPosition: {x: -0.4075003, y: -0.0000021755695, z: 0.00001406495}
+  m_LocalRotation: {x: 0.6702758, y: 0.09627156, z: -0.057984903, w: 0.73355293}
+  m_LocalPosition: {x: -0.4075008, y: -0.0000037252903, z: -0.0000011161901}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -58885,8 +58730,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1670104336919023}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.63164264, y: 0.07576529, z: -0.06385176, w: 0.76890194}
-  m_LocalPosition: {x: 0.40861657, y: 0.000007599592, z: -0.000008114614}
+  m_LocalRotation: {x: 0.63164425, y: 0.07575674, z: -0.06384398, w: 0.7689022}
+  m_LocalPosition: {x: 0.40861708, y: 0.000002592802, z: 0.0000062957406}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -60614,8 +60459,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1536229177561935}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.76196975, y: -0.06586939, z: 0.008248487, w: 0.64420134}
-  m_LocalPosition: {x: 0.041155588, y: -0.02693575, z: 0.098968856}
+  m_LocalRotation: {x: -0.7619702, y: -0.0658549, z: 0.008235728, w: 0.6442024}
+  m_LocalPosition: {x: 0.04115788, y: -0.026920665, z: 0.09896885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -60944,8 +60789,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545306844739639}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.79720616, y: 0.59405506, z: 0.07125368, w: -0.08052239}
-  m_LocalPosition: {x: -0.3848594, y: 0, z: -0.0000000019008535}
+  m_LocalRotation: {x: 0.7972082, y: 0.5940528, z: 0.07125151, w: -0.0805212}
+  m_LocalPosition: {x: -0.38485986, y: 0, z: -0.0000000019008557}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -64856,8 +64701,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1771294053210105}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06468928, y: 0.6840021, z: -0.7236653, w: -0.06530764}
-  m_LocalPosition: {x: 0.04115641, y: -0.02692867, z: -0.09896907}
+  m_LocalRotation: {x: 0.06472312, y: 0.68399984, z: -0.7236624, w: -0.065329075}
+  m_LocalPosition: {x: 0.041158702, y: -0.026913585, z: -0.09896909}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -113946,34 +113791,21 @@ MonoBehaviour:
   weaponManager: {fileID: 1728286027}
   IdleState:
     name: Idle
-    animatorStateName: Idle
     rigs:
     - {fileID: 447957423}
     rigWeight: 1
     currentRigWeight: 0
-  aimingState:
-    name: Aiming
-    animatorStateName: Aiming
-    rigs:
-    - {fileID: 666498841}
-    rigWeight: 1
-    currentRigWeight: 0
   firingState:
     name: Firing
-    animatorStateName: Firing
     rigs:
     - {fileID: 1291627002}
     rigWeight: 1
     currentRigWeight: 0
-  rigTransitionSpeed: 10
-  animationTransitionSpeed: 0.1
   isFiringParameter: IsFiring
-  isAimingParameter: IsAiming
   isReloadingParameter: IsReloading
   isMovingParameter: IsMoving
+  speedParameter: Speed
   currentStateFlags: 0
-  currentState: 0
-  isReloading: 0
 --- !u!114 &95208774159887003
 MonoBehaviour:
   m_ObjectHideFlags: 0

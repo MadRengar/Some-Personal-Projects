@@ -45,13 +45,13 @@ public class BTMoveToResource : Action
         if (dist > stopDistance)
         {
             agent.SetDestination(nearestResource.Value.position);
-            animController.SetMoving(true);
+            animController.SetMoving(true, 7f);
             return TaskStatus.Running;
         }
         else
         {
             agent.ResetPath();
-            animController.SetMoving(true);
+            animController.SetMoving(true, 7f);
             return TaskStatus.Success;
         }
     }
@@ -60,7 +60,7 @@ public class BTMoveToResource : Action
         // 确保在节点结束时清除移动状态
         if (animController != null)
         {
-            animController.SetMoving(false);
+            animController.SetMoving(false, 0);
             Debug.Log("BTMoveToResource结束 - 清除Moving标志");
         }
     }

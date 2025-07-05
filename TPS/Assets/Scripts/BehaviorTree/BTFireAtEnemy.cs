@@ -16,7 +16,7 @@ public class BTFireAtEnemy : Action
         // ¿ªÊ¼Éä»÷
         if (animController != null)
         {
-            animController.OnStartFiring();
+            animController.SetFiring(true);
         }
             
     }

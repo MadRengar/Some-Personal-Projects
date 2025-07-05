@@ -15,13 +15,12 @@ public class BTDefaultCombatMovement : Action
     private AIAnimationController animController;
     private AIAgentSettings agentSettings;
 
-    private float lastMoveTime = 0f;
-
     public override void OnStart()
     {
         agent = GetComponent<NavMeshAgent>();
         animController = GetComponent<AIAnimationController>();
         agentSettings = GetComponent<AIAgentSettings>();
+        agent.speed = agentSettings.defaultCombatMoveSpeed;
     }
 
     public override TaskStatus OnUpdate()
@@ -43,6 +42,9 @@ public class BTDefaultCombatMovement : Action
                 float safeDistance = agentSettings != null ? agentSettings.minCombatDistance : 6f;
                 float retreatDistance = agentSettings != null ? agentSettings.optimalCombatDistance : 8f;
 
+                animController.SetMoving(true, agent.speed);
+                //animController.SetMoveDirection(1f); // 后退
+
                 // 如果距离敌人太近，立即后退
                 if (distToEnemy < safeDistance)
                 {
@@ -54,34 +56,19 @@ public class BTDefaultCombatMovement : Action
                     {
                         agent.SetDestination(retreatTarget);
                     }
+                    animController.SetMoving(true, agent.speed);
+                    //animController.SetMoveDirection(-1f); // 后退
 
-                    // 设置移动状态
-                    if (animController != null)
-                    {
-                        animController.SetMoving(true);
-                    }
                 }
                 else
                 {
+                    animController.SetMoving(false, 0);
 
-                    // 距离安全，停止移动
-                    if (animController != null)
-                    {
-                        animController.SetMoving(false);
-                    }
                 }
 
                 return TaskStatus.Success;
             }
         }
         return TaskStatus.Failure;
-    }
-
-    public override void OnEnd()
-    {
-        if (animController != null)
-        {
-            animController.SetMoving(false);
-        }
     }
 }

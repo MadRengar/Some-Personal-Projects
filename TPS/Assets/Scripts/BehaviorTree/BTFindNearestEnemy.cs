@@ -62,9 +62,7 @@ public class BTFindNearestEnemy : Conditional
             // 没有敌人，切换到idle状态
             if (animController != null)
             {
-                animController.SetAiming(false);
                 animController.SetFiring(false);
-                Debug.Log("失去敌人目标 - 清除Aiming和Firing标志");
             }
             //animController.OnLostEnemyTarget();
             return TaskStatus.Failure;

@@ -219,7 +219,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         // 启动死亡摄像机序列
         cameraController.StartDeathCameraSequence();
 
-        Debug.Log("[玩家死亡事件]：ThirdPersonShooterController 清空所有Rig权重");
+        //Debug.Log("[玩家死亡事件]：ThirdPersonShooterController 清空所有Rig权重");
     }
 
     private void ClearAllRigWeights()
@@ -260,7 +260,7 @@ public class ThirdPersonShooterController : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"[ThirdPersonShooterController] 武器切换为: {newWeaponType}");
+        //Debug.Log($"[ThirdPersonShooterController] 武器切换为: {newWeaponType}");
     }
 
     private void SwitchToRifleMode()
@@ -275,7 +275,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         SetAnimationLayerWeight(hammerSwingLayerIndex, 0f);
 
         RestoreRifleRigWeights();
-        Debug.Log("[ThirdPersonShooterController] 切换到步枪模式");
+        //Debug.Log("[ThirdPersonShooterController] 切换到步枪模式");
     }
 
     private void SwitchToHammerMode()
@@ -294,7 +294,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         // 强制退出瞄准状态
         ForceExitAiming();
 
-        Debug.Log("[ThirdPersonShooterController] 切换到锤子模式，清空所有步枪 Rig");
+        //Debug.Log("[ThirdPersonShooterController] 切换到锤子模式，清空所有步枪 Rig");
     }
 
     private void SetAnimationLayerWeight(int layerIndex, float weight)
@@ -365,6 +365,6 @@ public class ThirdPersonShooterController : MonoBehaviour
         if (aimLeftHandIK != null) aimLeftHandIK.weight = isCurrentlyAiming ? 1f : 0f;
         if (idleLeftHandIK != null) idleLeftHandIK.weight = isCurrentlyAiming ? 0f : 1f;
 
-        Debug.Log($"[ThirdPersonShooterController] 恢复步枪 Rig 权重 - 瞄准: {isCurrentlyAiming}, 换弹: {isCurrentlyReloading}");
+        //Debug.Log($"[ThirdPersonShooterController] 恢复步枪 Rig 权重 - 瞄准: {isCurrentlyAiming}, 换弹: {isCurrentlyReloading}");
     }
 }

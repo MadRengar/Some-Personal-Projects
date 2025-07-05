@@ -11,19 +11,21 @@ public class AIAgentSettings : MonoBehaviour
 {
     [Header("AI Agent Basic Setting")]
     public float stopDistance = 2.5f; // 跟随玩家的距离
-    public float idleDurationBeforePatrol = 3.0f; //玩家静止超过该时间（秒）后，AI 开始巡逻
-    public float patrolRadiusAroundPlayer = 5.0f; // AI 围绕玩家巡逻的最大半径
-    public float patrolWaitTime = 1.5f; // AI 在每个巡逻点等待的时间
+    //public float idleDurationBeforePatrol = 3.0f; //玩家静止超过该时间（秒）后，AI 开始巡逻
+    //public float patrolRadiusAroundPlayer = 5.0f; // AI 围绕玩家巡逻的最大半径
+    //public float patrolWaitTime = 1.5f; // AI 在每个巡逻点等待的时间
     public float sightRadius = 20f; // AI感知/射击范围
     public float minDistanceToPing = 3.0f; // 可选：与玩家的最小距离，避免 AI 原地执行
 
-    [Header("Combat Distance Settings")]
+    [Header("(BTDefaultCombatMovement) Distance Settings")]
+    public float defaultCombatMoveSpeed = 20f;
     public float optimalCombatDistance = 8f;     // 理想战斗距离
     public float minCombatDistance = 5f;         // 最小战斗距离（小于这个距离要后退）
     public float maxCombatDistance = 15f;        // 最大战斗距离（大于这个距离要前进）
     public float combatRetreatSpeed = 1.2f;     // 战斗后退速度倍数
 
-    [Header("Tactical Movement Settings")]
+    [Header("(BTTacticalMovement) Settings")]
+    public float tacticalMoveSpeed = 20f;
     public float tacticalSafeDistance = 6f;          // 战术移动时与敌人的安全距离
     public float playerFollowWeight = 0.7f;          // 跟随玩家的权重 (0-1)
     public float enemyAvoidWeight = 0.3f;            // 避开敌人的权重 (0-1)  
@@ -128,9 +130,6 @@ public class AIAgentSettings : MonoBehaviour
         // 在 Scene 视图中画出 AI 停止距离圈和巡逻范围
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, stopDistance);
-
-        Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f); // 半透明橙色
-        Gizmos.DrawWireSphere(transform.position, patrolRadiusAroundPlayer);
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, sightRadius);

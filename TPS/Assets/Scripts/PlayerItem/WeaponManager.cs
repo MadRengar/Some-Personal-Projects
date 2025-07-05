@@ -292,7 +292,7 @@ public class WeaponManager : MonoBehaviour
         // 播放换弹音效
         PlayReloadAudio();
 
-        Debug.Log($"开始换弹 {weaponData.weaponName}...");
+        //Debug.Log($"开始换弹 {weaponData.weaponName}...");
 
         // 等待换弹时间
         yield return new WaitForSeconds(weaponData.reloadTime);

@@ -12,7 +12,6 @@ public class BTTacticalMovement : Action
     public SharedTransform player;
     public SharedTransform nearestEnemy;
 
-    // 移除硬编码的配置，改为从AIAgentSettings读取
     private NavMeshAgent agent;
     private AIAnimationController animController;
     private AIAgentSettings agentSettings; // 统一配置来源
@@ -26,15 +25,8 @@ public class BTTacticalMovement : Action
         agent = GetComponent<NavMeshAgent>();
         animController = GetComponent<AIAnimationController>();
         agentSettings = GetComponent<AIAgentSettings>(); // 获取配置组件
-
-        if (agentSettings == null)
-        {
-            Debug.LogError("BTTacticalMovement: 未找到AIAgentSettings组件！");
-            return;
-        }
-
         currentTarget = transform.position;
-        Debug.Log("AI开始战术移动（使用统一配置）");
+        agent.speed = agentSettings.tacticalMoveSpeed;
     }
 
     public override TaskStatus OnUpdate()
@@ -63,8 +55,6 @@ public class BTTacticalMovement : Action
             currentTarget = tacticalTarget;
             agent.SetDestination(currentTarget);
             hasValidTarget = true;
-
-            Debug.Log($"AI战术移动到: {tacticalTarget}");
         }
 
         UpdateMovementState();
@@ -76,15 +66,11 @@ public class BTTacticalMovement : Action
         Vector3 playerPos = player.Value.position;
         Vector3 currentPos = transform.position;
 
-        // 从AIAgentSettings读取配置
         float safeDistance = agentSettings.tacticalSafeDistance;
         float playerFollowWeight = agentSettings.playerFollowWeight;
-        float enemyAvoidWeight = agentSettings.enemyAvoidWeight;
 
-        // 基础目标：玩家位置
-        Vector3 targetDirection = (playerPos - currentPos).normalized;
+        Vector3 targetPos = playerPos;
 
-        // 如果有敌人，计算战术调整
         if (nearestEnemy.Value != null)
         {
             Vector3 enemyPos = nearestEnemy.Value.position;
@@ -92,31 +78,23 @@ public class BTTacticalMovement : Action
 
             if (distToEnemy < safeDistance)
             {
-                // 敌人太近，计算既远离敌人又靠近玩家的方向
                 Vector3 awayFromEnemy = (currentPos - enemyPos).normalized;
                 Vector3 towardsPlayer = (playerPos - currentPos).normalized;
 
-                // 混合两个方向：主要远离敌人，但倾向于玩家方向
                 Vector3 tacticalDirection = Vector3.Lerp(awayFromEnemy, towardsPlayer, playerFollowWeight);
-                targetDirection = tacticalDirection.normalized;
-
-                Debug.Log($"战术后退：远离敌人 {enemyAvoidWeight} + 靠近玩家 {playerFollowWeight} (安全距离: {safeDistance})");
+                targetPos = currentPos + tacticalDirection * safeDistance; // 这里的safeDistance决定走多远
             }
         }
 
-        // 计算目标位置
-        float moveDistance = Mathf.Min(3f, Vector3.Distance(currentPos, playerPos));
-        Vector3 tacticalTarget = currentPos + targetDirection * moveDistance;
-
-        // 确保目标位置在NavMesh上
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(tacticalTarget, out hit, 5f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(targetPos, out hit, 5f, NavMesh.AllAreas))
         {
             return hit.position;
         }
 
-        return playerPos; // 备选：直接前往玩家位置
+        return playerPos;
     }
+
 
     private void UpdateMovementState()
     {
@@ -131,24 +109,7 @@ public class BTTacticalMovement : Action
         bool currentMoving = animController.HasStateFlag(AIAnimationController.AIStateFlags.Moving);
         if (isMoving != currentMoving)
         {
-            animController.SetMoving(isMoving);
-            Debug.Log($"战术移动状态: {isMoving}");
-        }
-    }
-
-    // 可选：在Scene视图中显示调试信息
-    public override void OnDrawGizmos()
-    {
-        if (!hasValidTarget || agentSettings == null) return;
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(currentTarget, 0.5f);
-        Gizmos.DrawLine(transform.position, currentTarget);
-
-        if (nearestEnemy.Value != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, agentSettings.tacticalSafeDistance);
+            animController.SetMoving(isMoving, 8f);
         }
     }
 }
