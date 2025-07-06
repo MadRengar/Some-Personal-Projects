@@ -15,16 +15,22 @@ public class WeaponManager : MonoBehaviour
     [HideInInspector] public float cooldown = 0f; // 当前冷却时间
     [HideInInspector] public float fireRate; // 射击间隔
 
+    [Header("Damage")]
+    [SerializeField] private float headShotDamageMultiplying = 2f; // 当前弹夹子弹数
+
     [Header("References")]
     public Transform firePoint;
+
     [Header("WeaponAudio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip singleShotClip;
     [SerializeField] private AudioClip autoLoopClip;
+
     [Header("Particle")]
     [SerializeField] private ParticleSystem[] muzzleFlash;
     [SerializeField] private ParticleSystem hitEffect;
     [SerializeField] private ParticleSystem bloodEffect;
+
     [Header("Player Animator")]
     public Animator playerAnimator; // 拖拽玩家的Animator组件
     // 事件系统
@@ -198,6 +204,14 @@ public class WeaponManager : MonoBehaviour
             if (enemy != null)
             {
                 enemy.TakeDamage(weaponData.damage);
+            }
+        }
+        else if (raycastHit.collider.CompareTag("EnemyHead"))
+        {
+            var enemy = raycastHit.collider.GetComponentInParent<ZombieStats>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(Mathf.RoundToInt(weaponData.damage * headShotDamageMultiplying));
             }
         }
 

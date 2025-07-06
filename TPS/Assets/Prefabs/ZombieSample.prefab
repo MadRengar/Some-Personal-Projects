@@ -455,6 +455,7 @@ Transform:
   m_Children:
   - {fileID: 2282119840256333071}
   - {fileID: 5600134146764450913}
+  - {fileID: 7952217245336803829}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 195.617, z: 0}
 --- !u!114 &6370339095417773005
@@ -542,9 +543,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.25
-  m_Height: 1.8553032
+  m_Height: 1.5169779
   m_Direction: 1
-  m_Center: {x: 0, y: 0.89734846, z: 0}
+  m_Center: {x: 0, y: 0.72818583, z: 0}
 --- !u!195 &382033562241360284
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1796,6 +1797,59 @@ Transform:
   - {fileID: 3730025698131317869}
   m_Father: {fileID: 4419887947674190819}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7081852326665226433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7952217245336803829}
+  - component: {fileID: 2552089276891514302}
+  m_Layer: 6
+  m_Name: HeadHitbox
+  m_TagString: EnemyHead
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7952217245336803829
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7081852326665226433}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 1.568, z: 0.361}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 49231045690816727}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2552089276891514302
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7081852326665226433}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.28977904, y: 0.28118777, z: 0.29444233}
+  m_Center: {x: -0.007364184, y: 0.05985892, z: -0.35278067}
 --- !u!1 &7268381119582836423
 GameObject:
   m_ObjectHideFlags: 0

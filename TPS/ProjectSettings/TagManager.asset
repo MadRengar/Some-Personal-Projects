@@ -10,6 +10,7 @@ TagManager:
   - Resource
   - AIPlayer
   - BuildingPreview
+  - EnemyHead
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - AirWall
   - CampZone
   - Building
-  - 
+  - Obstacle
   - 
   - 
   - 
