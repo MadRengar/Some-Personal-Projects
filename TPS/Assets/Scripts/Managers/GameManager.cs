@@ -45,8 +45,13 @@ public class GameManager : MonoBehaviour
     [Header("Manager")]
     public PingMarkerManager pingMarkerManager;
 
-    // 死亡事件声明
+    [Header("Zombie")]
+    public ZombieManager zombieManager;
+
+    // 玩家死亡事件声明
     public static event System.Action OnPlayerDeath;
+    // ai队友死亡事件声明
+    public static event System.Action OnAIPlayerDeath;
     //public static event System.Action OnGameOver;
 
     private string lastCommand = "";
@@ -66,12 +71,14 @@ public class GameManager : MonoBehaviour
     {
         // 订阅玩家死亡事件
         OnPlayerDeath += HandlePlayerDeath;
+        OnAIPlayerDeath += HandleAIPlayerDeath;
     }
 
     private void OnDestroy()
     {
         // 取消订阅防止内存泄漏
         OnPlayerDeath -= HandlePlayerDeath;
+        OnAIPlayerDeath -= HandleAIPlayerDeath;
     }
 
     #region Getter
@@ -127,6 +134,11 @@ public class GameManager : MonoBehaviour
     {
         return playerWeaponManager;
     }
+
+    public bool CheckAIIsAlive()
+    {
+        return aiTeammate.GetComponent<AITeammateState>().IsAlive();
+    }
     #endregion
 
     // 处理玩家死亡
@@ -136,6 +148,17 @@ public class GameManager : MonoBehaviour
 
         // 切换游戏状态
         currentGameState = GameState.GameOver;
+        // 停止夜间生成器
+        if (zombieManager != null)
+        {           
+            foreach (var spawner in zombieManager.nightSpawners)
+            {
+                if (spawner != null)
+                {
+                    spawner.StopSpawning();
+                }
+            }
+        }
 
         // 停止时间系统
         if (GameTimeManager.Instance != null)
@@ -146,6 +169,12 @@ public class GameManager : MonoBehaviour
         // 触发游戏结束事件
         //OnGameOver?.Invoke();
     }
+
+    private void HandleAIPlayerDeath()
+    {
+        Debug.Log("ai队友死亡！等待重新部署！");
+    }
+
 
     private void ShowCursor()
     {
@@ -188,6 +217,12 @@ public class GameManager : MonoBehaviour
     public static void TriggerPlayerDeath()
     {
         OnPlayerDeath?.Invoke();
+    }
+
+    // 静态方法：触发AI玩家死亡事件
+    public static void TriggerAIPlayerDeath()
+    {
+        OnAIPlayerDeath?.Invoke();
     }
 
     // 获取当前游戏状态

@@ -134,6 +134,12 @@ public class ZombieManager : MonoBehaviour
 
     private void SpawnZombie(Vector3 position, bool isBerserk = false)
     {
+        // 游戏结束检查
+        if (GameManager.Instance.IsGameOver())
+        {
+            return;
+        }
+
         if (currentZombiesAlive >= maxZombiesAlive) return;
 
         // 从对象池中取一个僵尸，放置到目标位置

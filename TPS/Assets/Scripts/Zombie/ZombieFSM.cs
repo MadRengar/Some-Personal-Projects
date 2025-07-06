@@ -12,6 +12,7 @@ public class ZombieFSM : MonoBehaviour
     private NavMeshAgent agent;
     private ZombieStates currentState;
     private Animator anim;
+    private ZombieStats stats;
 
     [Header("Basic Settings")]
     public bool isGuard = false; // 该敌人是否站桩
@@ -74,6 +75,7 @@ public class ZombieFSM : MonoBehaviour
         anim = GetComponent<Animator>();
         zombieStats = GetComponent<ZombieStats>();
         playerTransform = GameManager.Instance.GetPlayerTransform();
+        stats = GetComponent<ZombieStats>();
     }
 
     void Start()
@@ -84,6 +86,13 @@ public class ZombieFSM : MonoBehaviour
 
     void Update()
     {
+        // 玩家死亡 游戏结束 停止FSM
+        if (GameManager.Instance.IsGameOver())
+        {
+            stats.Die();
+            return;
+        }
+
         if (currentState != ZombieStates.DEAD)
         {
             // 更新攻击冷却计时器

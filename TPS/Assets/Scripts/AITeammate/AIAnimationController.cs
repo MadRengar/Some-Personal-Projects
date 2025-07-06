@@ -25,6 +25,7 @@ public class AIAnimationController : MonoBehaviour
     [Header("Animation States")]
     public AnimationState IdleState = new AnimationState { name = "Idle" };
     public AnimationState firingState = new AnimationState { name = "Firing" };
+    public AnimationState deathState = new AnimationState { name = "Death" };
 
     [Header("Animator Parameters")]
     public string isFiringParameter = "IsFiring";
@@ -32,6 +33,7 @@ public class AIAnimationController : MonoBehaviour
     public string isMovingParameter = "IsMoving";
     //public string moveDirectionParameter = "MoveDirection";
     public string speedParameter = "Speed";
+    public string isAliveParameter = "IsAlive";
 
     // 统一的状态管理系统
     [System.Flags]
@@ -40,7 +42,8 @@ public class AIAnimationController : MonoBehaviour
         None = 0,
         Moving = 1,        // 正在移动
         Firing = 2,        // 正在射击
-        Reloading = 4      // 正在换弹
+        Reloading = 4,      // 正在换弹
+        Dead = 8            // ai死亡
     }
 
     [Header("Current State")]
@@ -48,8 +51,7 @@ public class AIAnimationController : MonoBehaviour
 
     void Start()
     {
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
         FindAndSubscribeToWeaponManager();
         InitializeRigWeights();
@@ -89,6 +91,34 @@ public class AIAnimationController : MonoBehaviour
     }
 
     #endregion
+
+    #region 死亡处理
+    public void SetDead(bool isDead)
+    {
+        SetStateFlag(AIStateFlags.Dead, isDead);
+
+        if (isDead)
+        {
+            // 死亡时清除所有其他状态
+            SetStateFlag(AIStateFlags.Moving, false);
+            SetStateFlag(AIStateFlags.Firing, false);
+            SetStateFlag(AIStateFlags.Reloading, false);
+
+            animator.SetFloat(speedParameter, 0f);
+            animator.SetBool(isMovingParameter, false);
+            animator.SetBool(isFiringParameter, false);
+            animator.SetBool(isReloadingParameter, false);
+            animator.SetBool(isAliveParameter, false);
+        }
+    }
+
+    public bool IsDead()
+    {
+        return HasStateFlag(AIStateFlags.Dead);
+    }
+
+    #endregion
+
 
     #region 公共接口
 
@@ -135,7 +165,6 @@ public class AIAnimationController : MonoBehaviour
     private void UpdateAnimatorParameters()
     {
         if (animator == null) return;
-
         animator.SetBool(isMovingParameter, HasStateFlag(AIStateFlags.Moving));
         animator.SetBool(isFiringParameter, HasStateFlag(AIStateFlags.Firing));
         animator.SetBool(isReloadingParameter, HasStateFlag(AIStateFlags.Reloading));
@@ -160,6 +189,11 @@ public class AIAnimationController : MonoBehaviour
 
         // 换弹时清除所有Rig
         if (HasStateFlag(AIStateFlags.Reloading))
+        {
+            UpdateStateRigWeights(IdleState, 0f);
+            UpdateStateRigWeights(firingState, 0f);
+        }
+        if (HasStateFlag(AIStateFlags.Dead))
         {
             UpdateStateRigWeights(IdleState, 0f);
             UpdateStateRigWeights(firingState, 0f);

@@ -71,6 +71,13 @@ public class ZombieSpawner : MonoBehaviour
     /// </summary>
     private void SpawnZombie()
     {
+        // 游戏结束检查
+        if (GameManager.Instance.IsGameOver())
+        {
+            return; // 游戏结束时不生成僵尸
+        }
+
+        // 数量检查
         if (zombieManager == null || !zombieManager.CanSpawnMoreZombies())
         {
             return; // 达到数量限制，不生成

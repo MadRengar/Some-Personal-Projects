@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityParticleSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ public class AITeammateState : MonoBehaviour
     [Header("Running State")]
     public int currentHealth; // 当前生命值
     public float aiPlayerCurrentWeight; // 当前物资重量
+    [SerializeField] private bool isAlive;
 
     public static event Action<int, int> AIOnHealthChanged;
 
@@ -24,6 +26,7 @@ public class AITeammateState : MonoBehaviour
         if (playerData != null)
         {
             currentHealth = playerData.maxHealth;
+            isAlive = playerData.isAlive;
         }
         if (inventoryManager != null)
         {
@@ -47,9 +50,33 @@ public class AITeammateState : MonoBehaviour
 
     public void AITakeDamage(int damageValue)
     {
+        if (!isAlive || GameManager.Instance.IsGameOver())
+            return; // 已死亡或游戏结束时不再受伤
         currentHealth -= damageValue;
         //Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
         AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+        if (currentHealth <= 0f && isAlive)
+        {
+            AIPlayerDie();
+        }
+    }
+
+    private void AIPlayerDie()
+    {
+        isAlive = false;
+        currentHealth = 0;
+
+        // 触发动画控制器的死亡状态
+        var animController = GetComponent<AIAnimationController>();
+        animController.SetDead(true);
+
+
+        // 停止AI的移动和行为
+        var agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        agent.isStopped = true;
+        agent.velocity = Vector3.zero;
+
+        GameManager.TriggerAIPlayerDeath();
     }
 
     public void AIGetHealing(int healingValue)
@@ -65,4 +92,11 @@ public class AITeammateState : MonoBehaviour
             AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
         }
     }
+
+    #region Getter
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
+    #endregion
 }
