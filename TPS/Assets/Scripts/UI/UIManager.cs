@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
-    public enum TipType { EVENT, HELP}
+    public enum TipType { EVENT, HELP, TIP}
     public static UIManager Instance { get; private set; }
 
     [Header("Ref")]
@@ -181,7 +181,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowDayNightTip(string msg, TipType tipType) 
     {
-        SetTipTitle(TipType.EVENT);
+        SetTipTitle(tipType);
         StartCoroutine(ShowTipCoroutine(msg));
     }
 
@@ -203,6 +203,9 @@ public class UIManager : MonoBehaviour
                 break;
             case TipType.HELP:
                 subtitlesTypeText.text = "Help";
+                break;
+            case TipType.TIP:
+                subtitlesTypeText.text = "Tip";
                 break;
         }
     }

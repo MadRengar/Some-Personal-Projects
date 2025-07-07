@@ -10,8 +10,8 @@ public class AITeammateState : MonoBehaviour
     public InventoryManager inventoryManager;
 
     [Header("Running State")]
-    public int currentHealth; // 当前生命值
-    public float aiPlayerCurrentWeight; // 当前物资重量
+    [SerializeField] private int currentHealth; // 当前生命值
+    [SerializeField] private float aiPlayerCurrentWeight; // 当前物资重量
     [SerializeField] private bool isAlive;
 
     public static event Action<int, int> AIOnHealthChanged;
@@ -19,22 +19,26 @@ public class AITeammateState : MonoBehaviour
     void Start()
     {
         InitializeAIState();
+        InitializeAIInventory();
     }
 
-    private void InitializeAIState()
+    public void InitializeAIState()
     {
         if (playerData != null)
         {
             currentHealth = playerData.maxHealth;
             isAlive = playerData.isAlive;
         }
+
+        AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+    }
+
+    public void InitializeAIInventory()
+    {
         if (inventoryManager != null)
         {
             aiPlayerCurrentWeight = inventoryManager.GetAICurrentWeight();
         }
-
-        // 初始化事件
-        AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
     }
 
     public (int wood, int iron) GetAiCurrentResourcesNum() // 元组
@@ -65,6 +69,9 @@ public class AITeammateState : MonoBehaviour
     {
         isAlive = false;
         currentHealth = 0;
+
+        // 清空背包
+        inventoryManager.ClearAIInventory();
 
         // 触发动画控制器的死亡状态
         var animController = GetComponent<AIAnimationController>();
@@ -97,6 +104,11 @@ public class AITeammateState : MonoBehaviour
     public bool IsAlive()
     {
         return isAlive;
+    }
+
+    public int GetAICurrentHealth()
+    {
+        return currentHealth;
     }
     #endregion
 }

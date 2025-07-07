@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     [Header("AI Agent")]
     public GameObject aiTeammate;
     public AIAgentSettings aiAgentSettings;
+    public WeaponManager aiPlayerWeaponManager;
 
     [Header("Manager")]
     public PingMarkerManager pingMarkerManager;
@@ -134,6 +135,10 @@ public class GameManager : MonoBehaviour
     {
         return playerWeaponManager;
     }
+    public WeaponManager GetAIPlayerWeaponManager()
+    {
+        return aiPlayerWeaponManager;
+    }
 
     public bool CheckAIIsAlive()
     {
@@ -172,7 +177,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleAIPlayerDeath()
     {
-        Debug.Log("ai队友死亡！等待重新部署！");
+        Debug.Log("[GameManager] ai队友死亡！等待重新部署！");
     }
 
 
@@ -259,6 +264,22 @@ public class GameManager : MonoBehaviour
         {
             tree.SetVariableValue("currentCommand", currentCommand);
             Debug.Log("GPT指令更新为: " + currentCommand);
+        }
+    }
+
+    /// <summary>
+    /// 清空AI当前指令（用于重生等场景）
+    /// </summary>
+    public void ClearAIBehaviorCommand()
+    {
+        currentCommand = "";
+
+        // 同时更新行为树变量
+        var tree = aiTeammate.GetComponent<BehaviorTree>();
+        if (tree != null)
+        {
+            tree.SetVariableValue("currentCommand", "");
+            Debug.Log("AI指令已清空");
         }
     }
 }

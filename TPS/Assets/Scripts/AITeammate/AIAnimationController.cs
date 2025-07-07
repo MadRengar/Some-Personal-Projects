@@ -158,6 +158,12 @@ public class AIAnimationController : MonoBehaviour
         }
     }
 
+    // Only use for setting AIReSpawn
+    public void SetAlive()
+    {
+        animator.SetBool(isAliveParameter, true);
+    }
+
     #endregion
 
     #region 动画参数更新
@@ -211,7 +217,7 @@ public class AIAnimationController : MonoBehaviour
         }
     }
 
-    private void InitializeRigWeights()
+    public void InitializeRigWeights()
     {
         SetRigWeights(IdleState, 1f);
         SetRigWeights(firingState, 0f);

@@ -67,7 +67,7 @@ public class WeaponManager : MonoBehaviour
     }
     #endregion
 
-    private void InitializeWeapon()
+    public void InitializeWeapon()
     {
         if (weaponData == null)
         {

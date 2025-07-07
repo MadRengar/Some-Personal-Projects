@@ -50,20 +50,6 @@ public class AIAgentSettings : MonoBehaviour
     private Vector2 velocity;
     private float speed;
 
-    private bool isAiming;
-    private bool isFiring;
-
-    // ¶¯»­×´Ì¬Ã¶¾Ù
-    public enum AnimationState
-    {
-        Idle,
-        Moving,
-        Aiming,
-        Firing
-    }
-
-    private AnimationState currentState = AnimationState.Idle;
-
     private void Start()
     {
         animator = GetComponent<Animator>();

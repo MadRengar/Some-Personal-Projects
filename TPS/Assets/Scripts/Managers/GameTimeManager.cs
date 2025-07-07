@@ -122,6 +122,9 @@ public class GameTimeManager : MonoBehaviour
     {
         //Debug.Log($"黎明开始 - 第{currentDay}天 {currentHour:F1}时");
         UIManager.Instance.ShowDayNightTip("We are temporarily safe.", UIManager.TipType.EVENT);
+
+        //如果ai死亡 重新部署
+
         // TODO: 停止大批量僵尸生成
         // ZombieSpawnManager.Instance.StopMassiveSpawn();
 

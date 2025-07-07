@@ -55,13 +55,4 @@ public class BTMoveToResource : Action
             return TaskStatus.Success;
         }
     }
-    public override void OnEnd()
-    {
-        // 确保在节点结束时清除移动状态
-        if (animController != null)
-        {
-            animController.SetMoving(false, 0);
-            Debug.Log("BTMoveToResource结束 - 清除Moving标志");
-        }
-    }
 }

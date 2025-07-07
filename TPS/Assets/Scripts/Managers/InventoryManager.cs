@@ -333,6 +333,19 @@ public class InventoryManager : MonoBehaviour
         }
     }
     #endregion
+    public void ClearAIInventory()
+    {
+        // 清空AI背包
+        aiPlayerResourceSlots.Clear();
+
+        // 重置AI当前重量
+        aiCurrentWeight = 0f;
+
+        // 触发资源变化事件，更新UI
+        OnResourcesChanged?.Invoke();
+
+        Debug.Log("AI背包已清空，重量重置为0");
+    }
     public enum InventoryTarget { Player, AI }
 
     public void TriggerResourcesChangedEvent()

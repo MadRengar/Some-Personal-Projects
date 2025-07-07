@@ -159,7 +159,7 @@ public class CharacterStatePanelController : MonoBehaviour
         if (aiTeammateState != null)
         {
             // 更新AI生命值
-            int currentHP = aiTeammateState.currentHealth;
+            int currentHP = aiTeammateState.GetAICurrentHealth();
             int maxHP = aiTeammateState.playerData != null ? aiTeammateState.playerData.maxHealth : 100;
             if (aiHPText != null)
                 aiHPText.text = $"{currentHP}/{maxHP}";
