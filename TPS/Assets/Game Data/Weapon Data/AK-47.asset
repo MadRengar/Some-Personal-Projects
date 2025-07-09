@@ -18,6 +18,7 @@ MonoBehaviour:
   weaponPrefab: {fileID: 0}
   isAutomatic: 1
   fireRate: 0.1
+  cooldown: 0.5
   bulletsPerShot: 1
   bulletVelocity: 500
   damage: 10
@@ -38,3 +39,9 @@ MonoBehaviour:
   shellEjectPrefab: {fileID: 6890884654578176216, guid: df672dc51b574c14c838b16ae9e8e772, type: 3}
   bulletTrailPrefab: {fileID: 0}
   bulletImpactPrefab: {fileID: 5853225067423371789, guid: 5a9ffa6ce0628084c823e820ef800f27, type: 3}
+  weaponAnimatorController: {fileID: 0}
+  drawTime: 0.5
+  holsterTime: 0.3
+  crosshairColor: {r: 1, g: 1, b: 1, a: 1}
+  crosshairSize: 1
+  ammoIcon: {fileID: 0}

@@ -21,7 +21,7 @@ MonoBehaviour:
   cooldown: 0.5
   bulletsPerShot: 1
   bulletVelocity: 500
-  damage: 2
+  damage: 10
   range: 70
   accuracy: 0.95
   magazineSize: 40

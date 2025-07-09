@@ -14,6 +14,9 @@ public class ZombieFSM : MonoBehaviour
     private Animator anim;
     private ZombieStats stats;
 
+    [Header("Ref")]
+    [SerializeField] private AITeammateState aiState;
+
     [Header("Basic Settings")]
     public bool isGuard = false; // 该敌人是否站桩
     public float lookAtTime = 2f; // 敌人每移动到新的位置停下来观察四周的时间
@@ -76,6 +79,7 @@ public class ZombieFSM : MonoBehaviour
         zombieStats = GetComponent<ZombieStats>();
         playerTransform = GameManager.Instance.GetPlayerTransform();
         stats = GetComponent<ZombieStats>();
+        aiState = GameManager.Instance.GetAIAgentStats();
     }
 
     void Start()
@@ -95,6 +99,8 @@ public class ZombieFSM : MonoBehaviour
 
         if (currentState != ZombieStates.DEAD)
         {
+            CheckTargetValidity();
+
             // 更新攻击冷却计时器
             if (attackCooldownTimer > 0f)
             {
@@ -202,6 +208,7 @@ public class ZombieFSM : MonoBehaviour
         attackCooldownTimer = 0f;
     }
 
+    #region 狂暴状态
     /// <summary>
     /// 检查狂暴状态
     /// </summary>
@@ -323,6 +330,39 @@ public class ZombieFSM : MonoBehaviour
             LockBerserkTarget();
         }
     }
+    #endregion
+
+    /// <summary>
+    /// 检查当前目标是否已经死亡，如果是 AI 队友且死亡，则切换目标到玩家
+    /// </summary>
+    private void CheckTargetValidity()
+    {
+        if (attackTarget == null) return;
+
+        if (attackTarget.CompareTag("AIPlayer"))
+        {
+            if (aiState != null && !aiState.IsAlive()) // 这里假设 AI 队友也有 IsAlive
+            {
+                Debug.Log("[ZombieFSM] 目标 AI 队友已死亡，切换回玩家");
+
+                if (playerTransform != null)
+                {
+                    attackTarget = playerTransform.gameObject;
+
+                    // 普通模式切换到追击
+                    if (!isBerserk)
+                    {
+                        currentState = ZombieStates.CHASE;
+                    }
+                    else
+                    {
+                        currentState = ZombieStates.BERSERK_CHASE;
+                    }                      
+                }
+            }
+        }
+    }
+
 
     private void Guard()
     {

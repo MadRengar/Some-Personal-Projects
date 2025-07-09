@@ -18,6 +18,7 @@ public class PingMarkerManager : MonoBehaviour
     [Header("2D UI")]
     public RectTransform markerUIIconPrefab;
     public Canvas uiCanvas;
+    public GameObject tipUI;
 
     private GameObject currentMarker;
     private RectTransform currentMarkerUI;
@@ -26,7 +27,7 @@ public class PingMarkerManager : MonoBehaviour
     private float distance;
 
     private Vector3 currentMarkedPosition;// 标记位置
-    private bool pingCommandActive;// 标记状态
+    [SerializeField] private bool pingCommandActive;// 标记状态
 
     private void Start()
     {
@@ -53,7 +54,7 @@ public class PingMarkerManager : MonoBehaviour
                     return;
                 }
                 currentMarkedPosition = raycastHit.point;
-                /* 3D Marker*/
+                /* 3D Marker */
                 if (currentMarker != null)
                 {
                     Destroy(currentMarker);
@@ -62,7 +63,7 @@ public class PingMarkerManager : MonoBehaviour
                 currentMarker = Instantiate(markerPrefab, spawnPosition, Quaternion.identity, markerParent);
                 pingCommandActive = true;
 
-                /* 2D Marker*/
+                /* 2D Marker */
                 if (currentMarkerUI != null)
                 {
                     Destroy(currentMarkerUI.gameObject);
@@ -70,12 +71,15 @@ public class PingMarkerManager : MonoBehaviour
                 currentMarkerUI = Instantiate(markerUIIconPrefab, uiCanvas.transform);
                 distanceText = currentMarkerUI.GetComponentInChildren<TextMeshProUGUI>();
                 //Debug.Log("标记位置: " + raycastHit.point);
+
+                /* 2D TipUI */
+                ShowTipUI();
             }
         }
         Show2DUIMarker();
     }
 
-    void Show2DUIMarker()
+    private void Show2DUIMarker()
     {
         if(currentMarker != null && currentMarkerUI != null)
         {
@@ -99,7 +103,17 @@ public class PingMarkerManager : MonoBehaviour
         }
     }
 
-    bool CancelMarkIfHitUI(Vector2 screenCenter)
+    private void ShowTipUI()
+    {
+        tipUI.SetActive(true);
+    }
+
+    private  void HideTipUI()
+    {
+        tipUI.SetActive(false);
+    }
+
+    private bool CancelMarkIfHitUI(Vector2 screenCenter)
     {
         // 屏幕中心
         if (currentMarkerUI != null &&
@@ -113,9 +127,11 @@ public class PingMarkerManager : MonoBehaviour
 
             Destroy(currentMarkerUI.gameObject);
             currentMarkerUI = null;
-            //清空数据
+            // 清空数据
             pingCommandActive = false;
             currentMarkedPosition = Vector3.zero;
+            // 隐藏TipUI
+            HideTipUI();
             return true;
         }
         return false;

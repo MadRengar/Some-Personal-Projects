@@ -470,9 +470,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 337aeb6df4aa9e343af051e81da04d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiState: {fileID: 0}
   isGuard: 0
   lookAtTime: 3
-  sightRadius: 6.64
+  sightRadius: 1
   patrolRange: 4.5
   dealDamageRange: 4
   berserkSpeed: 6
