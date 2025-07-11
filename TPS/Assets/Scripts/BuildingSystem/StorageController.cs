@@ -85,7 +85,7 @@ public class StorageController : MonoBehaviour, IBuildingController
         requiredWoodNum = storageData.requiredWoodNum;
         requiredIronNum = storageData.requiredIronNum;
         requiredBuildingTime = storageData.requiredBuildingTime;
-
+        currentHealth = storageData.maxHealth;
         // 读取仓库特有属性
         storageCapacity = storageData.storageCapacity;
 
@@ -307,6 +307,13 @@ public class StorageController : MonoBehaviour, IBuildingController
     private void DestroyBuilding()
     {
         Debug.Log("发电机被摧毁！");
+        // 清空仓库中的所有资源
+        currentWoodAmount = 0;
+        currentIronAmount = 0;
+
+        // 同步UI - 触发资源变化事件
+        inventoryManager.TriggerResourcesChangedEvent();
+
         // 这里可以添加爆炸效果
         Destroy(gameObject);
     }

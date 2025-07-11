@@ -2610,7 +2610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 1250725991711365750}
-  dayDurationInSeconds: 30
+  dayDurationInSeconds: 60
   dawnTime: 6
   nightTime: 20
   currentDay: 1
@@ -11462,7 +11462,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 23.702122, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &673654637
@@ -13012,7 +13012,7 @@ MonoBehaviour:
   navMeshCheckRadius: 2
   enableDaySpawn: 1
   daySpawnRadius: 80
-  dayGroupCount: 10
+  dayGroupCount: 0
   minZombiesPerGroup: 3
   maxZombiesPerGroup: 5
   minDistanceBetweenGroups: 10
@@ -26449,7 +26449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 6.2758327, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1484439282
@@ -38391,7 +38391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7520693657153830483, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 226.9291
+      value: 251.07
       objectReference: {fileID: 0}
     - target: {fileID: 7520693657153830483, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_LocalPosition.y
@@ -38399,7 +38399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7520693657153830483, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 222.66919
+      value: 237.35
       objectReference: {fileID: 0}
     - target: {fileID: 7520693657153830483, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_LocalRotation.w
@@ -243469,11 +243469,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 337aeb6df4aa9e343af051e81da04d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   aiState: {fileID: 0}
   isGuard: 0
   lookAtTime: 3
   sightRadius: 6.64
   patrolRange: 4.5
+  bonusAttackRange: 0
   dealDamageRange: 0
   berserkSpeed: 10
   aiPlayerTargetChance: 0.4
@@ -243484,6 +243486,10 @@ MonoBehaviour:
   berserkPlayerLockChance: 0.8
   berserkTargetSwitchChance: 0.2
   playerProximityThreshold: 10
+  globalBuildingTargetChance: 0.3
+  targetSwitchInterval: 10
+  runtimeTargetSwitchChance: 0.15
+  currentBerserkType: 0
 --- !u!4 &6371615309869467968
 Transform:
   m_ObjectHideFlags: 0

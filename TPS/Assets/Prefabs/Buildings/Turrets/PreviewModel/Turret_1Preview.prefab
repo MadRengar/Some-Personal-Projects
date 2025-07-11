@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8265026138264735350}
   - component: {fileID: 1335508607765974333}
   - component: {fileID: 2895270096168144541}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Veh_AA_Handle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7256030167428831411}
   - component: {fileID: 4871312396203646341}
   - component: {fileID: 1236352026014007730}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Turret_1Preview
   m_TagString: BuildingPreview
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ MonoBehaviour:
   hitEffect: {fileID: 0}
   buildingHitSound: {fileID: 0}
   buildingCompleteSound: {fileID: 0}
-  enableDebugLog: 1
+  enableDebugLog: 0
 --- !u!65 &1236352026014007730
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 1260198606653900264}
   - component: {fileID: 8757842442241308886}
   - component: {fileID: 2439506832379870303}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

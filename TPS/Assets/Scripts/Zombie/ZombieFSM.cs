@@ -10,7 +10,7 @@ public enum ZombieStates { Guard, PATROL, CHASE, ATTACK, DEAD, BERSERK_CHASE }
 public class ZombieFSM : MonoBehaviour
 {
     private NavMeshAgent agent;
-    private ZombieStates currentState;
+    [SerializeField] private ZombieStates currentState;
     private Animator anim;
     private ZombieStats stats;
 
@@ -41,6 +41,7 @@ public class ZombieFSM : MonoBehaviour
 
     /* 攻击相关属性 */
     [Header("Attack State")]
+    [SerializeField] private float bonusAttackRange = 2f;
     public float dealDamageRange;
     private float attackRange;
     private float attackCD;
@@ -71,6 +72,22 @@ public class ZombieFSM : MonoBehaviour
     [Range(0f, 1f)]
     public float berserkTargetSwitchChance = 0.2f; // AI队友→玩家的切换概率
     public float playerProximityThreshold = 10f; // 玩家和AI队友的距离阈值
+
+    [Header("Global Target Selection")]
+    [Range(0f, 1f)]
+    public float globalBuildingTargetChance = 0.3f; // 选择建筑目标的概率
+    public float targetSwitchInterval = 10f; // 目标切换间隔（秒）
+    [Range(0f, 1f)]
+    public float runtimeTargetSwitchChance = 0.15f; // 运行时切换概率
+
+    public enum BerserkTargetType
+    {
+        Survival,      // 攻击玩家/AI队友
+        PlayerBuilding // 攻击建筑
+    }
+
+    [SerializeField] private BerserkTargetType currentBerserkType;
+    private float lastTargetSwitchTime = 0f;
 
     void Awake()
     {
@@ -235,10 +252,72 @@ public class ZombieFSM : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 狂暴状态下锁定攻击目标（全图搜索）
-    /// </summary>
     private void LockBerserkTarget()
+    {
+        // 全图随机选择目标类型
+        bool shouldAttackBuilding = Random.Range(0f, 1f) < globalBuildingTargetChance;
+
+        if (shouldAttackBuilding)
+        {
+            currentBerserkType = BerserkTargetType.PlayerBuilding;
+            LockGlobalBuildingTarget();
+        }
+        else
+        {
+            currentBerserkType = BerserkTargetType.Survival;
+            LockPlayerTarget();
+        }
+
+        lastTargetSwitchTime = Time.time;
+        Debug.Log($"[ZombieFSM] {name} 狂暴目标选择 - 类型: {currentBerserkType}, 目标: {(attackTarget?.name ?? "无")}");
+    }
+
+    // 3. 添加新的方法：全图建筑目标选择
+    private void LockGlobalBuildingTarget()
+    {
+        // 找到场景中所有玩家建筑
+        GameObject[] allBuildings = GameObject.FindGameObjectsWithTag("PlayerBuilding");
+        List<GameObject> validBuildings = new List<GameObject>();
+
+        // 筛选有效建筑
+        foreach (var building in allBuildings)
+        {
+            IBuildingController buildingController = building.GetComponent<IBuildingController>();
+            if (buildingController != null && !buildingController.IsDestroyed())
+            {
+                validBuildings.Add(building);
+            }
+        }
+
+        if (validBuildings.Count > 0)
+        {
+            // 优先选择发电机（60%概率）
+            List<GameObject> generators = validBuildings.FindAll(b => b.GetComponent<GeneratorController>() != null);
+
+            if (generators.Count > 0 && Random.Range(0f, 1f) < 0.6f)
+            {
+                // 随机选择一个发电机
+                attackTarget = generators[Random.Range(0, generators.Count)];
+                Debug.Log($"[ZombieFSM] {name} 全图选择发电机目标: {attackTarget.name}");
+            }
+            else
+            {
+                // 随机选择任意建筑
+                attackTarget = validBuildings[Random.Range(0, validBuildings.Count)];
+                Debug.Log($"[ZombieFSM] {name} 全图选择建筑目标: {attackTarget.name}");
+            }
+        }
+        else
+        {
+            // 没有建筑，切换到攻击玩家
+            Debug.Log($"[ZombieFSM] {name} 没有可攻击的建筑，切换到攻击玩家");
+            currentBerserkType = BerserkTargetType.Survival;
+            LockPlayerTarget();
+        }
+    }
+
+    // 4. 添加新的方法：分离出来的玩家目标选择
+    private void LockPlayerTarget()
     {
         GameObject player = null;
         GameObject aiPlayer = null;
@@ -260,14 +339,14 @@ public class ZombieFSM : MonoBehaviour
         }
         else if (player != null)
         {
-            attackTarget = player; // 只有玩家
+            attackTarget = player;
         }
         else if (aiPlayer != null)
         {
-            attackTarget = aiPlayer; // 只有AI队友
+            attackTarget = aiPlayer;
         }
 
-        //Debug.Log($"[ZombieFSM] 狂暴状态锁定目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
+        Debug.Log($"[ZombieFSM] {name} 全图选择玩家目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
     }
 
     /// <summary>
@@ -276,6 +355,8 @@ public class ZombieFSM : MonoBehaviour
     private void BerserkUpdate()
     {
         if (playerTransform == null) return;
+
+        CheckRuntimeTargetSwitch();
 
         // 狂暴僵尸只有两种状态：狂暴追击和攻击
         switch (currentState)
@@ -291,6 +372,54 @@ public class ZombieFSM : MonoBehaviour
                 currentState = ZombieStates.BERSERK_CHASE;
                 break;
         }
+    }
+
+    private void CheckRuntimeTargetSwitch()
+    {
+        // 检查是否到了切换时间
+        if (Time.time - lastTargetSwitchTime < targetSwitchInterval) return;
+
+        // 按概率决定是否切换
+        if (Random.Range(0f, 1f) > runtimeTargetSwitchChance) return;
+
+        // 执行目标切换
+        bool currentlyAttackingBuilding = (currentBerserkType == BerserkTargetType.PlayerBuilding);
+
+        // 50%概率切换目标类型，50%概率保持类型但换目标
+        bool switchType = Random.Range(0f, 1f) < 0.5f;
+
+        if (switchType)
+        {
+            // 切换目标类型
+            if (currentlyAttackingBuilding)
+            {
+                Debug.Log($"[ZombieFSM] {name} 运行时切换：建筑 -> 玩家");
+                currentBerserkType = BerserkTargetType.Survival;
+                LockPlayerTarget();
+            }
+            else
+            {
+                Debug.Log($"[ZombieFSM] {name} 运行时切换：玩家 -> 建筑");
+                currentBerserkType = BerserkTargetType.PlayerBuilding;
+                LockGlobalBuildingTarget();
+            }
+        }
+        else
+        {
+            // 保持类型，换个目标
+            if (currentlyAttackingBuilding)
+            {
+                Debug.Log($"[ZombieFSM] {name} 运行时切换建筑目标");
+                LockGlobalBuildingTarget();
+            }
+            else
+            {
+                Debug.Log($"[ZombieFSM] {name} 运行时切换玩家目标");
+                LockPlayerTarget();
+            }
+        }
+
+        lastTargetSwitchTime = Time.time;
     }
 
     /// <summary>
@@ -314,7 +443,11 @@ public class ZombieFSM : MonoBehaviour
 
             // 检查是否可以攻击
             float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
-            if (distanceToTarget <= attackRange && attackCooldownTimer <= 0f)
+
+            float attackBonus = GetBuildingAttackBonus(attackTarget);
+            float effectiveAttackRange = attackRange + attackBonus;
+
+            if (distanceToTarget <= effectiveAttackRange && attackCooldownTimer <= 0f)
             {
                 // 切换到攻击状态
                 currentState = ZombieStates.ATTACK;
@@ -341,28 +474,104 @@ public class ZombieFSM : MonoBehaviour
 
         if (attackTarget.CompareTag("AIPlayer"))
         {
-            if (aiState != null && !aiState.IsAlive()) // 这里假设 AI 队友也有 IsAlive
+            if (aiState != null && !aiState.IsAlive())
             {
-                Debug.Log("[ZombieFSM] 目标 AI 队友已死亡，切换回玩家");
+                Debug.Log("[ZombieFSM] 目标 AI 队友已死亡，重新选择目标");
 
-                if (playerTransform != null)
+                if (isBerserk)
                 {
-                    attackTarget = playerTransform.gameObject;
-
-                    // 普通模式切换到追击
-                    if (!isBerserk)
+                    // 狂暴状态下重新执行完整的目标选择逻辑（就像刚生成时一样）
+                    LockBerserkTarget();
+                    currentState = ZombieStates.BERSERK_CHASE;
+                }
+                else
+                {
+                    // 非狂暴状态切换到玩家
+                    if (playerTransform != null)
                     {
+                        attackTarget = playerTransform.gameObject;
                         currentState = ZombieStates.CHASE;
+                    }
+                }
+            }
+        }
+        else if (attackTarget.CompareTag("PlayerBuilding"))
+        {
+            IBuildingController building = attackTarget.GetComponent<IBuildingController>();
+            if (building != null && building.IsDestroyed())
+            {
+                Debug.Log("[ZombieFSM] 目标建筑已被摧毁，重新选择目标");
+
+                if (isBerserk)
+                {
+                    // 狂暴状态下重新执行完整的目标选择逻辑（就像刚生成时一样）
+                    LockBerserkTarget();
+                    currentState = ZombieStates.BERSERK_CHASE;
+                }
+                else
+                {
+                    // 非狂暴状态回到正常逻辑
+                    attackTarget = null;
+                    currentState = ZombieStates.CHASE;
+                }
+            }
+        }
+        else if (attackTarget.CompareTag("Player"))
+        {
+            // 检查玩家是否死亡
+            PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
+            if (playerStats != null && playerStats.GetCurrentHealth() <= 0) // 使用血量判断
+            {
+                Debug.Log("[ZombieFSM] 目标玩家已死亡，重新选择目标");
+
+                if (isBerserk)
+                {
+                    // 狂暴状态下重新执行完整的目标选择逻辑
+                    LockBerserkTarget();
+                    currentState = ZombieStates.BERSERK_CHASE;
+                }
+                else
+                {
+                    // 非狂暴状态寻找其他目标或回到巡逻
+                    attackTarget = null;
+                    if (isGuard)
+                    {
+                        currentState = ZombieStates.Guard;
+                        remainLookAtTime = lookAtTime;
                     }
                     else
                     {
-                        currentState = ZombieStates.BERSERK_CHASE;
-                    }                      
+                        currentState = ZombieStates.PATROL;
+                        GetNewPatrolPoint();
+                    }
                 }
             }
         }
     }
 
+    private float GetBuildingAttackBonus(GameObject building)
+    {
+        if (!building.CompareTag("PlayerBuilding")) return 0f;
+
+        // 根据建筑类型返回不同的攻击范围补偿
+        if (building.GetComponent<StorageController>() != null)
+        {
+            return bonusAttackRange; // 仓库比较大，需要4米补偿
+        }
+        return 0f;
+    }
+
+    private string GetBuildingTypeName(GameObject building)
+    {
+        if (building.GetComponent<GeneratorController>() != null)
+            return "发电机";
+        else if (building.GetComponent<TurretController>() != null)
+            return "炮台";
+        else if (building.GetComponent<StorageController>() != null)
+            return "仓库";
+        else
+            return "建筑";
+    }
 
     private void Guard()
     {
@@ -557,7 +766,11 @@ public class ZombieFSM : MonoBehaviour
         if (attackTarget == null) return;
         // 再次检查距离
         float distanceToTarget = Vector3.Distance(transform.position, attackTarget.transform.position);
-        if (distanceToTarget <= dealDamageRange)
+
+        float damageBonus = GetBuildingAttackBonus(attackTarget);
+        float effectiveDamageRange = dealDamageRange + damageBonus;
+
+        if (distanceToTarget <= effectiveDamageRange)
         {
             if (attackTarget.CompareTag("Player"))
             {
@@ -582,7 +795,30 @@ public class ZombieFSM : MonoBehaviour
                     //Debug.Log($"[ZombieFSM] 对AI队友造成 {aiDamage} 点伤害！");
                 }
             }
+            else if (attackTarget.CompareTag("PlayerBuilding"))
+            {
+                // 对建筑造成伤害
+                IBuildingController building = attackTarget.GetComponent<IBuildingController>();
+
+                int buildingDamage = zombieStats.zombieAttackData.attackDamage;
+                building.TakeDamage(buildingDamage);
+
+                string buildingType = GetBuildingTypeName(attackTarget);
+                Debug.Log($"[ZombieFSM] 对{buildingType}造成 {buildingDamage} 点伤害！");
+
+                // 检查建筑是否被摧毁
+                if (building.IsDestroyed())
+                {
+                    Debug.Log($"[ZombieFSM] {buildingType}已被摧毁！");
+                    // 重新选择目标
+                    if (isBerserk)
+                    {
+                        LockBerserkTarget();
+                    }
+                }
+            }
         }
+       
     }
 
     public void EnterDeadState(bool isAlive)
