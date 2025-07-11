@@ -11,6 +11,7 @@ TagManager:
   - AIPlayer
   - BuildingPreview
   - EnemyHead
+  - PlayerBuilding
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - CampZone
   - Building
   - Obstacle
-  - 
+  - PlayerBuilding
   - 
   - 
   - 

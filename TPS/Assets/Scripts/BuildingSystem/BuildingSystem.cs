@@ -21,6 +21,10 @@ public class BuildingSystem : MonoBehaviour
     [Header("Running Data(From InventoryManager)")]
     [SerializeField] private int woodCount;
     [SerializeField] private int ironCount;
+
+    [Header("Turrets Data Structure")]
+    public List<TurretController> turretControllers = new List<TurretController>();
+
     // 运行时变量
     private Camera playerCamera;                // 主摄像机（运行时获取）
     private GameObject currentPreview;          // 当前预览的建筑

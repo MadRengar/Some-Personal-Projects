@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17433ab56c6e78b40bdbb2117ca77650, type: 3}
   m_Name: TurretLevel1
   m_EditorClassIdentifier: 
-  buildingName: 
+  buildingName: TurretLevel1
   requiredWoodNum: 10
   requiredIronNum: 10
   requiredBuildingTime: 100
   maxHealth: 100
   buildingType: 0
+  turretLevel: 1
   attackDamage: 5
   firerate: 0.1
   attackRange: 30
+  power: 10
   continuousFireDuration: 3
   restDuration: 1

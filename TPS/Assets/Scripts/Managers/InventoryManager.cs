@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +27,9 @@ public class InventoryManager : MonoBehaviour
 
     [Header("Storage Management")]
     public List<StorageController> allStorages = new List<StorageController>();
+
+    [Header("Storage Management")]
+    public List<GeneratorController> allGenerators = new List<GeneratorController>();
 
     [Header("Storage Debug Info (Read Only)")]
     [SerializeField] private List<StorageDebugInfo> storageDebugList = new List<StorageDebugInfo>();
@@ -348,6 +352,41 @@ public class InventoryManager : MonoBehaviour
     }
     public enum InventoryTarget { Player, AI }
 
+
+    #region Generator
+    public int GetAllGeneratorPower()
+    {
+        int total = 0;
+        GeneratorController[] allGenerators = FindObjectsOfType<GeneratorController>();
+        foreach (var generator in allGenerators)
+        {
+            total += generator.GetPowerOutput();
+        }
+        return total;
+    }
+
+    public void RegisterGenerator(GeneratorController generator)
+    {
+        if(generator!= null && ! allGenerators.Contains(generator))
+        {
+            allGenerators.Add(generator);
+        }
+    }
+
+    public void UnregisterGenerator(GeneratorController generator)
+    {
+        if (generator != null && !allGenerators.Contains(generator))
+        {
+            allGenerators.Remove(generator);
+        }
+    }
+
+    public void GeneratorInvokeEvent()
+    {
+        OnResourcesChanged?.Invoke();
+    }
+
+    #endregion
     public void TriggerResourcesChangedEvent()
     {
         OnResourcesChanged?.Invoke();

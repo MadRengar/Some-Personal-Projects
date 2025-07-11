@@ -8,10 +8,12 @@ public class ResourcesUIController : MonoBehaviour
     [Header("Resources UI")]
     [SerializeField] private TextMeshProUGUI woodNumUI;
     [SerializeField] private TextMeshProUGUI ironNumUI;
+    [SerializeField] private TextMeshProUGUI powerUI;
 
     private InventoryManager inventoryManager;
     private int woodCount;
     private int ironCount;
+    private int powerCount;
 
     void Start()
     {
@@ -39,14 +41,15 @@ public class ResourcesUIController : MonoBehaviour
         // 直接获取总资源数量（玩家+AI+仓库）
         woodCount = inventoryManager.GetTotalResourceIncludingAllStorage(ResourceType.Wood);
         ironCount = inventoryManager.GetTotalResourceIncludingAllStorage(ResourceType.Iron);
-
+        powerCount = inventoryManager.GetAllGeneratorPower();
         // 更新UI显示
         if (woodNumUI != null)
             woodNumUI.text = woodCount.ToString();
 
         if (ironNumUI != null)
             ironNumUI.text = ironCount.ToString();
+        if (powerUI != null)
+            powerUI.text = powerCount.ToString();
 
-        //Debug.Log($"UI更新：木材={woodCount}, 铁矿={ironCount}");
     }
 }

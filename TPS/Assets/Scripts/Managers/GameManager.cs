@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Inventory")]
     public InventoryManager inventoryManager;
+    public PowerManager powerManager;
 
     [Header("AI Agent")]
     public GameObject aiTeammate;
@@ -143,6 +144,11 @@ public class GameManager : MonoBehaviour
     public bool CheckAIIsAlive()
     {
         return aiTeammate.GetComponent<AITeammateState>().IsAlive();
+    }
+
+    public PowerManager GetPowerManager()
+    {
+        return powerManager;
     }
     #endregion
 

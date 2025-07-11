@@ -14,12 +14,12 @@ GameObject:
   - component: {fileID: 3759165121668670520}
   - component: {fileID: 8541377896345290439}
   - component: {fileID: 5028581248148391490}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Storage
-  m_TagString: Untagged
+  m_TagString: PlayerBuilding
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7520693657153830483
 Transform:
@@ -143,6 +143,8 @@ MonoBehaviour:
   storageData: {fileID: 11400000, guid: 886d42abfb5b59b4784a879cbdeb18ee, type: 2}
   currentHealth: 0
   currentCapacity: 0
+  currentWoodAmount: 0
+  currentIronAmount: 0
   requiredWoodNum: 0
   requiredIronNum: 0
   requiredBuildingTime: 0

@@ -470,10 +470,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 337aeb6df4aa9e343af051e81da04d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiState: {fileID: 0}
   isGuard: 0
   lookAtTime: 3
-  sightRadius: 1
+  sightRadius: 7
   patrolRange: 4.5
   dealDamageRange: 4
   berserkSpeed: 6
@@ -485,6 +484,13 @@ MonoBehaviour:
   berserkPlayerLockChance: 0.7
   berserkTargetSwitchChance: 0
   playerProximityThreshold: 20
+  buildingAttackChance: 0.878
+  buildingDetectionRadius: 30
+  priorityBuildingChance: 0.6
+  buildingLayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  currentBerserkType: 0
 --- !u!114 &1642324502673355681
 MonoBehaviour:
   m_ObjectHideFlags: 0

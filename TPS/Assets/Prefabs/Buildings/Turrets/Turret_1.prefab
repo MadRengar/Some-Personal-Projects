@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4757465341049626243}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4757465341049626243
 Transform:
@@ -42,12 +42,12 @@ GameObject:
   - component: {fileID: 8265026138264735350}
   - component: {fileID: 1335508607765974333}
   - component: {fileID: 2895270096168144541}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Wep_Veh_AA_Handle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8265026138264735350
 Transform:
@@ -127,12 +127,12 @@ GameObject:
   - component: {fileID: 7256030167428831411}
   - component: {fileID: 4372588776977661159}
   - component: {fileID: 256181077630221352}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Turret_1
-  m_TagString: Untagged
+  m_TagString: PlayerBuilding
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2721304158328909533
 Transform:
@@ -231,6 +231,9 @@ MonoBehaviour:
   attackRange: 0
   continuousFireDuration: 0
   restDuration: 0
+  isPowered: 1
+  powerRequirement: 0
+  level: 0
   fireSound: {fileID: 0}
   muzzleFlashPrefab: {fileID: 1626222058968914882}
   shellEjectPrefab: {fileID: 7431387619674387055}
@@ -271,12 +274,12 @@ GameObject:
   - component: {fileID: 1260198606653900264}
   - component: {fileID: 8757842442241308886}
   - component: {fileID: 2439506832379870303}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1260198606653900264
 Transform:
@@ -410,9 +413,25 @@ PrefabInstance:
       propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3984834695621546597, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3984834695621546597, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5331668692311563556, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5331668692311563556, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5331668692311563556, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 7523702661724920801, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
       propertyPath: m_BoundingSphereOverride.w
@@ -429,6 +448,14 @@ PrefabInstance:
     - target: {fileID: 7824026249473068113, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
       propertyPath: m_Name
       value: Gunshot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7824026249473068113, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7824026249473068113, guid: 8dc8b171fd1c6ad46b5a4f4bec24ca9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -496,6 +523,14 @@ PrefabInstance:
     - target: {fileID: 8318728968787263665, guid: df672dc51b574c14c838b16ae9e8e772, type: 3}
       propertyPath: m_Name
       value: Bullet_Shells
+      objectReference: {fileID: 0}
+    - target: {fileID: 8318728968787263665, guid: df672dc51b574c14c838b16ae9e8e772, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8318728968787263665, guid: df672dc51b574c14c838b16ae9e8e772, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -35,12 +35,17 @@ public class TurretController : MonoBehaviour, IBuildingController
     [SerializeField] private float continuousFireDuration;
     [SerializeField] private float restDuration;
 
+    [Header("Power Running State (Read Only)")]
+    [SerializeField] private bool isPowered = true;    // 当前是否有电
+    [SerializeField] private int powerRequirement;
+    [SerializeField] private int level;
+
     [Header("Particle System")]
     [SerializeField] private AudioClip fireSound;
     [SerializeField] private ParticleSystem muzzleFlashPrefab;
     [SerializeField] private ParticleSystem shellEjectPrefab;
 
-    [Header("Current State")]
+    [Header("Current State (Read Only)")]
     [SerializeField] private TurretState currentState = TurretState.Idle;
     [SerializeField] private Transform currentTarget;
     [SerializeField] private int currentHealth;
@@ -56,17 +61,22 @@ public class TurretController : MonoBehaviour, IBuildingController
     // Debug可视化
     [Header("Debug Visualization")]
     [SerializeField] private bool showFireTrajectory = true;
+
     private Vector3 lastFireStartPoint;
     private Vector3 lastFireEndPoint;
     private bool hasLastFireData = false;
-
+    private PowerManager powerManager;
     public BuildingData_SO GetBuildingData() => turretData;
 
     private void Start()
     {
         LoadTurretData();
+
         InitializeComponents();
-        StartEnemyDetection();
+
+        RegisterToPowerManager();
+
+        StartEnemyDetection();   
     }
 
     private void Update()
@@ -96,6 +106,8 @@ public class TurretController : MonoBehaviour, IBuildingController
         requiredIronNum = turretData.requiredIronNum;
         requiredBuildingTime = turretData.requiredBuildingTime;
         currentHealth = turretData.maxHealth;
+        powerRequirement = turretData.power;
+        level = turretData.turretLevel;
 
         // 读取攻击信息
         attackDamage = turretData.attackDamage;
@@ -116,7 +128,7 @@ public class TurretController : MonoBehaviour, IBuildingController
 
         if (currentHealth <= 0)
         {
-            DestroyTurret();
+            DestroyBuilding();
         }
     }
 
@@ -125,9 +137,10 @@ public class TurretController : MonoBehaviour, IBuildingController
         return currentHealth <= 0;
     }
 
-    private void DestroyTurret()
+    private void DestroyBuilding()
     {
         Debug.Log("炮台被摧毁！");
+        UnregisterTurret();
         Destroy(gameObject);
     }
 
@@ -144,8 +157,21 @@ public class TurretController : MonoBehaviour, IBuildingController
                 audioSource = gameObject.AddComponent<AudioSource>();
             }
         }
+        powerManager = GameManager.Instance.GetPowerManager();
     }
 
+    private void RegisterToPowerManager()
+    {
+        
+        powerManager.RegisterTurret(this);
+    }
+
+    private void UnregisterTurret()
+    {
+        powerManager.UnregisterTurret(this);
+    }
+
+    #region Turret FSM
     /// <summary>
     /// 防御塔状态机
     /// </summary>
@@ -352,7 +378,18 @@ public class TurretController : MonoBehaviour, IBuildingController
     {
         while (true)
         {
-            // 在空闲状态检测敌人，开火状态检查目标切换
+            // 如果没电，强制进入Idle状态
+            if (!isPowered)
+            {
+                if (currentState != TurretState.Idle)
+                {
+                    SwitchToIdle();
+                }
+                yield return new WaitForSeconds(0.3f);
+                continue;
+            }
+
+            // 原有的敌人检测逻辑...
             if (currentState == TurretState.Idle)
             {
                 Transform nearestEnemy = FindNearestEnemy();
@@ -365,7 +402,6 @@ public class TurretController : MonoBehaviour, IBuildingController
             }
             else if (currentState == TurretState.Firing)
             {
-                // 检查当前目标是否还有效
                 if (!IsTargetValid(currentTarget))
                 {
                     Debug.Log("[TurretController] 当前目标无效，寻找新目标");
@@ -413,8 +449,6 @@ public class TurretController : MonoBehaviour, IBuildingController
         return nearestEnemy;
     }
 
-    #region 状态切换方法
-
     private void SwitchToIdle()
     {
         currentState = TurretState.Idle;
@@ -444,6 +478,8 @@ public class TurretController : MonoBehaviour, IBuildingController
     }
 
     #endregion
+
+
 
     /// <summary>
     /// 绘制攻击范围和射击轨迹的Gizmo
@@ -484,6 +520,7 @@ public class TurretController : MonoBehaviour, IBuildingController
     private void OnDestroy()
     {
         StopEnemyDetection();
+        UnregisterTurret();
     }
 
     #region Public Getters - 供UI和其他系统使用
@@ -501,6 +538,31 @@ public class TurretController : MonoBehaviour, IBuildingController
     public ParticleSystem GetShellEjectPrefab() => shellEjectPrefab;
     public TurretState GetCurrentState() => currentState;
     public Transform GetCurrentTarget() => currentTarget;
+    public int GetTurretLevel() => level;
+    public int GetPowerRequirement() => powerRequirement;
 
+    // 添加电力管理方法
+    /// <summary>
+    /// 设置炮台电力状态
+    /// </summary>
+    public void SetPowered(bool powered)
+    {
+        if (isPowered == powered) return; // 避免重复设置
+
+        isPowered = powered;
+
+        if (!isPowered)
+        {
+            Debug.Log($"炮台 {name} 电力不足，暂停运行");
+            // 断电时强制进入Idle状态
+            SwitchToIdle();
+        }
+        else
+        {
+            Debug.Log($"炮台 {name} 电力恢复");
+        }
+    }
+
+    public bool IsPowered() => isPowered;
     #endregion
 }

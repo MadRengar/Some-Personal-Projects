@@ -25,7 +25,7 @@ public class StorageController : MonoBehaviour, IBuildingController
     private bool playerInRange = false;
 
     private PlayerInputSystem playerInputSystem;
-
+    private InventoryManager inventoryManager;
     public BuildingData_SO GetBuildingData() => storageData;
 
     public static event Action OnPlayerEnterStorageRange;
@@ -35,6 +35,7 @@ public class StorageController : MonoBehaviour, IBuildingController
     private void Start()
     {
         playerInputSystem = GameManager.Instance.GetPlayerInputSystem();
+        inventoryManager = GameManager.Instance.GetInventoryManager();
         LoadStorageData();
         SetupInteractionTrigger();
 
@@ -258,7 +259,6 @@ public class StorageController : MonoBehaviour, IBuildingController
     /// </summary>
     private void RegisterToInventoryManager()
     {
-        InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
         if (inventoryManager != null)
         {
             inventoryManager.RegisterStorage(this);
