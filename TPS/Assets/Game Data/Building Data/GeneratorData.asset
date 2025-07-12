@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GeneratorData
   m_EditorClassIdentifier: 
   buildingName: Generator
-  requiredWoodNum: 10
-  requiredIronNum: 10
+  requiredWoodNum: 5
+  requiredIronNum: 5
   requiredBuildingTime: 60
   maxHealth: 100
   buildingType: 1

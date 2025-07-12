@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TurretController : MonoBehaviour, IBuildingController
 {
@@ -49,6 +50,7 @@ public class TurretController : MonoBehaviour, IBuildingController
     [SerializeField] private TurretState currentState = TurretState.Idle;
     [SerializeField] private Transform currentTarget;
     [SerializeField] private int currentHealth;
+
     // 射击控制变量(仿照WeaponManager)
     [HideInInspector] public float cooldown = 0f; // 当前冷却时间
     private float firingTimer = 0f; // 连续开火计时器
@@ -540,6 +542,8 @@ public class TurretController : MonoBehaviour, IBuildingController
     public Transform GetCurrentTarget() => currentTarget;
     public int GetTurretLevel() => level;
     public int GetPowerRequirement() => powerRequirement;
+
+    public int GetCurrentHealth() => currentHealth;
 
     // 添加电力管理方法
     /// <summary>

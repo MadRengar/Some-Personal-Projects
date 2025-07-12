@@ -176,6 +176,7 @@ public class BuildingSystem : MonoBehaviour
     if (enableDebugLog)
         Debug.Log($"[BuildingSystem] 建筑预览已放置，等待建造: {buildingPreview.name} at {pos}");
 
+        buildingPreview.GetComponent<BuildingProgress>().ShowBuildingProgressUI();
         EndPlacement();
     }
 

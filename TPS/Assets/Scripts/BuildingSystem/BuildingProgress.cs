@@ -8,9 +8,8 @@ public class BuildingProgress : MonoBehaviour
     [SerializeField] private float progressPerHit = 20f;     // 每次锤击增加的进度
 
     [Header("Progress UI")]
-    [SerializeField] private Canvas progressCanvas;          // 进度条Canvas
-    [SerializeField] private Slider progressSlider;          // 进度条Slider
-    [SerializeField] private GameObject progressUI;          // 整个进度UI对象
+    [SerializeField] private GameObject buildingProgressUI;
+    [SerializeField] private Image radialFillImage;
 
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem hitEffect;       // 锤击特效
@@ -54,17 +53,6 @@ public class BuildingProgress : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-
-        // 如果没有设置进度UI，尝试在子物体中查找
-        if (progressUI == null)
-        {
-            progressUI = transform.Find("ProgressUI")?.gameObject;
-        }
-
-        if (progressSlider == null && progressUI != null)
-        {
-            progressSlider = progressUI.GetComponentInChildren<Slider>();
-        }
     }
 
     /// <summary>
@@ -97,16 +85,16 @@ public class BuildingProgress : MonoBehaviour
     /// </summary>
     private void UpdateProgressUI()
     {
-        if (progressSlider != null)
-        {
-            progressSlider.value = currentProgress / maxProgress;
-        }
 
-        // 显示进度UI（当开始建造时）
-        if (progressUI != null && currentProgress > 0f && !isCompleted)
+        if (radialFillImage != null)
         {
-            progressUI.SetActive(true);
+            radialFillImage.fillAmount = currentProgress / maxProgress;
         }
+    }
+
+    public void ShowBuildingProgressUI()
+    {
+        buildingProgressUI.SetActive(true);
     }
 
     /// <summary>
@@ -225,5 +213,13 @@ public class BuildingProgress : MonoBehaviour
 
         // 更新UI
         UpdateProgressUI();
+    }
+
+    void LateUpdate()
+    {
+        if (Camera.main != null)
+        {
+            buildingProgressUI.transform.forward = Camera.main.transform.forward;
+        }
     }
 }
