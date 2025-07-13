@@ -14,6 +14,7 @@ public class AIInitBTVariables : MonoBehaviour
 {
 
     public BehaviorTree behaviorTree;
+    public Transform ammoSupplyPos;
 
     void Start()
     {
@@ -22,11 +23,14 @@ public class AIInitBTVariables : MonoBehaviour
             Debug.LogError("[AIInitBTVariables] 缺少 BehaviorTree 引用！");
             return;
         }
-        // 注入共享变量 "player"，对应 SharedTransform 类型变量
+        // Player Ref
         behaviorTree.SetVariableValue("player", GameManager.Instance.GetPlayerTransform());
+        // 弹药补给点
+        behaviorTree.SetVariableValue("ammoSupplyPos", ammoSupplyPos);
     }
     void Update()
     {
+        // ping Ref
         behaviorTree.SetVariableValue("pingCommandActive", GameManager.Instance.GetPingMarkerManager().GetPingCommandActive());
         behaviorTree.SetVariableValue("pingPosition", GameManager.Instance.GetPingMarkerManager().GetCurrentMarkedPosition());
         //behaviorTree.SetVariableValue("currentCommand", GameManager.Instance.currentCommand);
