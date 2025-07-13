@@ -11,6 +11,8 @@ public class ZombieSpawner : MonoBehaviour
     public float spawnInterval = 2f; // 生成间隔（秒）
     public float spawnRadius = 2f; // 生成范围半径
 
+    [Header("Zombie State")]
+    [SerializeField] private int berserkHealth = 60;
     [Header("Debug")]
     public bool showGizmos = true;
 
@@ -134,7 +136,7 @@ public class ZombieSpawner : MonoBehaviour
         if (zombieStats != null)
         {
             zombieStats.isBerserk = isBerserk;
-            zombieStats.currentHealth = 100;
+            zombieStats.currentHealth = berserkHealth;
         }
 
         // 重置僵尸FSM以应用新状态

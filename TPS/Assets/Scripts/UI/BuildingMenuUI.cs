@@ -280,8 +280,8 @@ public class BuildingMenuUI : MonoBehaviour
             }
             else
             {
-                // TODO: 弹出提示
-                Debug.Log("资源数量不足！");
+
+                RadioPopController.Instance.ShowMessage(MessageKey.Build_no_resource, RadioPopController.MessageType.Warning);
                 return;
             }
             
@@ -297,8 +297,6 @@ public class BuildingMenuUI : MonoBehaviour
     /// </summary>
     public void CloseBuildingMenu()
     {
-        Debug.Log("BuildingMenuUI: 关闭建筑菜单");
-        
         // 通过PlayerInputSystem切换回战斗模式
         if (playerInputSystem != null)
         {

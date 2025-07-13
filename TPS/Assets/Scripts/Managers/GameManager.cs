@@ -269,6 +269,12 @@ public class GameManager : MonoBehaviour
         if (tree != null)
         {
             tree.SetVariableValue("currentCommand", currentCommand);
+
+            if(currentCommand == "unknown")
+            {
+                RadioPopController.Instance.ShowMessage(MessageKey.AI_parse_fail, RadioPopController.MessageType.Error);
+            }
+
             Debug.Log("GPT指令更新为: " + currentCommand);
         }
     }
