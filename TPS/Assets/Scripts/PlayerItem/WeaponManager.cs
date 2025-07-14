@@ -343,6 +343,20 @@ public class WeaponManager : MonoBehaviour
         OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
 
         Debug.Log($"获得 {amount} 发 {weaponData.weaponName} 弹药，当前备用: {reserveAmmo}");
+
+        if (currentAmmo <= 0)
+        {
+            OnWeaponEmpty?.Invoke();
+
+            if (weaponData.autoReloadWhenEmpty && reserveAmmo > 0)
+            {
+                StartReload();
+            }
+            else
+            {
+                PlayEmptyClipSound();
+            }
+        }
     }
     #endregion
 

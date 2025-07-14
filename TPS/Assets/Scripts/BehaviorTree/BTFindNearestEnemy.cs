@@ -10,6 +10,8 @@ public class BTFindNearestEnemy : Conditional
     public SharedTransform nearestEnemy;
     public float sightRadius; // AI感知/射击范围
     public LayerMask enemyLayer;    // 仅检测敌人
+    public SharedBool hasAmmo; // 从黑板读取
+
     private AIAgentSettings agentSettings;
     private AIAnimationController animController;
 
@@ -60,7 +62,7 @@ public class BTFindNearestEnemy : Conditional
             nearestEnemy.Value = null;
             //Debug.Log("BackToMove!");
             // 没有敌人，切换到idle状态
-            if (animController != null)
+            if (hasAmmo.Value && animController != null)
             {
                 animController.SetFiring(false);
             }

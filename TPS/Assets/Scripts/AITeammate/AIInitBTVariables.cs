@@ -15,7 +15,7 @@ public class AIInitBTVariables : MonoBehaviour
 
     public BehaviorTree behaviorTree;
     public Transform ammoSupplyPos;
-
+    public AmmoWorkbenchController ammoWorkbenchController;
     void Start()
     {
         if (behaviorTree == null)
@@ -27,6 +27,7 @@ public class AIInitBTVariables : MonoBehaviour
         behaviorTree.SetVariableValue("player", GameManager.Instance.GetPlayerTransform());
         // µ¯Ò©²¹¸øµã
         behaviorTree.SetVariableValue("ammoSupplyPos", ammoSupplyPos);
+        
     }
     void Update()
     {
@@ -34,5 +35,7 @@ public class AIInitBTVariables : MonoBehaviour
         behaviorTree.SetVariableValue("pingCommandActive", GameManager.Instance.GetPingMarkerManager().GetPingCommandActive());
         behaviorTree.SetVariableValue("pingPosition", GameManager.Instance.GetPingMarkerManager().GetCurrentMarkedPosition());
         //behaviorTree.SetVariableValue("currentCommand", GameManager.Instance.currentCommand);
+
+        behaviorTree.SetVariableValue("aiIsInsideAmmoSupply", ammoWorkbenchController.aiInRange);
     }
 }

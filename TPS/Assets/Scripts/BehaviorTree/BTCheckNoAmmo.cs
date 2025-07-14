@@ -4,7 +4,9 @@ using BehaviorDesigner.Runtime.Tasks;
 
 public class BTCheckNoAmmo : Conditional
 {
+    // 所有其他检查弹药的地方从这里读取
     public SharedBool outOfAmmo;
+    public SharedBool hasAmmo;
 
     private WeaponManager weaponManager;
 
@@ -17,10 +19,13 @@ public class BTCheckNoAmmo : Conditional
     {
         if (weaponManager == null) return TaskStatus.Failure;
         // 检查是否完全没子弹
-        bool hasNoAmmo = weaponManager.GetCurrentAmmo() == 0 && weaponManager.GetReserveAmmo() == 0;
+        bool currentlyOutOfAmmo = weaponManager.GetCurrentAmmo() == 0 && weaponManager.GetReserveAmmo() == 0;
+        bool currentlyHasAmmo = !currentlyOutOfAmmo;
 
-        outOfAmmo.Value = hasNoAmmo;
+        // 更新两个标志位
+        outOfAmmo.Value = currentlyOutOfAmmo;
+        hasAmmo.Value = currentlyHasAmmo;
 
-        return hasNoAmmo ? TaskStatus.Success : TaskStatus.Failure;
+        return currentlyOutOfAmmo ? TaskStatus.Success : TaskStatus.Failure;
     }
 }

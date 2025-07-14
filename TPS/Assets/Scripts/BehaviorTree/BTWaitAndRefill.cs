@@ -28,8 +28,9 @@ public class BTWaitAndRefill : Action
         }
 
         timer += Time.deltaTime;
+        Debug.Log("Ê±¼ä" + timer);
 
-        if (timer >= 3f)
+        if (timer >= 2f)
         {
             if (weaponManager.GetWeaponData() != null)
             {

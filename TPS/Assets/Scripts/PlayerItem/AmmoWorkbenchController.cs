@@ -11,10 +11,14 @@ public class AmmoWorkbenchController : MonoBehaviour
     public int ironCostPerBullet = 1;    // 每发子弹消耗的铁块数量
     public int bulletsPerCraft = 30;     // 每次制作的子弹数量
 
+    [Header("AI Support")]
+    public bool aiInRange = false; // AI是否在补给区域内
+
     // 事件定义
     public static event Action OnPlayerInteractWithWorkbench;
 
     private bool playerInRange = false;
+
     private PlayerInputSystem playerInputSystem;
 
     private void Start()
@@ -38,6 +42,11 @@ public class AmmoWorkbenchController : MonoBehaviour
             playerInRange = true;
             UIManager.Instance.ShowInteractionTip();
         }
+        if (other.CompareTag("AIPlayer"))
+        {
+            Debug.Log("ai进入弹药补充区域！");
+            aiInRange = true;
+        }
     }
 
     /// <summary>
@@ -49,6 +58,10 @@ public class AmmoWorkbenchController : MonoBehaviour
         {
             playerInRange = false;
             UIManager.Instance.HideInteractionTip();
+        }
+        if (other.CompareTag("AIPlayer"))
+        {
+            aiInRange = false;
         }
     }
 

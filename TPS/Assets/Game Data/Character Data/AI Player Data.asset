@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0375c06e83622ec429e1813cfc81764e, type: 3}
   m_Name: AI Player Data
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 300
   maxStamina: 0
   maxSatiety: 0
   maxInfectivity: 0

@@ -35,6 +35,8 @@ public class AIAnimationController : MonoBehaviour
     public string speedParameter = "Speed";
     public string isAliveParameter = "IsAlive";
 
+
+
     // 统一的状态管理系统
     [System.Flags]
     public enum AIStateFlags
@@ -63,6 +65,31 @@ public class AIAnimationController : MonoBehaviour
         UpdateRigWeights();
         UpdateAnimatorParameters();
     }
+
+    #region 弹药检查逻辑
+
+    /// <summary>
+    /// 检查是否有弹药
+    /// </summary>
+    private bool HasAmmo()
+    {
+        if (weaponManager == null) return false;
+
+        return weaponManager.GetCurrentAmmo() > 0 || weaponManager.GetReserveAmmo() > 0;
+    }
+
+    /// <summary>
+    /// 检查是否完全没有弹药
+    /// </summary>
+    private bool IsOutOfAmmo()
+    {
+        if (weaponManager == null) return true;
+
+        return weaponManager.GetCurrentAmmo() == 0 && weaponManager.GetReserveAmmo() == 0;
+    }
+
+    #endregion
+
 
     #region 状态管理
 
@@ -138,6 +165,13 @@ public class AIAnimationController : MonoBehaviour
 
     public void SetFiring(bool firing)
     {
+        // 没有弹药时不能开火
+        if (firing && IsOutOfAmmo())
+        {
+            Debug.Log("AI没有弹药，无法开火！");
+            return;
+        }
+
         // 换弹时不能射击
         if (firing && HasStateFlag(AIStateFlags.Reloading))
         {
@@ -171,8 +205,13 @@ public class AIAnimationController : MonoBehaviour
     private void UpdateAnimatorParameters()
     {
         if (animator == null) return;
+
+        // 检查弹药状态
+        bool canFire = HasAmmo() && !HasStateFlag(AIStateFlags.Reloading) && !HasStateFlag(AIStateFlags.Dead);
+        bool shouldFire = HasStateFlag(AIStateFlags.Firing) && canFire;
+
         animator.SetBool(isMovingParameter, HasStateFlag(AIStateFlags.Moving));
-        animator.SetBool(isFiringParameter, HasStateFlag(AIStateFlags.Firing));
+        animator.SetBool(isFiringParameter, shouldFire);
         animator.SetBool(isReloadingParameter, HasStateFlag(AIStateFlags.Reloading));
     }
 
@@ -182,7 +221,11 @@ public class AIAnimationController : MonoBehaviour
 
     private void UpdateRigWeights()
     {
-        if (HasStateFlag(AIStateFlags.Firing))
+        // 检查是否可以开火
+        bool canFire = HasAmmo() && !HasStateFlag(AIStateFlags.Reloading) && !HasStateFlag(AIStateFlags.Dead);
+        bool shouldUseFiringRig = HasStateFlag(AIStateFlags.Firing) && canFire;
+
+        if (shouldUseFiringRig)
         {
             UpdateStateRigWeights(IdleState, 0f);
             UpdateStateRigWeights(firingState, 1f);
@@ -199,6 +242,7 @@ public class AIAnimationController : MonoBehaviour
             UpdateStateRigWeights(IdleState, 0f);
             UpdateStateRigWeights(firingState, 0f);
         }
+
         if (HasStateFlag(AIStateFlags.Dead))
         {
             UpdateStateRigWeights(IdleState, 0f);
