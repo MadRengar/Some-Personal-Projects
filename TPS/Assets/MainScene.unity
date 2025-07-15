@@ -3478,7 +3478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 1250725991711365750}
-  dayDurationInSeconds: 300
+  dayDurationInSeconds: 30
   dawnTime: 6
   nightTime: 20
   currentDay: 1
@@ -15368,7 +15368,7 @@ MonoBehaviour:
   navMeshCheckRadius: 2
   enableDaySpawn: 1
   daySpawnRadius: 80
-  dayGroupCount: 2
+  dayGroupCount: 0
   minZombiesPerGroup: 3
   maxZombiesPerGroup: 5
   minDistanceBetweenGroups: 10
@@ -15377,7 +15377,7 @@ MonoBehaviour:
   - {fileID: 1293692630}
   - {fileID: 1447678011}
   - {fileID: 373998517}
-  maxZombiesAlive: 150
+  maxZombiesAlive: 10
   currentZombiesAlive: 0
 --- !u!114 &758596684
 MonoBehaviour:
@@ -15397,10 +15397,10 @@ MonoBehaviour:
   modelVariants:
   - name: ZombieType1
     modelPrefab: {fileID: 5633288458621112625, guid: 1712364d20c503642bc2bce57aeb0b47, type: 3}
-    spawnWeight: 0.091
+    spawnWeight: 0.411
   - name: ZombieType2
     modelPrefab: {fileID: 5520139805721089262, guid: 9cf8b2fb223b60b49a4e32db9ec3d577, type: 3}
-    spawnWeight: 0.727
+    spawnWeight: 0.598
   - name: ZombieType3
     modelPrefab: {fileID: 6170066819822201529, guid: 4d3cc5f56c334fa4f9f58aee498ab544, type: 3}
     spawnWeight: 0.373
@@ -40466,6 +40466,7 @@ MonoBehaviour:
   sightRadius: 12
   minDistanceToPing: 3
   stayInSupplyAmmoAreaTime: 0.2
+  requiredVisitCount: 2
   defaultCombatMoveSpeed: 12
   optimalCombatDistance: 8
   minCombatDistance: 5
@@ -44962,15 +44963,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202456000291410184, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.726
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202456000291410184, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202456000291410184, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.726
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4492877285095165219, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_Name
@@ -70663,8 +70664,9 @@ MonoBehaviour:
   swingCooldown: 0.5
   buildingLayerMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 12288
   progressPerHit: 20
+  repairPerHit: 10
   playerAnimator: {fileID: 0}
   hammerSwingTrigger: HammerSwing
   hammerLayerIndex: 3

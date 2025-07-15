@@ -269,7 +269,7 @@ public class ZombieFSM : MonoBehaviour
         }
 
         lastTargetSwitchTime = Time.time;
-        Debug.Log($"[ZombieFSM] {name} 狂暴目标选择 - 类型: {currentBerserkType}, 目标: {(attackTarget?.name ?? "无")}");
+        //Debug.Log($"[ZombieFSM] {name} 狂暴目标选择 - 类型: {currentBerserkType}, 目标: {(attackTarget?.name ?? "无")}");
     }
 
     // 3. 添加新的方法：全图建筑目标选择

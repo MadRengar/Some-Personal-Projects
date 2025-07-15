@@ -16,7 +16,7 @@ MonoBehaviour:
   requiredWoodNum: 5
   requiredIronNum: 5
   requiredBuildingTime: 150
-  maxHealth: 150
+  maxHealth: 200
   buildingType: 0
   turretLevel: 2
   attackDamage: 10

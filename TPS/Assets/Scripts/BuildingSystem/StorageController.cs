@@ -288,16 +288,36 @@ public class StorageController : MonoBehaviour, IBuildingController
         return playerInRange;
     }
 
-    public void TakeDamage(int damage)
+public void TakeDamage(int damage)
+{
+    if (damage < 0) // 负伤害表示修复
+    {
+        int healAmount = -damage;
+        int maxHealth = storageData.maxHealth;
+        
+        if (currentHealth >= maxHealth)
+        {
+            Debug.Log($"仓库 {name} 已满血，无需修复");
+            return;
+        }
+        
+        // 计算实际修复量，不能超过最大生命值
+        int actualHeal = Mathf.Min(healAmount, maxHealth - currentHealth);
+        currentHealth += actualHeal;
+        
+        Debug.Log($"仓库 {name} 修复 {actualHeal} 点，当前耐久: {currentHealth}/{maxHealth}");
+    }
+    else // 正常伤害
     {
         currentHealth -= damage;
-        Debug.Log($"发电机受到 {damage} 点伤害，剩余血量: {currentHealth}");
+        Debug.Log($"仓库受到 {damage} 点伤害，剩余生命: {currentHealth}");
 
         if (currentHealth <= 0)
         {
             DestroyBuilding();
         }
     }
+}
 
     public bool IsDestroyed()
     {

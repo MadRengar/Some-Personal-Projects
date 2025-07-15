@@ -38,12 +38,32 @@ public class GeneratorController : MonoBehaviour, IBuildingController
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
-        Debug.Log($"发电机受到 {damage} 点伤害，剩余血量: {currentHealth}");
-
-        if (currentHealth <= 0)
+        if (damage < 0) // 负伤害表示修复
         {
-            DestroyBuilding();
+            int healAmount = -damage;
+            int maxHealth = generatorData.maxHealth;
+
+            if (currentHealth >= maxHealth)
+            {
+                Debug.Log($"发电机 {name} 已满血，无需修复");
+                return;
+            }
+
+            // 计算实际修复量，不能超过最大生命值
+            int actualHeal = Mathf.Min(healAmount, maxHealth - currentHealth);
+            currentHealth += actualHeal;
+
+            Debug.Log($"发电机 {name} 修复 {actualHeal} 点，当前耐久: {currentHealth}/{maxHealth}");
+        }
+        else // 正常伤害
+        {
+            currentHealth -= damage;
+            Debug.Log($"发电机受到 {damage} 点伤害，剩余生命: {currentHealth}");
+
+            if (currentHealth <= 0)
+            {
+                DestroyBuilding();
+            }
         }
     }
 
@@ -62,9 +82,11 @@ public class GeneratorController : MonoBehaviour, IBuildingController
 
     }
 
-    // 获取电力输出
-    public int GetPowerOutput()
-    {
-        return IsDestroyed() ? 0 : generatorData.powerOutput;
-    }
+    #region Getter
+    public int GetPowerOutput() => generatorData.powerOutput;
+
+    public int GetCurrentHealth() => currentHealth;
+
+    #endregion
 }
+

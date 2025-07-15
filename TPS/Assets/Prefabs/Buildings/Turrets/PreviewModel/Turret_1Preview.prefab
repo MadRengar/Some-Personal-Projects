@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4202945643730465871}
   - component: {fileID: 7112539864964789829}
   - component: {fileID: 2310566535104274078}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 4460796435635172785}
   - component: {fileID: 8197087676765799058}
   - component: {fileID: 6686488401976015507}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5586609981944025325}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Dial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 8265026138264735350}
   - component: {fileID: 1335508607765974333}
   - component: {fileID: 2895270096168144541}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: SM_Wep_Veh_AA_Handle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 7456071840404397254}
   - component: {fileID: 6231508522893173157}
   - component: {fileID: 7174499857169265809}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: ICON
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 2006213932556209107}
   - component: {fileID: 3210678233055362370}
   - component: {fileID: 3453519991621964951}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Dial Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 7256030167428831411}
   - component: {fileID: 4871312396203646341}
   - component: {fileID: 1236352026014007730}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Turret_1Preview
   m_TagString: BuildingPreview
   m_Icon: {fileID: 0}
@@ -585,7 +585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8208345144113319210}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -621,7 +621,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6171234526015855052}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: BuildingProgress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,7 +659,7 @@ GameObject:
   - component: {fileID: 1260198606653900264}
   - component: {fileID: 8757842442241308886}
   - component: {fileID: 2439506832379870303}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

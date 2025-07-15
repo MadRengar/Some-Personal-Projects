@@ -26,9 +26,7 @@ public class BTDefaultCombatMovement : Action
     private static int refillVisitCount = 0; // 进入补给点的次数（战斗时用）
     private static bool isRefilling = false; // 是否正在补给
     private bool wasInRangeLastFrame = false; // 上一帧是否在范围内
-
-    [Header("Refill Settings")]
-    public int requiredVisitCount = 2; // 战斗时需要的进入次数
+    private int requiredVisitCount; // 战斗时需要的进入次数
 
     public override void OnStart()
     {
@@ -39,6 +37,7 @@ public class BTDefaultCombatMovement : Action
 
         agent.speed = agentSettings.defaultCombatMoveSpeed;
         refillTime = agentSettings.stayInSupplyAmmoAreaTime;
+        requiredVisitCount = agentSettings.requiredVisitCount;
     }
 
     public override TaskStatus OnUpdate()

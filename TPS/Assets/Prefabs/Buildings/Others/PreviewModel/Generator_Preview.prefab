@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4321353415678198109}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: BuildingProgress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 8817712224334698821}
   - component: {fileID: 5580990356444032975}
   - component: {fileID: 7357956803072202701}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Generator_Preview
   m_TagString: BuildingPreview
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 746581173363228149}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 61009502198686584}
   - component: {fileID: 219957168051850644}
   - component: {fileID: 5074180207115257237}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Dial Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 593496077916152302}
   - component: {fileID: 195620261028774356}
   - component: {fileID: 2666577105359702048}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: ICON
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 1636042697656884100}
   - component: {fileID: 2962856904732834192}
   - component: {fileID: 1966205327185103941}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +434,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8066925699999760357}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Dial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -474,7 +474,7 @@ GameObject:
   - component: {fileID: 20328822639852846}
   - component: {fileID: 3712151275058358609}
   - component: {fileID: 8616486655763887143}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

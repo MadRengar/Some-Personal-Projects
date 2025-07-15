@@ -56,7 +56,7 @@ public class BuildingStateUIController : MonoBehaviour
         }
         else if (controller is GeneratorController generator)
         {
-            currentHealth = generator.IsDestroyed() ? 0 : generator.GetBuildingData().maxHealth;
+            currentHealth = generator.GetCurrentHealth();
             hasPower = false; // 发电机始终有电
         }
         else if (controller is StorageController storage)

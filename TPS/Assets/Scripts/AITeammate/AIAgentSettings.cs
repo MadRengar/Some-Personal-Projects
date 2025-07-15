@@ -17,8 +17,9 @@ public class AIAgentSettings : MonoBehaviour
     public float sightRadius = 20f; // AI感知/射击范围
     public float minDistanceToPing = 3.0f; // 可选：与玩家的最小距离，避免 AI 原地执行
 
-    [Header("(Ammo Supply")]
-    public float stayInSupplyAmmoAreaTime = 1f;
+    [Header("Ammo Supply")]
+    public float stayInSupplyAmmoAreaTime = 0.5f;
+    public int requiredVisitCount = 2;
 
     [Header("(BTDefaultCombatMovement) Distance Settings")]
     public float defaultCombatMoveSpeed = 20f;

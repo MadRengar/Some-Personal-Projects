@@ -11,6 +11,9 @@ public class HammerController : MonoBehaviour
     [Header("Building Progress")]
     [SerializeField] private float progressPerHit = 20f;
 
+    [Header("Building Repair")]
+    [SerializeField] private int repairPerHit = 10; // 每次挥击修复的耐久值
+
     [Header("Animation")]
     [SerializeField] private Animator playerAnimator; // 玩家动画控制器
     [SerializeField] private string hammerSwingTrigger = "HammerSwing"; // 锤子挥击动画触发器名称
@@ -164,6 +167,10 @@ public class HammerController : MonoBehaviour
             {
                 HandleBuildingHit(hit.collider.gameObject);
             }
+            if (hit.collider.CompareTag("PlayerBuilding"))
+            {
+                HandleBuildingRepair(hit.collider.gameObject);
+            }
         }
         else
         {
@@ -206,6 +213,100 @@ public class HammerController : MonoBehaviour
         }
     }
 
+    #region Repair
+    private void HandleBuildingRepair(GameObject playerBuilding)
+    {
+        if (enableDebugLog)
+        {
+            Debug.Log($"[HammerController] 修复建筑物: {playerBuilding.name}，恢复 {repairPerHit} 点耐久");
+        }
+
+        // 尝试获取建筑控制器接口
+        IBuildingController buildingController = playerBuilding.GetComponent<IBuildingController>();
+        if (buildingController != null)
+        {
+            // 检查建筑是否被摧毁
+            if (buildingController.IsDestroyed())
+            {
+                if (enableDebugLog)
+                {
+                    Debug.Log("[HammerController] 建筑已被摧毁，无法修复");
+                }
+                return;
+            }
+
+            // 根据建筑类型进行修复
+            TurretController turret = playerBuilding.GetComponent<TurretController>();
+            if (turret != null)
+            {
+                RepairTurret(turret);
+                return;
+            }
+
+            GeneratorController generator = playerBuilding.GetComponent<GeneratorController>();
+            if (generator != null)
+            {
+                RepairGenerator(generator);
+                return;
+            }
+
+            StorageController storage = playerBuilding.GetComponent<StorageController>();
+            if (storage != null)
+            {
+                RepairStorage(storage);
+                return;
+            }
+        }
+
+        if (enableDebugLog)
+        {
+            Debug.LogWarning($"[HammerController] 无法修复建筑物 {playerBuilding.name}：未找到有效的建筑控制器");
+        }
+    }
+
+    /// <summary>
+    /// 修复防御塔
+    /// </summary>
+    private void RepairTurret(TurretController turret)
+    {
+        // 直接调用TakeDamage，传入负值表示修复
+        turret.TakeDamage(-repairPerHit);
+
+        if (enableDebugLog)
+        {
+            Debug.Log($"[HammerController] 尝试修复防御塔");
+        }
+    }
+
+    /// <summary>
+    /// 修复发电机
+    /// </summary>
+    private void RepairGenerator(GeneratorController generator)
+    {
+        // 通过造成负伤害来"修复"
+        generator.TakeDamage(-repairPerHit);
+
+        if (enableDebugLog)
+        {
+            Debug.Log($"[HammerController] 发电机修复成功");
+        }
+    }
+
+    /// <summary>
+    /// 修复仓库
+    /// </summary>
+    private void RepairStorage(StorageController storage)
+    {
+        // 通过造成负伤害来"修复"
+        storage.TakeDamage(-repairPerHit);
+
+        if (enableDebugLog)
+        {
+            Debug.Log($"[HammerController] 仓库修复成功");
+        }
+    }
+
+    #endregion
     /// <summary>
     /// 播放挥击效果
     /// </summary>
