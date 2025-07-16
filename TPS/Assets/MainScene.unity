@@ -16813,14 +16813,17 @@ MonoBehaviour:
     resourcePrefab: {fileID: 4791540327544588399, guid: 97215e3cf4af1ec4cbd1819cd4d174cc, type: 3}
     maxAmountPerPile: 1
     spawnWeight: 21
-  minPileCount: 80
-  maxPileCount: 90
+  minPileCount: 90
+  maxPileCount: 100
   minDistanceBetweenPiles: 1
   maxTries: 500
   groundMask:
     serializedVersion: 2
     m_Bits: 8
   spawnRadius: 150
+  campZoneTransform: {fileID: 2080789217}
+  campZoneSize: {x: 100, y: 10, z: 80}
+  enableDebugLog: 0
 --- !u!4 &801724911
 Transform:
   m_ObjectHideFlags: 0
