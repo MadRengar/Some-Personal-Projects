@@ -102,7 +102,7 @@ public class BTTacticalMovement : Action
 
         // 检查是否正在移动
         bool isMoving = agent.hasPath &&
-                       agent.remainingDistance > agentSettings.stopDistance &&
+                       agent.remainingDistance > agentSettings.stopFollowDistance &&
                        agent.velocity.magnitude > 0.1f;
 
         // 更新移动状态

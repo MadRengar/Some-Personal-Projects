@@ -212,6 +212,7 @@ public class UIManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
+        Debug.Log("[UIManager]: 玩家死亡！");
         // 立即激活渐变UI对象
         if (screenFadeUI != null)
         {

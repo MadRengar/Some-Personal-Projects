@@ -34,8 +34,10 @@ public class AIInitBTVariables : MonoBehaviour
         // ping Ref
         behaviorTree.SetVariableValue("pingCommandActive", GameManager.Instance.GetPingMarkerManager().GetPingCommandActive());
         behaviorTree.SetVariableValue("pingPosition", GameManager.Instance.GetPingMarkerManager().GetCurrentMarkedPosition());
+        behaviorTree.SetVariableValue("isTargetBuilding", GameManager.Instance.GetPingMarkerManager().IsCurrentTargetBuilding());
         //behaviorTree.SetVariableValue("currentCommand", GameManager.Instance.currentCommand);
 
         behaviorTree.SetVariableValue("aiIsInsideAmmoSupply", ammoWorkbenchController.aiInRange);
+ 
     }
 }

@@ -37,7 +37,7 @@ public class BTMoveToResource : Action
 
         float stopDistance = 2.0f;
         if (agentSettings != null)
-            stopDistance = agentSettings.stopDistance;
+            stopDistance = agentSettings.stopFollowDistance;
 
         float dist = Vector3.Distance(transform.position, nearestResource.Value.position);
 

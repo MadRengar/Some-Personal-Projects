@@ -2,11 +2,24 @@ using System.Collections.Generic;
 
 public enum MessageKey
 {
+    /* Instruction */
     AI_parse_fail,
-    Generator_low_energy,
+
+    /* Building */
+    Building_Generator_low_energy,
+
+    /* BuildingSystem */
     Build_success,
     Build_no_resource,
-    Zombie_wave
+
+    /* Zombie */
+    Zombie_wave,
+
+    /* Ping */
+    PingMove_success,
+    PingMove_unsuccess,
+    Ping_illegal,
+    Ping_tooclose,
 }
 
 public static class RadioMessages
@@ -14,10 +27,14 @@ public static class RadioMessages
     public static readonly Dictionary<MessageKey, string> MessageTable = new Dictionary<MessageKey, string>
     {
         { MessageKey.AI_parse_fail,      "AI instruction parsing failed!" },
-        { MessageKey.Generator_low_energy,  "Insufficient power!" },
+        { MessageKey.Building_Generator_low_energy,  "Insufficient power!" },
         { MessageKey.Build_success,      "Construction completed!" },
         { MessageKey.Build_no_resource,  "Insufficient resources to build!" },
         { MessageKey.Zombie_wave,        "Our base is under attack!" },
+        { MessageKey.PingMove_success,       "Moving to the marked location" },
+        { MessageKey.PingMove_unsuccess,      "Illegal marked location" },
+        { MessageKey.Ping_illegal,      "Illegal mark" },
+        { MessageKey.Ping_tooclose,      "Mark too close" },
     };
 
     public static string Get(MessageKey key)

@@ -11,11 +11,16 @@ public class BTHasValidPingCommand : Conditional
     public SharedVector3 pingPosition; // Marker的位置
     public SharedTransform player;
     public SharedString currentCommand; // 当前指令
+    public SharedBool isTargetBuilding; //标记目标是否为建筑物
+
     private AIAgentSettings agentSettings;
     private float minDistanceToPing; // 最短ping距离
+    private PingMarkerManager pingManager;
+
     public override void OnStart()
     {
         agentSettings = GetComponent<AIAgentSettings>();
+        pingManager = GameManager.Instance.GetPingMarkerManager();
     }
     public override TaskStatus OnUpdate()
     {
@@ -23,9 +28,21 @@ public class BTHasValidPingCommand : Conditional
         {
             if (pingPosition.Value == Vector3.zero)
             {
-                //Debug.Log("Ping位置无效");
+                RadioPopController.Instance.ShowMessage(MessageKey.PingMove_unsuccess, RadioPopController.MessageType.Error);
                 return TaskStatus.Failure;
             }
+
+            if (pingManager != null)
+            {
+                bool isBuilding = isTargetBuilding.Value;
+
+                if (isBuilding)
+                {
+                    RadioPopController.Instance.ShowMessage(MessageKey.PingMove_unsuccess, RadioPopController.MessageType.Error);
+                    return TaskStatus.Failure;
+                }
+            }
+
             if (player.Value != null && agentSettings != null)
             {
                 float distance = Vector3.Distance(player.Value.position, pingPosition.Value);
@@ -36,11 +53,11 @@ public class BTHasValidPingCommand : Conditional
 
                 if (distance < minDistanceToPing)
                 {
-                    //Debug.Log("Ping位置距离太近，无需前往");
+                    RadioPopController.Instance.ShowMessage(MessageKey.Ping_tooclose, RadioPopController.MessageType.Warning);
                     return TaskStatus.Failure;
                 }
             }
-            //Debug.Log("有效的 Ping 命令 + 合法位置");
+            RadioPopController.Instance.ShowMessage(MessageKey.PingMove_success, RadioPopController.MessageType.Info);
             return TaskStatus.Success;
         }
         return TaskStatus.Failure;

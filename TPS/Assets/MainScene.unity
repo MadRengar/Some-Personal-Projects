@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 2174098}
   - component: {fileID: 2174100}
   - component: {fileID: 2174099}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Drink_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,12 +146,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2174097}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.779, y: 0.012, z: -0.469}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.77899265, y: 0.012000002, z: -0.46899605}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!23 &2174099
 MeshRenderer:
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 19680057}
   - component: {fileID: 19680059}
   - component: {fileID: 19680058}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Alcohol_04 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,11 +471,11 @@ Transform:
   m_GameObject: {fileID: 19680056}
   serializedVersion: 2
   m_LocalRotation: {x: 0.52050805, y: 0.47861412, z: -0.478614, w: 0.52050805}
-  m_LocalPosition: {x: -1.473, y: 0.893, z: 2.401}
+  m_LocalPosition: {x: -1.4729929, y: 0.893, z: 2.400999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: -85.198}
 --- !u!23 &19680058
 MeshRenderer:
@@ -3080,7 +3080,7 @@ GameObject:
   - component: {fileID: 148941586}
   - component: {fileID: 148941588}
   - component: {fileID: 148941587}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Meat_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3096,11 +3096,11 @@ Transform:
   m_GameObject: {fileID: 148941585}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.951, y: 1.251, z: 0.961}
+  m_LocalPosition: {x: 1.9509878, y: 1.251, z: 0.9609966}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &148941587
 MeshRenderer:
@@ -3460,11 +3460,13 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  markerParent: {fileID: 0}
   markerUIIconPrefab: {fileID: 7650760141120498236, guid: b7d4f7f32f3815147938ec8356b3ef21, type: 3}
   uiCanvas: {fileID: 787301269}
   tipUI: {fileID: 4026307067657120837}
   pingCommandActive: 0
+  isCurrentTargetBuilding: 0
+  currentMarkedBuilding: {fileID: 0}
+  currentTargetTag: 
 --- !u!114 &157247496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5321,7 +5323,7 @@ GameObject:
   - component: {fileID: 260486977}
   - component: {fileID: 260486979}
   - component: {fileID: 260486978}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Meat_01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5337,11 +5339,11 @@ Transform:
   m_GameObject: {fileID: 260486976}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.521, y: 1.251, z: 1.183}
+  m_LocalPosition: {x: 1.5209951, y: 1.251, z: 1.1829967}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &260486978
 MeshRenderer:
@@ -10041,7 +10043,7 @@ GameObject:
   - component: {fileID: 481997253}
   - component: {fileID: 481997255}
   - component: {fileID: 481997254}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Alcohol_04 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10057,11 +10059,11 @@ Transform:
   m_GameObject: {fileID: 481997252}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.654, y: 0.823, z: 2.367}
+  m_LocalPosition: {x: -1.6539927, y: 0.82299995, z: 2.3670025}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &481997254
 MeshRenderer:
@@ -12894,7 +12896,7 @@ GameObject:
   - component: {fileID: 641477029}
   - component: {fileID: 641477031}
   - component: {fileID: 641477030}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Alcohol_04 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12910,11 +12912,11 @@ Transform:
   m_GameObject: {fileID: 641477028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.91, y: 0.823, z: 2.41}
+  m_LocalPosition: {x: -1.9100046, y: 0.82299995, z: 2.4100018}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &641477030
 MeshRenderer:
@@ -13934,7 +13936,7 @@ GameObject:
   - component: {fileID: 679911865}
   - component: {fileID: 679911867}
   - component: {fileID: 679911866}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Meat_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13950,11 +13952,11 @@ Transform:
   m_GameObject: {fileID: 679911864}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.3380397, z: -0, w: 0.9411319}
-  m_LocalPosition: {x: 1.629, y: 1.251, z: 0.879}
+  m_LocalPosition: {x: 1.6289968, y: 1.251, z: 0.8789959}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: -39.515, z: 0}
 --- !u!23 &679911866
 MeshRenderer:
@@ -15227,9 +15229,9 @@ GameObject:
   m_Component:
   - component: {fileID: 730445394}
   - component: {fileID: 730445395}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: EatingArea
-  m_TagString: Untagged
+  m_TagString: PlayerBuilding
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15247,37 +15249,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4993712686171622912}
-  - {fileID: 8221196305051742901}
-  - {fileID: 1395373365831929892}
-  - {fileID: 641477029}
-  - {fileID: 481997253}
-  - {fileID: 19680057}
-  - {fileID: 3138284569375731695}
-  - {fileID: 833905913476082176}
-  - {fileID: 7964716979432619872}
-  - {fileID: 4585158207817845111}
-  - {fileID: 2066712065910473268}
-  - {fileID: 290827227035320734}
-  - {fileID: 2027065721336467808}
-  - {fileID: 419999881081491175}
-  - {fileID: 148941586}
-  - {fileID: 260486977}
-  - {fileID: 679911865}
-  - {fileID: 6266526301616783069}
-  - {fileID: 3104278488585115572}
-  - {fileID: 3494238130252896629}
-  - {fileID: 4335544137994244131}
-  - {fileID: 4334111622556665234}
-  - {fileID: 3133453384571611013}
-  - {fileID: 3730319448170126482}
-  - {fileID: 7881869644702479888}
-  - {fileID: 4573554735516739055}
-  - {fileID: 3909459119578823519}
-  - {fileID: 4539962892507834948}
-  - {fileID: 6136285973161411950}
-  - {fileID: 3682322745148225453}
-  - {fileID: 2174098}
+  - {fileID: 1549621033}
+  - {fileID: 851300305}
   m_Father: {fileID: 2080789217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &730445395
@@ -18131,6 +18104,107 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 850997844}
   m_Mesh: {fileID: 4300000, guid: e53af04ca99c9a245b35457bb33c09a5, type: 3}
+--- !u!1 &851300304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 851300305}
+  - component: {fileID: 851300308}
+  - component: {fileID: 851300307}
+  - component: {fileID: 851300306}
+  m_Layer: 12
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &851300305
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851300304}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 730445394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &851300306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851300304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &851300307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851300304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &851300308
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851300304}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &852046306
 GameObject:
   m_ObjectHideFlags: 0
@@ -26152,7 +26226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1209034089}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AISupplyAmmoPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32800,6 +32874,68 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540802101}
   m_Mesh: {fileID: 4300000, guid: 44a4d77b0215b9b48bf2d6f5926565a6, type: 3}
+--- !u!1 &1549621032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549621033}
+  m_Layer: 12
+  m_Name: Items
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1549621033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549621032}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4993712686171622912}
+  - {fileID: 8221196305051742901}
+  - {fileID: 1395373365831929892}
+  - {fileID: 641477029}
+  - {fileID: 481997253}
+  - {fileID: 19680057}
+  - {fileID: 3138284569375731695}
+  - {fileID: 833905913476082176}
+  - {fileID: 7964716979432619872}
+  - {fileID: 4585158207817845111}
+  - {fileID: 2066712065910473268}
+  - {fileID: 290827227035320734}
+  - {fileID: 2027065721336467808}
+  - {fileID: 419999881081491175}
+  - {fileID: 148941586}
+  - {fileID: 260486977}
+  - {fileID: 679911865}
+  - {fileID: 6266526301616783069}
+  - {fileID: 3104278488585115572}
+  - {fileID: 3494238130252896629}
+  - {fileID: 4335544137994244131}
+  - {fileID: 4334111622556665234}
+  - {fileID: 3133453384571611013}
+  - {fileID: 3730319448170126482}
+  - {fileID: 7881869644702479888}
+  - {fileID: 4573554735516739055}
+  - {fileID: 3909459119578823519}
+  - {fileID: 4539962892507834948}
+  - {fileID: 6136285973161411950}
+  - {fileID: 3682322745148225453}
+  - {fileID: 2174098}
+  m_Father: {fileID: 730445394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1550654902
 GameObject:
   m_ObjectHideFlags: 0
@@ -40418,11 +40554,14 @@ MonoBehaviour:
         Aim At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"GameObjectaiAimTarget":0,"SingleaimTurnSpeed":15},{"Type":"BTFireAtEnemy","NodeData":{"Offset":"(237.998062,147.795563)"},"ID":15,"Name":"BT
         Fire At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"WeaponManagerweaponManager":1}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(480.414063,123.691345)"},"ID":16,"Name":"Movement
         Branch","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-218.017792,183.992188)"},"ID":17,"Name":"PingMoving","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidPingCommand","NodeData":{"Offset":"(-125.925972,177.037018)"},"ID":18,"Name":"BT
-        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTMoveToPosition","NodeData":{"Offset":"(74.07401,178.518509)"},"ID":19,"Name":"BT
+        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTMoveToPosition","NodeData":{"Offset":"(74.07401,178.518509)"},"ID":19,"Name":"BT
         Move To Position","Instant":true,"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(166.3331,160.714462)"},"ID":20,"Name":"FollowMoving","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-123.088852,200.5364)"},"ID":21,"Name":"BT
-        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":3},"SingleinputThreshold":0.1,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTTacticalMovement","NodeData":{"Offset":"(124.338257,189.11792)"},"ID":22,"Name":"BT
-        Tactical Movement","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true}}]},{"Type":"BTDefaultCombatMovement","NodeData":{"Offset":"(430.555573,146.666687)"},"ID":23,"Name":"BT
-        Default Combat Movement","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false},"SharedTransformammoSupplyPos":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"ammoSupplyPos","IsShared":true},"SharedBoolaiIsInsideAmmoSupply":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"aiIsInsideAmmoSupply","IsShared":true,"BooleanmValue":false}}]}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isAliveBT","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"outOfAmmo","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"ammoSupplyPos","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"aiIsInsideAmmoSupply","IsShared":true,"BooleanmValue":false}]}'
+        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":3},"SingleinputThreshold":0.1,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTTacticalMovement","NodeData":{"Offset":"(54.3382568,209.11792)"},"ID":22,"Name":"BT
+        Tactical Movement","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(471.113037,196.021362)"},"ID":23,"Name":"Building","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidBuildingCommand","NodeData":{"Offset":"(-60,170)"},"ID":24,"Name":"BT
+        Has Valid Building Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTMoveToBuilding","NodeData":{"Offset":"(134.113037,165.021362)"},"ID":25,"Name":"BT
+        Move To Building","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(314.113037,179.021362)"},"ID":26,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTRepairBuilding","NodeData":{"Offset":"(-73.88696,117.021362)"},"ID":27,"Name":"BT
+        Repair Building","Instant":true,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]}]},{"Type":"BTDefaultCombatMovement","NodeData":{"Offset":"(700.555542,156.666687)"},"ID":28,"Name":"BT
+        Default Combat Movement","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false},"SharedTransformammoSupplyPos":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"ammoSupplyPos","IsShared":true},"SharedBoolaiIsInsideAmmoSupply":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"aiIsInsideAmmoSupply","IsShared":true,"BooleanmValue":false}}]}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isAliveBT","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"outOfAmmo","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"ammoSupplyPos","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"aiIsInsideAmmoSupply","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -40465,7 +40604,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e546fa0e8f736439c2a7c784e0fc0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopDistance: 2
+  stopFollowDistance: 3
+  stopDistanceToMark: 2.5
   sightRadius: 12
   minDistanceToPing: 3
   stayInSupplyAmmoAreaTime: 0.2
@@ -46713,9 +46853,9 @@ GameObject:
   - component: {fileID: 23721299967131175}
   - component: {fileID: 33592990042881746}
   - component: {fileID: 33592990042881747}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AmmoSupply
-  m_TagString: Untagged
+  m_TagString: PlayerBuilding
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125619,7 +125759,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &291242453758243983
 MeshFilter:
@@ -125658,7 +125798,7 @@ GameObject:
   - component: {fileID: 290827227035320734}
   - component: {fileID: 319685414057073034}
   - component: {fileID: 309404412416327364}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Drink_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132395,7 +132535,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &420031386821881284
 GameObject:
@@ -132521,7 +132661,7 @@ GameObject:
   - component: {fileID: 419999881081491175}
   - component: {fileID: 408898779528525017}
   - component: {fileID: 398605491189631103}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Meat_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142100,7 +142240,7 @@ GameObject:
   - component: {fileID: 664871465241039237}
   - component: {fileID: 667109290524765683}
   - component: {fileID: 676845012090604597}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Item_Ammo_762_Open_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145008,7 +145148,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &834219417088760143
 MeshFilter:
@@ -145097,7 +145237,7 @@ GameObject:
   - component: {fileID: 833905913476082176}
   - component: {fileID: 858026798898102874}
   - component: {fileID: 849366369494633280}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_BeerCup_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154653,7 +154793,7 @@ GameObject:
   - component: {fileID: 1395373365831929892}
   - component: {fileID: 1379338838557384624}
   - component: {fileID: 1369608613337975118}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Alcohol_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154769,7 +154909,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1395593732510638105
 MeshRenderer:
@@ -161805,7 +161945,7 @@ GameObject:
   - component: {fileID: 1726400878917981700}
   - component: {fileID: 1693991182228382974}
   - component: {fileID: 1704820355113223382}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Item_Ammo_12G_Open_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167741,7 +167881,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &2028996528815999907
 MeshFilter:
@@ -167851,7 +167991,7 @@ GameObject:
   - component: {fileID: 2027065721336467808}
   - component: {fileID: 2038246472478377650}
   - component: {fileID: 2046092697430560416}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Can_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168669,7 +168809,7 @@ GameObject:
   - component: {fileID: 2066712065910473268}
   - component: {fileID: 2078374810815482832}
   - component: {fileID: 2085215567962442660}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Can_07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168791,7 +168931,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2068048243368287506
 Transform:
@@ -190816,7 +190956,7 @@ GameObject:
   - component: {fileID: 3104278488585115572}
   - component: {fileID: 3131119305004962984}
   - component: {fileID: 3122731350612016428}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Rice_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191009,7 +191149,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3105361155155004051
 MeshFilter:
@@ -191528,7 +191668,7 @@ GameObject:
   - component: {fileID: 3133453384571611013}
   - component: {fileID: 3105361155155004051}
   - component: {fileID: 3114647950510362893}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Frypan_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191619,7 +191759,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3133576855607310259
 GameObject:
@@ -191763,7 +191903,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &3140811741370048990
 MeshRenderer:
@@ -191818,7 +191958,7 @@ GameObject:
   - component: {fileID: 3138284569375731695}
   - component: {fileID: 3164794161753827255}
   - component: {fileID: 3156653787020950153}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Alcohol_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192634,7 +192774,7 @@ GameObject:
   - component: {fileID: 3171022343815151639}
   - component: {fileID: 3203907028974318317}
   - component: {fileID: 3196545705528840901}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Item_Ammo_12G_Open_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199145,7 +199285,7 @@ GameObject:
   - component: {fileID: 3494238130252896629}
   - component: {fileID: 3465910984033016425}
   - component: {fileID: 3475846905306395629}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Rice_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199309,7 +199449,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3496295694951604030
 GameObject:
@@ -203210,7 +203350,7 @@ GameObject:
   - component: {fileID: 3682322745148225453}
   - component: {fileID: 3705559681404023607}
   - component: {fileID: 3694770340269670015}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Rice_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203248,7 +203388,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &3682706221668699640
 Transform:
@@ -204356,7 +204496,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3731239992220355240
 GameObject:
@@ -204369,7 +204509,7 @@ GameObject:
   - component: {fileID: 3730319448170126482}
   - component: {fileID: 3728154428021501190}
   - component: {fileID: 3718174585515179834}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Jar_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207828,10 +207968,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.994063, z: -0, w: -0.108806275}
   m_LocalPosition: {x: -0.80401707, y: 0.01000157, z: 2.6430035}
-  m_LocalScale: {x: 2.9445999, y: 2.9446, z: 2.9445999}
+  m_LocalScale: {x: 2.9445996, y: 2.9446, z: 2.9445996}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: -192.493, z: 0}
 --- !u!33 &3909666641164639255
 MeshFilter:
@@ -207955,7 +208095,7 @@ GameObject:
   - component: {fileID: 3906948055407319185}
   - component: {fileID: 3898582135218596705}
   - component: {fileID: 3911876317880179012}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Prop_ShopShelf_Wall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213270,7 +213410,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4335544137994244131
 Transform:
@@ -213285,7 +213425,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4337816437300890322
 GameObject:
@@ -213298,7 +213438,7 @@ GameObject:
   - component: {fileID: 4334111622556665234}
   - component: {fileID: 4345273592178407064}
   - component: {fileID: 4350896753878660904}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Shop_Goods_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213316,7 +213456,7 @@ GameObject:
   - component: {fileID: 4335544137994244131}
   - component: {fileID: 4345295042242171711}
   - component: {fileID: 4352805064987409083}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Rice_01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216708,7 +216848,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 45.516, z: 0}
 --- !u!1 &4543701540578998491
 GameObject:
@@ -216755,7 +216895,7 @@ GameObject:
   - component: {fileID: 4568383301181156892}
   - component: {fileID: 4559014092306547472}
   - component: {fileID: 4568383301181156893}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Prop_WorkShelf_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217137,7 +217277,7 @@ GameObject:
   - component: {fileID: 4573554735516739055}
   - component: {fileID: 4548139015756136891}
   - component: {fileID: 4556619602123033071}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Can_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217227,7 +217367,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4573808371496445730
 MonoBehaviour:
@@ -217639,7 +217779,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4585512305593511962
 GameObject:
@@ -217887,7 +218027,7 @@ GameObject:
   - component: {fileID: 4585158207817845111}
   - component: {fileID: 4599965279879879869}
   - component: {fileID: 4610093096742281643}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Can_03 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228288,7 +228428,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 35.418, z: 0}
 --- !u!4 &4993974391229401899
 Transform:
@@ -228448,7 +228588,7 @@ GameObject:
   - component: {fileID: 4983938945352415012}
   - component: {fileID: 4976381291871062046}
   - component: {fileID: 4998974886945579933}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Prop_Table_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255597,7 +255737,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6137749640193942394
 GameObject:
@@ -255848,7 +255988,7 @@ GameObject:
   - component: {fileID: 6136285973161411950}
   - component: {fileID: 6147153085183510130}
   - component: {fileID: 6154943891885486070}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Rice_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258991,7 +259131,7 @@ GameObject:
   - component: {fileID: 6266526301616783069}
   - component: {fileID: 6241741719034087869}
   - component: {fileID: 6247808968044647267}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Potatoe_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259100,7 +259240,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &6266883435524886505
 MeshRenderer:
@@ -278272,7 +278412,7 @@ GameObject:
   - component: {fileID: 7183713753808563874}
   - component: {fileID: 7190008204216265750}
   - component: {fileID: 7200893824874597540}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Item_Ammo_9mm_Open_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283355,7 +283495,7 @@ GameObject:
   - component: {fileID: 7421053614949111544}
   - component: {fileID: 7393359983399201248}
   - component: {fileID: 7403567897076045374}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Item_Ammo_Crate_Lid_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283381,7 +283521,7 @@ GameObject:
   - component: {fileID: 7420902868914677726}
   - component: {fileID: 7393382724010353228}
   - component: {fileID: 7403715127410721338}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SM_Item_Ammo_Crate_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294546,7 +294686,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &7882002098246826011
 RectTransform:
@@ -294578,7 +294718,7 @@ GameObject:
   - component: {fileID: 7881869644702479888}
   - component: {fileID: 7856389437933361452}
   - component: {fileID: 7863415872186044026}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Can_09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295778,7 +295918,7 @@ GameObject:
   - component: {fileID: 7964716979432619872}
   - component: {fileID: 7998330201458584234}
   - component: {fileID: 7985952802006669244}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Item_Can_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295798,7 +295938,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &7966578143210275996
 MeshRenderer:
@@ -299489,7 +299629,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 730445394}
+  m_Father: {fileID: 1549621033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8222621805178112945
 GameObject:
@@ -299503,7 +299643,7 @@ GameObject:
   - component: {fileID: 8242009177591164617}
   - component: {fileID: 8235501300061432955}
   - component: {fileID: 8242009177591164618}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: SM_Prop_DiningTable_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

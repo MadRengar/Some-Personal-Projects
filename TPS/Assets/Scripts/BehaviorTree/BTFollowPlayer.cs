@@ -31,8 +31,8 @@ public class BTFollowPlayer : Action
 
         if (agentSettings != null)
         {
-            stopDistance = agentSettings.stopDistance;
-            //agent.stoppingDistance = stopDistance;
+            stopDistance = agentSettings.stopFollowDistance;
+            //agent.stoppingDistance = stopFollowDistance;
         }
 
         if (player.Value == null)
