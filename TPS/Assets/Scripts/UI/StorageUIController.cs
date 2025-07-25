@@ -217,7 +217,6 @@ public class StorageUIController : MonoBehaviour
         if (!storedSuccess)
         {
             Debug.LogError("存储到仓库失败！需要回滚玩家背包资源");
-            // TODO: 这里应该回滚资源到玩家背包，但暂时简化处理
             return false;
         }
 

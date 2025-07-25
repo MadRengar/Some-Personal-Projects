@@ -562,8 +562,11 @@ public class TurretController : MonoBehaviour, IBuildingController
     public Transform GetCurrentTarget() => currentTarget;
     public int GetTurretLevel() => level;
     public int GetPowerRequirement() => powerRequirement;
-
     public int GetCurrentHealth() => currentHealth;
+    public bool IsFullHealth()
+    {
+        return currentHealth >= turretData.maxHealth;
+    }
 
     // 添加电力管理方法
     /// <summary>

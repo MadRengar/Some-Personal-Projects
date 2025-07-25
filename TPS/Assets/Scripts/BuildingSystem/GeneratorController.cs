@@ -87,6 +87,10 @@ public class GeneratorController : MonoBehaviour, IBuildingController
 
     public int GetCurrentHealth() => currentHealth;
 
+    public bool IsFullHealth()
+    {
+        return currentHealth >= generatorData.maxHealth;
+    }
     #endregion
 }
 

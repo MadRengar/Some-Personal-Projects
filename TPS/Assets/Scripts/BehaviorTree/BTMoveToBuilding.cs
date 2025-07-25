@@ -77,7 +77,7 @@ public class BTMoveToBuilding : Action
         else
         {
             // 继续移动到建筑物
-            Debug.Log($"移动到建筑物中... 剩余距离: {dist:F1}m");
+            //Debug.Log($"移动到建筑物中... 剩余距离: {dist:F1}m");
             agent.SetDestination(pingPosition.Value);
             return TaskStatus.Running;
         }

@@ -399,7 +399,6 @@ namespace PlayerControl
                 // 开始射击
                 if (shootPressed && !_wasShootPressed)
                 {
-                    //TODO：FIX逻辑
                     ResetShootingTriggers();
                     _animator.SetTrigger(_animIDStartShooting);
                     _isInAutoFire = false;

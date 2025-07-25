@@ -83,8 +83,6 @@ public class WeaponManager : MonoBehaviour
         fireRate = weaponData.fireRate;
         cooldown = weaponData.cooldown;
     }
-    //TODO：武器切换
-
     #region 射击系统
     /// <summary>
     /// 处理射击输入

@@ -34,8 +34,11 @@ public class AIAnimationController : MonoBehaviour
     //public string moveDirectionParameter = "MoveDirection";
     public string speedParameter = "Speed";
     public string isAliveParameter = "IsAlive";
+    public string isRepairingParameter = "HammerSwing";
 
-
+    [Header("AI Weapon Objects")]
+    public GameObject aiRifleObject;  // AI步枪对象
+    public GameObject aiHammerObject; // AI锤子对象
 
     // 统一的状态管理系统
     [System.Flags]
@@ -45,7 +48,8 @@ public class AIAnimationController : MonoBehaviour
         Moving = 1,        // 正在移动
         Firing = 2,        // 正在射击
         Reloading = 4,      // 正在换弹
-        Dead = 8            // ai死亡
+        Dead = 8,            // ai死亡
+        Repairing = 16     // 正在维修
     }
 
     [Header("Current State")]
@@ -57,6 +61,7 @@ public class AIAnimationController : MonoBehaviour
 
         FindAndSubscribeToWeaponManager();
         InitializeRigWeights();
+        InitializeWeapons();
     }
 
     void Update()
@@ -64,6 +69,7 @@ public class AIAnimationController : MonoBehaviour
         HandleReloadAnimation();
         UpdateRigWeights();
         UpdateAnimatorParameters();
+        UpdateRepairLayer();
     }
 
     #region 弹药检查逻辑
@@ -130,6 +136,7 @@ public class AIAnimationController : MonoBehaviour
             SetStateFlag(AIStateFlags.Moving, false);
             SetStateFlag(AIStateFlags.Firing, false);
             SetStateFlag(AIStateFlags.Reloading, false);
+            SetStateFlag(AIStateFlags.Repairing, false);
 
             animator.SetFloat(speedParameter, 0f);
             animator.SetBool(isMovingParameter, false);
@@ -178,6 +185,12 @@ public class AIAnimationController : MonoBehaviour
             return;
         }
 
+        // 维修时不能射击
+        if (firing && HasStateFlag(AIStateFlags.Repairing))
+        {
+            return;
+        }
+
         SetStateFlag(AIStateFlags.Firing, firing);
     }
 
@@ -189,7 +202,30 @@ public class AIAnimationController : MonoBehaviour
         {
             // 开始换弹时停止射击
             SetStateFlag(AIStateFlags.Firing, false);
+            SetStateFlag(AIStateFlags.Repairing, false);
         }
+    }
+
+    public void SetRepairing(bool repairing)
+    {
+        SetStateFlag(AIStateFlags.Repairing, repairing);
+
+        if (repairing)
+        {
+            // 开始维修时停止射击和换弹
+            SetStateFlag(AIStateFlags.Firing, false);
+            SetStateFlag(AIStateFlags.Reloading, false);
+
+            // 切换到锤子
+            SwitchToHammer();
+        }
+        else
+        {
+            // 停止维修时切换回步枪
+            SwitchToRifle();
+        }
+
+        Debug.Log($"AI维修状态: {repairing}");
     }
 
     // Only use for setting AIReSpawn
@@ -198,6 +234,82 @@ public class AIAnimationController : MonoBehaviour
         animator.SetBool(isAliveParameter, true);
     }
 
+    #endregion
+
+    #region AI武器切换
+    private void InitializeWeapons()
+    {
+        // 初始化时显示步枪，隐藏锤子
+        if (aiRifleObject != null)
+            aiRifleObject.SetActive(true);
+
+        if (aiHammerObject != null)
+            aiHammerObject.SetActive(false);
+    }
+
+    private void SwitchToHammer()
+    {
+        if (aiRifleObject != null)
+            aiRifleObject.SetActive(false);
+
+        if (aiHammerObject != null)
+            aiHammerObject.SetActive(true);
+
+        //Debug.Log("AI切换到锤子");
+    }
+
+    private void SwitchToRifle()
+    {
+        if (aiRifleObject != null)
+            aiRifleObject.SetActive(true);
+
+        if (aiHammerObject != null)
+            aiHammerObject.SetActive(false);
+
+        //Debug.Log("AI切换到步枪");
+    }
+    #endregion
+
+
+    #region 维修层控制
+    private void UpdateRepairLayer()
+    {
+        bool shouldRepair = HasStateFlag(AIStateFlags.Repairing) && !HasStateFlag(AIStateFlags.Dead);
+
+        if (shouldRepair)
+        {
+            // 维修时：启用Repair Layer，禁用战斗相关层
+
+            animator.SetLayerWeight(5, 1f); // IdleWithHammer Layer
+
+            animator.SetLayerWeight(4, 1f); // Repair Layer
+
+            animator.SetLayerWeight(3, 0f); // Firing Layer
+
+            animator.SetLayerWeight(2, 0f); // Reloading Layer
+
+            animator.SetLayerWeight(1, 0f); // IdleWithRifle Layer
+        }
+        else
+        {
+            // 非维修时：恢复正常层权重
+            animator.SetLayerWeight(5, 0f); // IdleWithHammer Layer
+
+            animator.SetLayerWeight(4, 0f); // Repair Layer
+
+            animator.SetLayerWeight(3, 1f); // Firing Layer
+
+            animator.SetLayerWeight(2, 1f); // Reloading Layer
+
+            animator.SetLayerWeight(1, 1f); // Rifle Idle Layer
+        }
+    }
+
+    public void TriggerHammerSwing()
+    {
+        animator.SetTrigger(isRepairingParameter); // 使用HammerSwing trigger
+        Debug.Log("AI触发锤子挥击动画");
+    }
     #endregion
 
     #region 动画参数更新
@@ -221,6 +333,14 @@ public class AIAnimationController : MonoBehaviour
 
     private void UpdateRigWeights()
     {
+        // 维修时清除所有Rig，因为维修动画由单独的层控制，不需要Rig
+        if (HasStateFlag(AIStateFlags.Repairing))
+        {
+            UpdateStateRigWeights(IdleState, 0f);
+            UpdateStateRigWeights(firingState, 0f);
+            return; // 维修时直接返回，不处理其他状态
+        }
+
         // 检查是否可以开火
         bool canFire = HasAmmo() && !HasStateFlag(AIStateFlags.Reloading) && !HasStateFlag(AIStateFlags.Dead);
         bool shouldUseFiringRig = HasStateFlag(AIStateFlags.Firing) && canFire;

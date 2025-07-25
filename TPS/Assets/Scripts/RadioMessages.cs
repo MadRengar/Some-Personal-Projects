@@ -11,6 +11,7 @@ public enum MessageKey
     /* BuildingSystem */
     Build_success,
     Build_no_resource,
+    Building_FullHealth,
 
     /* Zombie */
     Zombie_wave,
@@ -35,6 +36,7 @@ public static class RadioMessages
         { MessageKey.PingMove_unsuccess,      "Illegal marked location" },
         { MessageKey.Ping_illegal,      "Illegal mark" },
         { MessageKey.Ping_tooclose,      "Mark too close" },
+        { MessageKey.Building_FullHealth,      "Building is full health" },
     };
 
     public static string Get(MessageKey key)

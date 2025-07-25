@@ -3480,7 +3480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 1250725991711365750}
-  dayDurationInSeconds: 30
+  dayDurationInSeconds: 300
   dawnTime: 6
   nightTime: 20
   currentDay: 1
@@ -13629,7 +13629,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 23.702122, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &673654637
@@ -23305,7 +23305,7 @@ Transform:
   m_GameObject: {fileID: 1056611464}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16334292, y: 0.000000014901159, z: 0.02261057, w: 0.98631024}
-  m_LocalPosition: {x: 0.047770076, y: 0.01018703, z: -0.3806164}
+  m_LocalPosition: {x: 0.04777418, y: 0.01018703, z: -0.38063112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -27485,7 +27485,7 @@ Transform:
   m_GameObject: {fileID: 1266709546}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16334292, y: 0.000000014901159, z: 0.02261057, w: 0.98631024}
-  m_LocalPosition: {x: 0.047770076, y: 0.01018703, z: -0.3806164}
+  m_LocalPosition: {x: 0.04777418, y: 0.01018703, z: -0.38063112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31620,7 +31620,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 6.2758327, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1484439282
@@ -40410,6 +40410,89 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899509187}
   m_Mesh: {fileID: 4300000, guid: 44a4d77b0215b9b48bf2d6f5926565a6, type: 3}
+--- !u!1 &1904112476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1904112477}
+  - component: {fileID: 1904112479}
+  - component: {fileID: 1904112478}
+  m_Layer: 0
+  m_Name: Hammer_Build
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1904112477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904112476}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0.7071068, z: -0, w: 0}
+  m_LocalPosition: {x: 0.379, y: 0.059, z: -0.082}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4674680866946555}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: -90}
+--- !u!23 &1904112478
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904112476}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 5bb68a94905ffc0418608fc7e572ea42, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1904112479
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904112476}
+  m_Mesh: {fileID: 4300000, guid: 0e3eac6834efcde4e9b57d1714588038, type: 3}
 --- !u!1 &1907622944
 GameObject:
   m_ObjectHideFlags: 0
@@ -40506,7 +40589,7 @@ NavMeshAgent:
   m_Speed: 8
   m_Acceleration: 10
   avoidancePriority: 50
-  m_AngularSpeed: 160
+  m_AngularSpeed: 200
   m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -40547,20 +40630,20 @@ MonoBehaviour:
         Alive Check","Instant":true,"SharedBoolisAIAlive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isAliveBT","IsShared":true,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(159.444427,120)"},"ID":4,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-772.8567,237.857132)"},"ID":5,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTFindNearestResource","NodeData":{"Offset":"(-121.473236,158.227844)"},"ID":6,"Name":"BT
         Find Nearest Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTMoveToResource","NodeData":{"Offset":"(78.52663,163.400146)"},"ID":7,"Name":"BT
         Move To Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true}},{"Type":"BTPickupResource","NodeData":{"Offset":"(269.4533,156.104553)"},"ID":8,"Name":"BT
-        Pickup Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},"SinglepickupRange":2.5}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Parallel","NodeData":{"Offset":"(460.200745,207.1323)"},"ID":9,"Name":"Parallel","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-155.38501,196.0609)"},"ID":10,"Name":"Combat
-        Branch","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTFindNearestEnemy","NodeData":{"Offset":"(-267.651245,156.375916)"},"ID":11,"Name":"BT
-        Find Nearest Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"SinglesightRadius":20,"LayerMaskenemyLayer":64,"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Inverter","NodeData":{"Offset":"(-95.576416,163.154861)"},"ID":12,"Name":"Inverter","Instant":true,"Children":[{"Type":"BTCheckNoAmmo","NodeData":{"Offset":"(0.5822048,141.2263)"},"ID":13,"Name":"BT
-        Check No Ammo","Instant":true,"SharedBooloutOfAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"outOfAmmo","IsShared":true,"BooleanmValue":false},"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false}}]},{"Type":"BTAimAtEnemy","NodeData":{"Offset":"(72.8420258,149.156921)"},"ID":14,"Name":"BT
-        Aim At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"GameObjectaiAimTarget":0,"SingleaimTurnSpeed":15},{"Type":"BTFireAtEnemy","NodeData":{"Offset":"(237.998062,147.795563)"},"ID":15,"Name":"BT
-        Fire At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"WeaponManagerweaponManager":1}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(480.414063,123.691345)"},"ID":16,"Name":"Movement
-        Branch","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-218.017792,183.992188)"},"ID":17,"Name":"PingMoving","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidPingCommand","NodeData":{"Offset":"(-125.925972,177.037018)"},"ID":18,"Name":"BT
-        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTMoveToPosition","NodeData":{"Offset":"(74.07401,178.518509)"},"ID":19,"Name":"BT
-        Move To Position","Instant":true,"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(166.3331,160.714462)"},"ID":20,"Name":"FollowMoving","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-123.088852,200.5364)"},"ID":21,"Name":"BT
-        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":3},"SingleinputThreshold":0.1,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTTacticalMovement","NodeData":{"Offset":"(54.3382568,209.11792)"},"ID":22,"Name":"BT
-        Tactical Movement","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(471.113037,196.021362)"},"ID":23,"Name":"Building","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidBuildingCommand","NodeData":{"Offset":"(-60,170)"},"ID":24,"Name":"BT
-        Has Valid Building Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTMoveToBuilding","NodeData":{"Offset":"(134.113037,165.021362)"},"ID":25,"Name":"BT
-        Move To Building","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(314.113037,179.021362)"},"ID":26,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTRepairBuilding","NodeData":{"Offset":"(-73.88696,117.021362)"},"ID":27,"Name":"BT
-        Repair Building","Instant":true,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]}]},{"Type":"BTDefaultCombatMovement","NodeData":{"Offset":"(700.555542,156.666687)"},"ID":28,"Name":"BT
+        Pickup Resource","Instant":true,"SharedTransformnearestResource":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},"SinglepickupRange":2.5}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-170.625046,245.625168)"},"ID":9,"Name":"Building","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidBuildingCommand","NodeData":{"Offset":"(-60,170)"},"ID":10,"Name":"BT
+        Has Valid Building Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTMoveToBuilding","NodeData":{"Offset":"(134.113037,165.021362)"},"ID":11,"Name":"BT
+        Move To Building","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTRepairBuilding","NodeData":{"Offset":"(290,180)"},"ID":12,"Name":"BT
+        Repair Building","Instant":true,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Parallel","NodeData":{"Offset":"(460.200745,207.1323)"},"ID":13,"Name":"Parallel","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-155.38501,196.0609)"},"ID":14,"Name":"Combat
+        Branch","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTFindNearestEnemy","NodeData":{"Offset":"(-267.651245,156.375916)"},"ID":15,"Name":"BT
+        Find Nearest Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"SinglesightRadius":20,"LayerMaskenemyLayer":64,"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Inverter","NodeData":{"Offset":"(-95.576416,163.154861)"},"ID":16,"Name":"Inverter","Instant":true,"Children":[{"Type":"BTCheckNoAmmo","NodeData":{"Offset":"(0.5822048,141.2263)"},"ID":17,"Name":"BT
+        Check No Ammo","Instant":true,"SharedBooloutOfAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"outOfAmmo","IsShared":true,"BooleanmValue":false},"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false}}]},{"Type":"BTAimAtEnemy","NodeData":{"Offset":"(72.8420258,149.156921)"},"ID":18,"Name":"BT
+        Aim At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"GameObjectaiAimTarget":0,"SingleaimTurnSpeed":15},{"Type":"BTFireAtEnemy","NodeData":{"Offset":"(237.998062,147.795563)"},"ID":19,"Name":"BT
+        Fire At Enemy","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"WeaponManagerweaponManager":1}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(480.414063,123.691345)"},"ID":20,"Name":"Movement
+        Branch","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-218.017792,183.992188)"},"ID":21,"Name":"PingMoving","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTHasValidPingCommand","NodeData":{"Offset":"(-125.925972,177.037018)"},"ID":22,"Name":"BT
+        Has Valid Ping Command","Instant":true,"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":2},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolisTargetBuilding":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}},{"Type":"BTMoveToPosition","NodeData":{"Offset":"(74.07401,178.518509)"},"ID":23,"Name":"BT
+        Move To Position","Instant":true,"SharedVector3pingPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolpingCommandActive":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(166.3331,160.714462)"},"ID":24,"Name":"FollowMoving","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BTIsPlayerMoving","NodeData":{"Offset":"(-123.088852,200.5364)"},"ID":25,"Name":"BT
+        Is Player Moving","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":null,"TransformmValue":3},"SingleinputThreshold":0.1,"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true}},{"Type":"BTTacticalMovement","NodeData":{"Offset":"(54.3382568,209.11792)"},"ID":26,"Name":"BT
+        Tactical Movement","Instant":true,"SharedTransformplayer":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true}}]},{"Type":"BTDefaultCombatMovement","NodeData":{"Offset":"(700.555542,156.666687)"},"ID":27,"Name":"BT
         Default Combat Movement","Instant":true,"SharedTransformnearestEnemy":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},"SharedStringcurrentCommand":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},"SharedBoolhasAmmo":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false},"SharedTransformammoSupplyPos":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"ammoSupplyPos","IsShared":true},"SharedBoolaiIsInsideAmmoSupply":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"aiIsInsideAmmoSupply","IsShared":true,"BooleanmValue":false}}]}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"player","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"pingCommandActive","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"pingPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"currentCommand","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestResource","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"nearestEnemy","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isAliveBT","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"outOfAmmo","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"hasAmmo","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"ammoSupplyPos","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"aiIsInsideAmmoSupply","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isTargetBuilding","IsShared":true,"BooleanmValue":false}]}'
       fieldSerializationData:
         typeName: []
@@ -44990,7 +45073,7 @@ Transform:
   m_GameObject: {fileID: 2076215880}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16334292, y: 0.000000014901159, z: 0.02261057, w: 0.98631024}
-  m_LocalPosition: {x: 0.047770076, y: 0.01018703, z: -0.3806164}
+  m_LocalPosition: {x: 0.04777418, y: 0.01018703, z: -0.38063112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45106,15 +45189,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202456000291410184, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.726
       objectReference: {fileID: 0}
     - target: {fileID: 4202456000291410184, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4202456000291410184, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.726
       objectReference: {fileID: 0}
     - target: {fileID: 4492877285095165219, guid: 9421e88ef5f09e04da58c4ececc26604, type: 3}
       propertyPath: m_Name
@@ -53237,6 +53320,7 @@ GameObject:
   - component: {fileID: 1909791456}
   - component: {fileID: 95208774159887004}
   - component: {fileID: 95208774159887005}
+  - component: {fileID: 95208774159887006}
   m_Layer: 7
   m_Name: AI Teammate
   m_TagString: AIPlayer
@@ -70804,7 +70888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hammerRange: 6
-  swingCooldown: 0.5
+  swingCooldown: 0.4
   buildingLayerMask:
     serializedVersion: 2
     m_Bits: 12288
@@ -71280,6 +71364,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4469338220485363}
+  - {fileID: 1904112477}
   m_Father: {fileID: 4005547299783677}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4675796041294431
@@ -121774,6 +121859,9 @@ MonoBehaviour:
   isMovingParameter: IsMoving
   speedParameter: Speed
   isAliveParameter: IsAlive
+  isRepairingParameter: HammerSwing
+  aiRifleObject: {fileID: 1728286025}
+  aiHammerObject: {fileID: 1904112476}
   currentStateFlags: 0
 --- !u!114 &95208774159887003
 MonoBehaviour:
@@ -121832,6 +121920,21 @@ CharacterController:
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
+--- !u!114 &95208774159887006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501363663334865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b30b89ced67c6574f8527b9242f5cabd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hammerRange: 3
+  repairPerHit: 20
+  enableDebugLog: 1
 --- !u!4 &95274766441279302
 Transform:
   m_ObjectHideFlags: 0
@@ -173506,7 +173609,7 @@ Transform:
   m_GameObject: {fileID: 6023448004986948384}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16334292, y: 0.000000014901159, z: 0.02261057, w: 0.98631024}
-  m_LocalPosition: {x: 0.047770076, y: 0.01018703, z: -0.3806164}
+  m_LocalPosition: {x: 0.04777418, y: 0.01018703, z: -0.38063112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

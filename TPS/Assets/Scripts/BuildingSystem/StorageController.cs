@@ -346,5 +346,9 @@ public void TakeDamage(int damage)
     public int GetStorageCapacity() => storageCapacity;
     public int GetStoredWood() => currentWoodAmount;
     public int GetStoredIron() => currentIronAmount;
+    public bool IsFullHealth()
+    {
+        return currentHealth >= storageData.maxHealth;
+    }
     #endregion
 }

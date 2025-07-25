@@ -40,9 +40,6 @@ public class AIAgentSettings : MonoBehaviour
     public bool isFollowingPlayer = false;       // 是否收到跟随指令
     public bool prioritizePlayerFollow = false;  // 是否优先跟随玩家（即使在战斗中）
 
-    /*TODO：容忍ai错误寻路时间
-      由于一些原因阻止ai代理无法真正的到达目标点，从而在目标点附近附近持续转圈
-     */
     public float timeToFindPathCount = 0f;
     public float timeToFindPath = 2.0f; 
     public float margin = 1.0f; // 容忍范围
