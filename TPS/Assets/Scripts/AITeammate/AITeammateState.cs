@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class AITeammateState : MonoBehaviour
 {
-    public PlayerData_SO playerData;
+    public PlayerData_SO aiPlayerData;
     public InventoryManager inventoryManager;
 
     [Header("Running State")]
@@ -16,21 +16,26 @@ public class AITeammateState : MonoBehaviour
 
     public static event Action<int, int> AIOnHealthChanged;
 
+    private Coroutine hpRecoverCoroutine;
+    private TreatmentController treatmentArea;
+
     void Start()
     {
+        treatmentArea = CampZoneManager.Instance.GetTreatmentArea().GetComponent<TreatmentController>();
+        StartHpRecover();
         InitializeAIState();
         InitializeAIInventory();
     }
 
     public void InitializeAIState()
     {
-        if (playerData != null)
+        if (aiPlayerData != null)
         {
-            currentHealth = playerData.maxHealth;
-            isAlive = playerData.isAlive;
+            currentHealth = aiPlayerData.maxHealth;
+            isAlive = aiPlayerData.isAlive;
         }
 
-        AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+        AIOnHealthChanged?.Invoke(currentHealth, aiPlayerData.maxHealth);
     }
 
     public void InitializeAIInventory()
@@ -58,7 +63,7 @@ public class AITeammateState : MonoBehaviour
             return; // 已死亡或游戏结束时不再受伤
         currentHealth -= damageValue;
         //Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
-        AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+        AIOnHealthChanged?.Invoke(currentHealth, aiPlayerData.maxHealth);
         if (currentHealth <= 0f && isAlive)
         {
             AIPlayerDie();
@@ -88,15 +93,60 @@ public class AITeammateState : MonoBehaviour
 
     public void AIGetHealing(int healingValue)
     {
-        if (currentHealth < playerData.maxHealth)
+        if (currentHealth < aiPlayerData.maxHealth)
         {
             currentHealth += healingValue;
             //Debug.Log($"玩家获得{healingValue}点治疗，当前生命值：{currentHealth}");
-            if (currentHealth > playerData.maxHealth)
+            if (currentHealth > aiPlayerData.maxHealth)
             {
-                currentHealth = playerData.maxHealth;
+                currentHealth = aiPlayerData.maxHealth;
             }
-            AIOnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+            AIOnHealthChanged?.Invoke(currentHealth, aiPlayerData.maxHealth);
+        }
+    }
+
+    public void StartHpRecover()
+    {
+        if (hpRecoverCoroutine != null)
+        {
+            StopCoroutine(hpRecoverCoroutine);
+        }
+
+        hpRecoverCoroutine = StartCoroutine(HpRecoverCoroutine());
+    }
+
+    public void StopHpRecover()
+    {
+        if (hpRecoverCoroutine != null)
+        {
+            StopCoroutine(hpRecoverCoroutine);
+            hpRecoverCoroutine = null;
+        }
+    }
+
+     private IEnumerator HpRecoverCoroutine()
+    {
+        while(true)
+        {
+            if(treatmentArea.IsPlayerInTreatmentArea())
+            {
+                yield return new WaitForSeconds(1f);
+                if (currentHealth <= aiPlayerData.maxHealth)
+                {
+                    currentHealth += treatmentArea.GetAIPlayerRecoverRate();
+
+                    if (currentHealth > aiPlayerData.maxHealth)
+                    {
+                        currentHealth = aiPlayerData.maxHealth;
+                    }
+                    AIOnHealthChanged?.Invoke(currentHealth, aiPlayerData.maxHealth);
+                }
+            }
+            else
+            {
+                yield return null;
+            }
+            
         }
     }
 

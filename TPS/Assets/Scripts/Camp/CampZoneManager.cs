@@ -8,6 +8,15 @@ public class CampZoneManager : MonoBehaviour
     [Header("Camp Zone Settings")]
     public LayerMask campZoneLayer = 1 << 10; // 营地层
 
+    [Header("Camp Value")]
+    [SerializeField] private bool playerInCampZone;
+    [SerializeField] private float staminaRecoverRate = 3f;
+
+    [Header("Camp Buildings Ref")]
+    [SerializeField] private GameObject treatmentArea;
+    [SerializeField] private GameObject foodSupplyArea;
+    [SerializeField] private GameObject ammoSupplyArea;
+
     private static CampZoneManager _instance;
     public static CampZoneManager Instance
     {
@@ -171,4 +180,44 @@ public class CampZoneManager : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            Debug.Log("玩家正在营地中！");
+            playerInCampZone = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInCampZone = false;
+        }
+    }
+
+    #region Getter
+    public bool IsPlayerInCampZone()
+    {
+        return playerInCampZone;
+    }
+
+    public float GetStaminaRecoverRate()
+    {
+        return staminaRecoverRate;
+    }
+    public GameObject GetTreatmentArea()
+    {
+        return treatmentArea;
+    }
+    public GameObject GetAmmoSupplyArea()
+    {
+        return ammoSupplyArea;
+    }
+    public GameObject GetFoodSupplyArea()
+    {
+        return foodSupplyArea;
+    }
+    #endregion
 }

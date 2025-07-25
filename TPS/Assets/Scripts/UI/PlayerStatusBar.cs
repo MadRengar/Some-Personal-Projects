@@ -113,7 +113,7 @@ public class PlayerStatusBar : MonoBehaviour
                 if (aITeammateStats != null)
                 {
                     current = aITeammateStats.GetAICurrentHealth();
-                    max = aITeammateStats.playerData.maxHealth;
+                    max = aITeammateStats.aiPlayerData.maxHealth;
                     //Debug.Log($"ai当前生命值：{current}！！！！！");
                 }
                 break;

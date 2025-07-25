@@ -31,6 +31,7 @@ public class BTHasValidBuildingCommand : Conditional
                 if (pingPosition.Value == Vector3.zero)
                 {
                     RadioPopController.Instance.ShowMessage(MessageKey.Ping_illegal, RadioPopController.MessageType.Error);
+                    Debug.Log("清空指令");
                     currentCommand.Value = ""; // 清空指令
                     return TaskStatus.Failure;
                 }
@@ -39,6 +40,7 @@ public class BTHasValidBuildingCommand : Conditional
                 if (!isTargetBuilding.Value)
                 {
                     RadioPopController.Instance.ShowMessage(MessageKey.Ping_illegal, RadioPopController.MessageType.Error);
+                    Debug.Log("清空指令");
                     currentCommand.Value = ""; // 清空指令
                     return TaskStatus.Failure;
                 }
@@ -51,6 +53,7 @@ public class BTHasValidBuildingCommand : Conditional
                     if (markedBuilding == null)
                     {
                         Debug.Log("[BTHasValidBuildingCommand] 标记的建筑物已消失");
+                        Debug.Log("清空指令");
                         currentCommand.Value = ""; // 清空指令
                         return TaskStatus.Failure;
                     }
@@ -62,6 +65,7 @@ public class BTHasValidBuildingCommand : Conditional
                     if (IsBuildingFullHealth(markedBuilding))
                     {
                         RadioPopController.Instance.ShowMessage(MessageKey.Building_FullHealth, RadioPopController.MessageType.Warning);
+                        Debug.Log("清空指令");
                         currentCommand.Value = ""; // 清空指令
                         return TaskStatus.Failure;
                     }

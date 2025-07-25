@@ -11,7 +11,7 @@ public class BTRepairBuilding : Action
     public SharedBool pingCommandActive; // 指令是否激活
 
     [Header("Repair Settings")]
-    public float swingInterval = 2f; // 挥击间隔
+    public float swingInterval = 0.6f; // 挥击间隔
 
     private AIAnimationController animController;
     private AIHammerController hammerController;
@@ -32,6 +32,8 @@ public class BTRepairBuilding : Action
         animController = GetComponent<AIAnimationController>();
         hammerController = GetComponent<AIHammerController>();
         pingManager = GameManager.Instance.GetPingMarkerManager();
+
+        Debug.Log("[BTRepairBuilding] 进入维修节点");
     }
 
     public override TaskStatus OnUpdate()
@@ -96,22 +98,12 @@ public class BTRepairBuilding : Action
     /// </summary>
     private void StartRepair()
     {
-        Debug.Log("[BTRepairBuilding] AI开始维修建筑物");
+        animController.SetRepairing(true);
 
-        // 启动维修动画和武器切换
-        if (animController != null)
+        GameObject targetBuilding = pingManager.GetCurrentMarkedBuilding();
+        if (targetBuilding != null)
         {
-            animController.SetRepairing(true);
-        }
-
-        // 显示目标建筑信息
-        if (pingManager != null)
-        {
-            GameObject targetBuilding = pingManager.GetCurrentMarkedBuilding();
-            if (targetBuilding != null)
-            {
-                Debug.Log($"[BTRepairBuilding] 开始维修建筑物: {targetBuilding.name}");
-            }
+            Debug.Log($"[BTRepairBuilding] 开始维修建筑物: {targetBuilding.name}");
         }
     }
 
@@ -120,15 +112,10 @@ public class BTRepairBuilding : Action
     /// </summary>
     private void TriggerHammerSwing()
     {
-        if (animController != null)
-        {
-            animController.TriggerHammerSwing();
-            Debug.Log("[BTRepairBuilding] 触发锤子挥击动画");
-        }
-        else
-        {
-            Debug.LogError("[BTRepairBuilding] AIAnimationController为空！");
-        }
+
+        animController.TriggerHammerSwing();
+        Debug.Log("[BTRepairBuilding] 触发锤子挥击动画");
+
     }
 
     /// <summary>
@@ -150,25 +137,5 @@ public class BTRepairBuilding : Action
             hasStartedRepair = false;
             swingTimer = 0f;
         }
-    }
-
-    public override void OnEnd()
-    {
-        Debug.Log("[BTRepairBuilding] 退出维修节点");
-        StopRepair();
-    }
-
-    /// <summary>
-    /// 获取维修进度信息（用于调试）
-    /// </summary>
-    public string GetRepairStatus()
-    {
-        if (!hasStartedRepair)
-            return "未开始维修";
-
-        if (hammerController != null && hammerController.IsTargetBuildingFullHealth())
-            return "建筑已满血";
-
-        return $"维修中 (下次挥击: {swingInterval - swingTimer:F1}s)";
     }
 }

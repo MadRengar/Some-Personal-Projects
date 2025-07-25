@@ -21,6 +21,9 @@ public enum MessageKey
     PingMove_unsuccess,
     Ping_illegal,
     Ping_tooclose,
+
+    /* Interact */
+    Interact_foodSupply,
 }
 
 public static class RadioMessages
@@ -37,6 +40,7 @@ public static class RadioMessages
         { MessageKey.Ping_illegal,      "Illegal mark" },
         { MessageKey.Ping_tooclose,      "Mark too close" },
         { MessageKey.Building_FullHealth,      "Building is full health" },
+        { MessageKey.Interact_foodSupply,      "Replenishing satiety" },
     };
 
     public static string Get(MessageKey key)

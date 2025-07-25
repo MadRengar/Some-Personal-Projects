@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    [Header("State Building Ref")]
+    public FoodSupplyController foodSupplyZone;
+
     [Header("Player Data")]
     public PlayerData_SO playerData;
 
@@ -27,17 +30,21 @@ public class PlayerStats : MonoBehaviour
     private Coroutine satietyDecayCoroutine;
     private Coroutine staminaDecayCoroutine;
     private Coroutine staminaRecoverCoroutine;
+    private Coroutine hpRecoverCoroutine;
 
     private PlayerInputSystem playerInputSystem;
     private Animator animator;
     private ThirdPersonController controller;
     private CameraController cameraController;
+    private TreatmentController treatmentArea;
+
     private void Awake()
     {
         playerInputSystem = GetComponent<PlayerInputSystem>();
         animator = GetComponent<Animator>();
         controller = GetComponent<ThirdPersonController>();
         cameraController = GetComponent<CameraController>();
+        treatmentArea = CampZoneManager.Instance.GetTreatmentArea().GetComponent<TreatmentController>();
         InitializePlayerState();
     }
 
@@ -45,6 +52,7 @@ public class PlayerStats : MonoBehaviour
     {
         // 开始饱食度衰减
         StartSatietyDecay();
+        StartHpRecover();
     }
 
     private void InitializePlayerState()
@@ -104,6 +112,50 @@ public class PlayerStats : MonoBehaviour
             OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
         }
     }
+
+    public void StartHpRecover()
+    {
+        if (hpRecoverCoroutine != null)
+        {
+            StopCoroutine(hpRecoverCoroutine);
+        }
+
+        hpRecoverCoroutine = StartCoroutine(HpRecoverCoroutine());
+    }
+
+    public void StopHpRecover()
+    {
+        if (hpRecoverCoroutine != null)
+        {
+            StopCoroutine(hpRecoverCoroutine);
+            hpRecoverCoroutine = null;
+        }
+    }
+    private IEnumerator HpRecoverCoroutine()
+    {
+        while(true)
+        {
+            if(treatmentArea.IsPlayerInTreatmentArea())
+            {
+                yield return new WaitForSeconds(1f);
+                if (currentHealth <= playerData.maxHealth)
+                {
+                    currentHealth += treatmentArea.GetPlayerRecoverRate();
+
+                    if (currentHealth > playerData.maxHealth)
+                    {
+                        currentHealth = playerData.maxHealth;
+                    }
+                    OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
+                }
+            }
+            else
+            {
+                yield return null;
+            }
+            
+        }
+    }
     #endregion
 
     #region Decay IEnumerator
@@ -114,6 +166,7 @@ public class PlayerStats : MonoBehaviour
         {
             StopCoroutine(satietyDecayCoroutine);
         }
+
         satietyDecayCoroutine = StartCoroutine(SatietyDecayCoroutine());
     }
 
@@ -128,13 +181,28 @@ public class PlayerStats : MonoBehaviour
 
     private IEnumerator SatietyDecayCoroutine()
     {
+
         while (true)
         {
-            yield return null; // 每帧执行，而不是每秒
+            yield return null;
 
             if (currentSatiety > 0)
             {
-                currentSatiety -= satietyDecayRate * Time.deltaTime; // 乘以帧时间
+                if(currentSatiety > playerData.maxSatiety)
+                {
+                    currentSatiety = playerData.maxSatiety;
+                    OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
+                    continue;
+                }
+                if (foodSupplyZone.isPlayerInRange())
+                {
+                    currentSatiety += foodSupplyZone.GetSupplySatietyPerSec() * Time.deltaTime;
+                }
+                else
+                {
+                    currentSatiety -= satietyDecayRate * Time.deltaTime; // 乘以帧时间
+                }
+                
                 if (currentSatiety < 0)
                 {
                     currentSatiety = 0;
@@ -172,7 +240,15 @@ public class PlayerStats : MonoBehaviour
 
             if (currentStamina > 0)
             {
-                currentStamina -= staminaDecayRate * Time.deltaTime; // 乘以帧时间
+                if(CampZoneManager.Instance.IsPlayerInCampZone())
+                {
+                    currentStamina -= 0f * Time.deltaTime;
+                }
+                else
+                {
+                    currentStamina -= staminaDecayRate * Time.deltaTime; // 乘以帧时间
+                }
+                
                 if (currentStamina <= 0)
                 {
                     currentStamina = 0;

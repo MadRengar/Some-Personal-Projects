@@ -137,8 +137,7 @@ public class HammerController : MonoBehaviour
         // 首先播放挥击动画
         PlayHammerSwingAnimation();
 
-        // 执行挥击检测
-        PerformSwing();
+        // 执行挥击检测 - Animation Event
 
         // 设置冷却时间
         cooldownTimer = swingCooldown;
@@ -149,7 +148,7 @@ public class HammerController : MonoBehaviour
     /// <summary>
     /// 执行挥击检测
     /// </summary>
-    private void PerformSwing()
+    private void OnHammerHit()
     {
         // 从摄像机中心发射射线检测建筑物
         Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0);
@@ -320,11 +319,6 @@ public class HammerController : MonoBehaviour
         if (playerAnimator != null && !string.IsNullOrEmpty(hammerSwingTrigger))
         {
             playerAnimator.SetTrigger(hammerSwingTrigger);
-
-            if (enableDebugLog)
-            {
-                Debug.Log($"[HammerController] 触发挥击动画: {hammerSwingTrigger}");
-            }
         }
     }
 
