@@ -1,0 +1,427 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.PackageManager;
+using UnityEngine;
+
+public class WeaponManager : MonoBehaviour
+{
+    [Header("Weapon DataSO")]
+    public WeaponData_SO weaponData; // 武器数据引用
+
+    [Header("Running State")]
+    [SerializeField] private int currentAmmo; // 当前弹夹子弹数
+    [SerializeField] private int reserveAmmo; // 备用子弹数
+    [SerializeField] private bool isReloading = false; // 是否正在换弹
+    [HideInInspector] public float cooldown = 0f; // 当前冷却时间
+    [HideInInspector] public float fireRate; // 射击间隔
+
+    [Header("Damage")]
+    [SerializeField] private float headShotDamageMultiplying = 2f; // 当前弹夹子弹数
+
+    [Header("References")]
+    public Transform firePoint;
+
+    [Header("WeaponAudio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip singleShotClip;
+    [SerializeField] private AudioClip autoLoopClip;
+
+    [Header("Particle")]
+    [SerializeField] private ParticleSystem[] muzzleFlash;
+    [SerializeField] private ParticleSystem hitEffect;
+    [SerializeField] private ParticleSystem bloodEffect;
+
+    [Header("Player Animator")]
+    public Animator playerAnimator; // 拖拽玩家的Animator组件
+    // 事件系统
+    public System.Action<int, int> OnAmmoChanged; // 弹药变化事件 (当前弹药, 备用弹药)
+    public System.Action<bool> OnReloadStateChanged; // 换弹状态变化事件
+    public System.Action<WeaponData_SO> OnWeaponChanged; // 武器切换事件
+    public System.Action OnWeaponFired; // 武器射击事件
+    public System.Action OnWeaponEmpty; // 武器空弹事件
+
+    private bool isEnemy;
+    private void Awake()
+    {
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        InitializeWeapon();
+    }
+
+    private void Start()
+    {
+        // 触发初始弹药事件
+        OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
+        OnWeaponChanged?.Invoke(weaponData);
+    }
+
+
+    #region 更新循环
+    private void Update()
+    {
+        if (cooldown > 0f)
+        {
+            cooldown -= Time.deltaTime;
+        }
+    }
+    #endregion
+
+    public void InitializeWeapon()
+    {
+        if (weaponData == null)
+        {
+            Debug.LogError($"WeaponManager on {gameObject.name}: 未分配武器数据！");
+            return;
+        }
+
+        // 初始化弹药
+        currentAmmo = weaponData.magazineSize;
+        reserveAmmo = weaponData.maxReserveAmmo;
+
+        // 同步武器数据到公共变量
+        fireRate = weaponData.fireRate;
+        cooldown = weaponData.cooldown;
+    }
+    #region 射击系统
+    /// <summary>
+    /// 处理射击输入
+    /// </summary>
+    public void HandleShooting(bool shootPressed, bool shootHeld, bool shootReleased, RaycastHit raycastHit)
+    {
+        if (weaponData == null || isReloading) return;
+        if (weaponData.isAutomatic)
+        {
+            if (shootHeld && CanFire())
+            {
+                TryFire(raycastHit);
+            }
+
+            if (shootReleased)
+            {
+                // 停止自动枪音效等逻辑
+                StopAutoFireAudio();
+            }
+        }
+        else
+        {
+            // 半自动射击
+            if (shootPressed && CanFire())
+            {
+                TryFire(raycastHit);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 尝试射击
+    /// </summary>
+    private bool CanFire()
+    {
+        return currentAmmo > 0 && cooldown <= 0f && !isReloading;
+    }
+
+    public void TryFire(RaycastHit raycastHit)
+    {
+        if (!CanFire()) return;
+
+        // 执行射击
+        Fire(raycastHit);
+
+        // 消耗弹药
+        ConsumeAmmo();
+
+        // 设置冷却时间
+        cooldown = weaponData.fireRate;
+
+        // 触发射击事件
+        OnWeaponFired?.Invoke();
+    }
+
+    /// <summary>
+    /// 执行射击逻辑
+    /// </summary>
+    private void Fire(RaycastHit raycastHit)
+    {
+        // 计算射击方向
+        Vector3 shootDirection = CalculateShootDirection(raycastHit);
+        Debug.DrawLine(firePoint.position, raycastHit.point, Color.red, 1.0f);
+        // 调用对象池生成子弹
+        // 生成子弹
+        for (int i = 0; i < weaponData.bulletsPerShot; i++)
+        {
+            FireBullet(shootDirection);
+        }
+
+        // 播放音效
+        //PlayFireAudio();
+
+        // 播放视觉效果
+        //PlayMuzzleFlash();
+
+        // 处理命中
+        HandleHit(raycastHit);
+    }
+
+    private Vector3 CalculateShootDirection(RaycastHit raycastHit)
+    {
+        Vector3 direction = (raycastHit.point - firePoint.position).normalized;
+
+        // 添加精度影响（随机偏移）
+        float inaccuracy = 1f - weaponData.accuracy;
+        direction += Random.insideUnitSphere * inaccuracy * 0.1f;
+
+        return direction.normalized;
+    }
+
+    private void FireBullet(Vector3 direction)
+    {
+        // 使用对象池生成子弹
+        GameObject bullet = BulletPool.Instance.TryGetBullet();
+        if (bullet != null)
+        {
+            bullet.transform.position = firePoint.position;
+            bullet.transform.rotation = Quaternion.LookRotation(direction);
+
+            Rigidbody rb = bullet.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero;
+                rb.AddForce(direction * weaponData.bulletVelocity, ForceMode.Impulse);
+            }
+        }
+    }
+
+    private void HandleHit(RaycastHit raycastHit)
+    {
+        if (raycastHit.collider == null) return;
+
+        if (raycastHit.collider.CompareTag("Enemy"))
+        {
+            var enemy = raycastHit.collider.GetComponent<ZombieStats>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(weaponData.damage);
+            }
+        }
+        else if (raycastHit.collider.CompareTag("EnemyHead"))
+        {
+            var enemy = raycastHit.collider.GetComponentInParent<ZombieStats>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(Mathf.RoundToInt(weaponData.damage * headShotDamageMultiplying));
+            }
+        }
+
+        // 生成撞击效果 TODO:不同的撞击效果判断
+        if (weaponData.bulletImpactPrefab != null)
+        {
+            Instantiate(weaponData.bulletImpactPrefab, raycastHit.point,
+                       Quaternion.LookRotation(raycastHit.normal));
+        }
+    }
+    #endregion
+
+    #region 弹药系统
+    /// <summary>
+    /// 消耗弹药
+    /// </summary>
+    private void ConsumeAmmo()
+    {
+        currentAmmo -= weaponData.bulletsPerShot;
+        if (currentAmmo < 0) currentAmmo = 0;
+
+        // 触发弹药变化事件
+        OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
+
+        // 检查是否需要自动换弹
+        if (currentAmmo <= 0)
+        {
+            OnWeaponEmpty?.Invoke();
+
+            if (weaponData.autoReloadWhenEmpty && reserveAmmo > 0)
+            {
+                StartReload();
+            }
+            else
+            {
+                PlayEmptyClipSound();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 开始换弹
+    /// </summary>
+    public void StartReload()
+    {
+        // 检查是否可以换弹
+        if (!CanReload())
+        {
+            // 可选：播放无法换弹的音效
+            if (currentAmmo >= weaponData.magazineSize)
+            {
+                Debug.Log("弹夹已满，无需换弹");
+            }
+            else if (reserveAmmo <= 0)
+            {
+                Debug.Log("没有备用弹药");
+                // 可以播放空弹夹音效
+                PlayEmptyClipSound();
+            }
+            else if (isReloading)
+            {
+                Debug.Log("正在换弹中");
+            }
+            return;
+        }
+
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    /// <summary>
+    /// 检查是否可以换弹
+    /// </summary>
+    public bool CanReload()
+    {
+        return !isReloading &&
+               currentAmmo < weaponData.magazineSize &&
+               reserveAmmo > 0;
+    }
+
+    /// <summary>
+    /// 换弹协程
+    /// </summary>
+    private IEnumerator ReloadCoroutine()
+    {
+        isReloading = true;
+        OnReloadStateChanged?.Invoke(true);
+        // 设置换弹动画参数
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetBool("IsReloading", true);
+        }
+        // 播放换弹音效
+        PlayReloadAudio();
+
+        //Debug.Log($"开始换弹 {weaponData.weaponName}...");
+
+        // 等待换弹时间
+        yield return new WaitForSeconds(weaponData.reloadTime);
+
+        // 计算实际装填的子弹数
+        int ammoNeeded = weaponData.magazineSize - currentAmmo;
+        int ammoToReload = Mathf.Min(ammoNeeded, reserveAmmo);
+
+        // 执行换弹
+        currentAmmo += ammoToReload;
+        reserveAmmo -= ammoToReload;
+
+        isReloading = false;
+        OnReloadStateChanged?.Invoke(false);
+
+        // 停止换弹动画
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetBool("IsReloading", false);
+        }
+
+        // 触发弹药变化事件
+        OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
+
+        //Debug.Log($"换弹完成！当前: {currentAmmo}/{weaponData.magazineSize}, 备用: {reserveAmmo}");
+    }
+
+    /// <summary>
+    /// 添加备用弹药
+    /// </summary>
+    public void AddReserveAmmo(int amount)
+    {
+        reserveAmmo += amount;
+        OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
+
+        Debug.Log($"获得 {amount} 发 {weaponData.weaponName} 弹药，当前备用: {reserveAmmo}");
+
+        if (currentAmmo <= 0)
+        {
+            OnWeaponEmpty?.Invoke();
+
+            if (weaponData.autoReloadWhenEmpty && reserveAmmo > 0)
+            {
+                StartReload();
+            }
+            else
+            {
+                PlayEmptyClipSound();
+            }
+        }
+    }
+    #endregion
+
+    #region 音效系统
+    private void PlayFireAudio()
+    {
+        if (audioSource == null) return;
+
+        AudioClip clipToPlay = weaponData.isAutomatic ?
+                              weaponData.autoFireSound : weaponData.fireSound;
+
+        if (clipToPlay != null)
+        {
+            if (weaponData.isAutomatic)
+            {
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.clip = clipToPlay;
+                    audioSource.loop = true;
+                    audioSource.volume = weaponData.soundVolume;
+                    audioSource.Play();
+                }
+            }
+            else
+            {
+                audioSource.PlayOneShot(clipToPlay, weaponData.soundVolume);
+            }
+        }
+    }
+
+    private void StopAutoFireAudio()
+    {
+        if (audioSource != null && weaponData.isAutomatic)
+        {
+            audioSource.Stop();
+        }
+    }
+
+    private void PlayReloadAudio()
+    {
+        if (audioSource != null && weaponData.reloadSound != null)
+        {
+            audioSource.PlayOneShot(weaponData.reloadSound, weaponData.soundVolume);
+        }
+    }
+
+    private void PlayEmptyClipSound()
+    {
+        if (audioSource != null && weaponData.emptyClipSound != null)
+        {
+            audioSource.PlayOneShot(weaponData.emptyClipSound, weaponData.soundVolume);
+        }
+    }
+    #endregion
+
+    #region 公共访问器
+    public WeaponData_SO GetWeaponData() => weaponData;
+    public int GetCurrentAmmo() => currentAmmo;
+    public int GetReserveAmmo() => reserveAmmo;
+    public int GetMagazineSize() => weaponData?.magazineSize ?? 0;
+    public bool IsReloading() => isReloading;
+    public bool HasAmmo() => currentAmmo > 0 || reserveAmmo > 0;
+    public float GetReloadProgress()
+    {
+        // 可以通过协程或其他方式实现更精确的进度计算
+        return isReloading ? 0.5f : 1f;
+    }
+    #endregion
+
+}

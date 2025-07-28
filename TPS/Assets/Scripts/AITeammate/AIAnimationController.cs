@@ -110,7 +110,7 @@ public class AIAnimationController : MonoBehaviour
             currentStateFlags &= ~flag;
         }
 
-        Debug.Log($"AI状态更新: {currentStateFlags}");
+        //Debug.Log($"AI状态更新: {currentStateFlags}");
     }
 
     public bool HasStateFlag(AIStateFlags flag)

@@ -49,7 +49,7 @@ public class ResourceSpawner : MonoBehaviour
             if (campZoneObj != null)
             {
                 campZoneTransform = campZoneObj.transform;
-                Debug.Log($"自动找到营地: {campZoneObj.name}");
+                //Debug.Log($"自动找到营地: {campZoneObj.name}");
             }
         }
 
@@ -60,7 +60,7 @@ public class ResourceSpawner : MonoBehaviour
             if (campZone != null)
             {
                 campZoneSize = campZone.campSize;
-                Debug.Log($"从CampZone获取营地大小: {campZoneSize}");
+                //Debug.Log($"从CampZone获取营地大小: {campZoneSize}");
             }
         }
 
@@ -75,7 +75,7 @@ public class ResourceSpawner : MonoBehaviour
         if (campZoneTransform == null)
         {
             if (enableDebugLog)
-                Debug.LogWarning("没有设置营地Transform，跳过营地检测");
+                //Debug.LogWarning("没有设置营地Transform，跳过营地检测");
             return false;
         }
 
@@ -98,8 +98,8 @@ public class ResourceSpawner : MonoBehaviour
 
         if (isInCamp && enableDebugLog)
         {
-            Debug.Log($"位置 {position} 在营地内");
-            Debug.Log($"营地中心: {campCenter}, 营地大小: {campZoneSize}");
+            //Debug.Log($"位置 {position} 在营地内");
+            //Debug.Log($"营地中心: {campCenter}, 营地大小: {campZoneSize}");
         }
 
         return isInCamp;
@@ -131,7 +131,7 @@ public class ResourceSpawner : MonoBehaviour
                     {
                         campZoneBlocked++;
 
-                        Debug.Log($"位置在营地内，跳过: {navHit.position}");
+                        //Debug.Log($"位置在营地内，跳过: {navHit.position}");
                         continue; // 如果在营地区域内，跳过这个位置
                     }
 
