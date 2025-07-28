@@ -10,6 +10,7 @@ public class GameTimeManager : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI timeText; // 时间显示文本
+    [SerializeField] private TextMeshProUGUI dayCount;
 
     [Header("Time Settings")]
     [SerializeField] private float dayDurationInSeconds = 300f; // 一天的实际时长（秒）
@@ -58,6 +59,7 @@ public class GameTimeManager : MonoBehaviour
         lastFrameIsNight = isNight;
 
         Debug.Log($"游戏时间系统启动 - 第{currentDay}天 {currentHour:F1}时"); // 浮点保留一位
+        dayCount.text = $"Day {currentDay}";
     }
 
     private void Update()
@@ -82,8 +84,8 @@ public class GameTimeManager : MonoBehaviour
         {
             currentHour -= 24f;
             currentDay++;
+            dayCount.text = $"Day {currentDay}";
             OnDayChanged?.Invoke(currentDay);
-            //Debug.Log($"新的一天开始 - 第{currentDay}天");
         }
         updateUITime();
         // 触发小时变化事件
@@ -280,8 +282,17 @@ public class GameTimeManager : MonoBehaviour
     /// </summary>
     public void SetTimeSpeed(float newDayDuration)
     {
-        dayDurationInSeconds = newDayDuration;
-        timeSpeed = 24f / dayDurationInSeconds;
+        if (newDayDuration <= 0f)
+        {
+            timeSpeed = 0f; // 直接设置为0停止时间
+            Debug.Log("时间已停止");
+        }
+        else
+        {
+            dayDurationInSeconds = newDayDuration;
+            timeSpeed = 24f / dayDurationInSeconds;
+            Debug.Log($"时间流速已设置为: {timeSpeed}");
+        }
     }
 
     /// <summary>

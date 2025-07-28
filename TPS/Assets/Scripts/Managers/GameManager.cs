@@ -177,8 +177,6 @@ public class GameManager : MonoBehaviour
             GameTimeManager.Instance.SetTimeSpeed(0f); // 停止时间流逝
         }
         ShowCursor();
-        // 触发游戏结束事件
-        //OnGameOver?.Invoke();
     }
 
     private void HandleAIPlayerDeath()

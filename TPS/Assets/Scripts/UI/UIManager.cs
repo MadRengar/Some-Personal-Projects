@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public Canvas uiCanvas;
     public GameObject playerGameScreenUI;
     public GameObject gameOverMenuUI;
+    public TextMeshProUGUI survivalDayCount;
 
     [Header("Player UI Panel")]
     public GameObject buildingMenuPanelUI;
@@ -212,35 +213,23 @@ public class UIManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
+        survivalDayCount.text = GameTimeManager.Instance.GetCurrentDay().ToString();
         Debug.Log("[UIManager]: 玩家死亡！");
         // 立即激活渐变UI对象
-        if (screenFadeUI != null)
-        {
-            screenFadeUI.SetActive(true);
-        }
-
+        screenFadeUI.SetActive(true);
         // 立即设置动画标志位为true，进入"in"状态
-        if (screenFadeAnimator != null)
-        {
-            screenFadeAnimator.SetBool("Active", true);
-        }
+        screenFadeAnimator.SetBool("Active", true);
     }
 
     private void ShowGameOverUI()
     {
-        // 立即激活渐变UI对象
-        if (playerGameScreenUI != null)
-        {
-            playerGameScreenUI.SetActive(false);
-        }
-        if (gameOverMenuUI != null)
-        {
-            gameOverMenuUI.SetActive(true);
-        }
-        if (screenFadeUI != null)
-        {
-            screenFadeUI.SetActive(false);
-        }
+
+        playerGameScreenUI.SetActive(false);
+
+        gameOverMenuUI.SetActive(true);
+
+        screenFadeUI.SetActive(false);
+
     }
 
     public void OnScreenFadeComplete()
