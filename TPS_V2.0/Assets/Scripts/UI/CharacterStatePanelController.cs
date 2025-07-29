@@ -36,9 +36,8 @@ public class CharacterStatePanelController : MonoBehaviour
         GetManagerReferences();
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        // 每次面板激活时更新数据
         UpdatePanelData();
     }
 

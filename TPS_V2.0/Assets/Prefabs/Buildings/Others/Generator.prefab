@@ -1036,5 +1036,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 1114169613518368565}
-  lowPowerTip: {fileID: 1471568759138256772}
+  capacitySlider: {fileID: 0}
+  BuildingType: {fileID: 1471568759138256772}
+  woodAmountText: {fileID: 0}
+  ironAmountText: {fileID: 0}
   controller: {fileID: -8329218859839915214}

@@ -22,6 +22,10 @@ public class AIAgentSettings : MonoBehaviour
     public float stayInSupplyAmmoAreaTime = 0.5f;
     public int requiredVisitCount = 2;
 
+    [Header("Collect Resources")]
+    public int checkAvailableRecourseTime = 3;
+    public float stopToStorageDis = 3f;
+
     [Header("(BTDefaultCombatMovement) Distance Settings")]
     public float defaultCombatMoveSpeed = 20f;
     public float optimalCombatDistance = 8f;     // ¿ÌœÎ’Ω∂∑æ‡¿Î

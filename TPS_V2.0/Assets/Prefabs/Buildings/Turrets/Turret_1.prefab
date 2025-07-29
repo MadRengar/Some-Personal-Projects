@@ -5614,7 +5614,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 0}
-  lowPowerTip: {fileID: 0}
+  capacitySlider: {fileID: 0}
+  BuildingType: {fileID: 0}
+  woodAmountText: {fileID: 0}
+  ironAmountText: {fileID: 0}
   controller: {fileID: 0}
 --- !u!1 &7962360523803734613
 GameObject:
@@ -5983,7 +5986,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 5926350354485034974}
-  lowPowerTip: {fileID: 6638141968502428415}
+  capacitySlider: {fileID: 0}
+  BuildingType: {fileID: 6638141968502428415}
+  woodAmountText: {fileID: 0}
+  ironAmountText: {fileID: 0}
   controller: {fileID: 4372588776977661159}
 --- !u!1001 &3531180859306840949
 PrefabInstance:

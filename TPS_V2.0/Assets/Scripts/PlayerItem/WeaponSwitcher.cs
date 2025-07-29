@@ -17,10 +17,12 @@ public class WeaponSwitcher : MonoBehaviour
     public GameObject hammerObject;     // 锤子游戏对象（暂时可以为空）
 
     // 武器切换事件
+    private Animator animator;
     public static event Action<WeaponType> OnWeaponChanged;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         // 初始化武器状态
         SwitchToWeapon(currentWeapon);
     }
@@ -51,7 +53,8 @@ public class WeaponSwitcher : MonoBehaviour
         if (currentWeapon == weaponType) return; // 已经是当前武器
 
         currentWeapon = weaponType;
-
+        //animator.SetBool("IsReloading", false);
+        //animator.ResetTrigger("StartShooting");
         // 更新武器对象显示状态
         UpdateWeaponDisplay();
 
