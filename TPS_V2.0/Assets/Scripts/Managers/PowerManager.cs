@@ -57,7 +57,7 @@ public class PowerManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"[PowerManager] 电力检查 - 发电: {totalPowerGeneration}, 需求: {totalPowerConsumption}");
+        //Debug.Log($"[PowerManager] 电力检查 - 发电: {totalPowerGeneration}, 需求: {totalPowerConsumption}");
 
         if (totalPowerGeneration >= totalPowerConsumption)
         {
@@ -87,7 +87,7 @@ public class PowerManager : MonoBehaviour
             }
             allTurrets.Add(turret);
 
-            Debug.Log($"[PowerManager] 注册炮台: {turret.name}，当前炮台数量: {allTurrets.Count}");
+            //Debug.Log($"[PowerManager] 注册炮台: {turret.name}，当前炮台数量: {allTurrets.Count}");
             CheckPowerBalance();
         }
     }
@@ -108,7 +108,7 @@ public class PowerManager : MonoBehaviour
                 level2Turrets.Remove(turret);
             }
             allTurrets.Remove(turret);
-            Debug.Log($"[PowerManager] 移除炮台: {turret.name}，当前炮台数量: {allTurrets.Count}");
+            //Debug.Log($"[PowerManager] 移除炮台: {turret.name}，当前炮台数量: {allTurrets.Count}");
             CheckPowerBalance();
         }
     }
@@ -124,7 +124,7 @@ public class PowerManager : MonoBehaviour
                 activeTurrets++;
             }
         }
-        Debug.Log($"[PowerManager] 电力充足，启用所有 {activeTurrets} 座炮台");
+        //Debug.Log($"[PowerManager] 电力充足，启用所有 {activeTurrets} 座炮台");
     }
 
     /// <summary>
@@ -156,7 +156,7 @@ public class PowerManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"[PowerManager] 电力不足，启用 {activeTurrets}/{allTurrets.Count} 座炮台，消耗电力: {usedPower}/{availablePower}");
+        //Debug.Log($"[PowerManager] 电力不足，启用 {activeTurrets}/{allTurrets.Count} 座炮台，消耗电力: {usedPower}/{availablePower}");
     }
 
 }

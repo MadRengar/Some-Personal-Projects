@@ -298,19 +298,19 @@ public class ZombieFSM : MonoBehaviour
             {
                 // 随机选择一个发电机
                 attackTarget = generators[Random.Range(0, generators.Count)];
-                Debug.Log($"[ZombieFSM] {name} 全图选择发电机目标: {attackTarget.name}");
+                //Debug.Log($"[ZombieFSM] {name} 全图选择发电机目标: {attackTarget.name}");
             }
             else
             {
                 // 随机选择任意建筑
                 attackTarget = validBuildings[Random.Range(0, validBuildings.Count)];
-                Debug.Log($"[ZombieFSM] {name} 全图选择建筑目标: {attackTarget.name}");
+                //Debug.Log($"[ZombieFSM] {name} 全图选择建筑目标: {attackTarget.name}");
             }
         }
         else
         {
             // 没有建筑，切换到攻击玩家
-            Debug.Log($"[ZombieFSM] {name} 没有可攻击的建筑，切换到攻击玩家");
+            //Debug.Log($"[ZombieFSM] {name} 没有可攻击的建筑，切换到攻击玩家");
             currentBerserkType = BerserkTargetType.Survival;
             LockPlayerTarget();
         }
@@ -346,7 +346,7 @@ public class ZombieFSM : MonoBehaviour
             attackTarget = aiPlayer;
         }
 
-        Debug.Log($"[ZombieFSM] {name} 全图选择玩家目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
+        //Debug.Log($"[ZombieFSM] {name} 全图选择玩家目标: {(attackTarget != null ? attackTarget.name : "无目标")}");
     }
 
     /// <summary>
@@ -393,13 +393,13 @@ public class ZombieFSM : MonoBehaviour
             // 切换目标类型
             if (currentlyAttackingBuilding)
             {
-                Debug.Log($"[ZombieFSM] {name} 运行时切换：建筑 -> 玩家");
+                //Debug.Log($"[ZombieFSM] {name} 运行时切换：建筑 -> 玩家");
                 currentBerserkType = BerserkTargetType.Survival;
                 LockPlayerTarget();
             }
             else
             {
-                Debug.Log($"[ZombieFSM] {name} 运行时切换：玩家 -> 建筑");
+                //Debug.Log($"[ZombieFSM] {name} 运行时切换：玩家 -> 建筑");
                 currentBerserkType = BerserkTargetType.PlayerBuilding;
                 LockGlobalBuildingTarget();
             }
@@ -409,12 +409,12 @@ public class ZombieFSM : MonoBehaviour
             // 保持类型，换个目标
             if (currentlyAttackingBuilding)
             {
-                Debug.Log($"[ZombieFSM] {name} 运行时切换建筑目标");
+                //Debug.Log($"[ZombieFSM] {name} 运行时切换建筑目标");
                 LockGlobalBuildingTarget();
             }
             else
             {
-                Debug.Log($"[ZombieFSM] {name} 运行时切换玩家目标");
+                //Debug.Log($"[ZombieFSM] {name} 运行时切换玩家目标");
                 LockPlayerTarget();
             }
         }
@@ -476,7 +476,6 @@ public class ZombieFSM : MonoBehaviour
         {
             if (aiState != null && !aiState.IsAlive())
             {
-                Debug.Log("[ZombieFSM] 目标 AI 队友已死亡，重新选择目标");
 
                 if (isBerserk)
                 {
@@ -500,7 +499,6 @@ public class ZombieFSM : MonoBehaviour
             IBuildingController building = attackTarget.GetComponent<IBuildingController>();
             if (building != null && building.IsDestroyed())
             {
-                Debug.Log("[ZombieFSM] 目标建筑已被摧毁，重新选择目标");
 
                 if (isBerserk)
                 {
@@ -522,7 +520,6 @@ public class ZombieFSM : MonoBehaviour
             PlayerStats playerStats = attackTarget.GetComponent<PlayerStats>();
             if (playerStats != null && playerStats.GetCurrentHealth() <= 0) // 使用血量判断
             {
-                Debug.Log("[ZombieFSM] 目标玩家已死亡，重新选择目标");
 
                 if (isBerserk)
                 {
@@ -564,13 +561,13 @@ public class ZombieFSM : MonoBehaviour
     private string GetBuildingTypeName(GameObject building)
     {
         if (building.GetComponent<GeneratorController>() != null)
-            return "发电机";
+            return "Generator";
         else if (building.GetComponent<TurretController>() != null)
-            return "炮台";
+            return "Turret";
         else if (building.GetComponent<StorageController>() != null)
-            return "仓库";
+            return "Storage";
         else
-            return "建筑";
+            return "PlayerBuildings";
     }
 
     private void Guard()
@@ -804,12 +801,10 @@ public class ZombieFSM : MonoBehaviour
                 building.TakeDamage(buildingDamage);
 
                 string buildingType = GetBuildingTypeName(attackTarget);
-                Debug.Log($"[ZombieFSM] 对{buildingType}造成 {buildingDamage} 点伤害！");
 
                 // 检查建筑是否被摧毁
                 if (building.IsDestroyed())
                 {
-                    Debug.Log($"[ZombieFSM] {buildingType}已被摧毁！");
                     // 重新选择目标
                     if (isBerserk)
                     {

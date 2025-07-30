@@ -8,6 +8,9 @@ public class GameTimeManager : MonoBehaviour
 {
     public static GameTimeManager Instance { get; private set; }
 
+    [Header("Resource Management")]
+    public ResourceSpawner resourceSpawner;
+
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI timeText; // 时间显示文本
     [SerializeField] private TextMeshProUGUI dayCount;
@@ -131,7 +134,8 @@ public class GameTimeManager : MonoBehaviour
         // ZombieSpawnManager.Instance.StopMassiveSpawn();
 
         // TODO: 开始资源刷新
-        // ResourceSpawner.Instance.RefreshResources();
+        resourceSpawner.DailyResourceRefresh();
+        Debug.Log($"第{currentDay}天资源已刷新！");
 
         // TODO: 开始随机生成僵尸
         // ZombieSpawnManager.Instance.StartRandomSpawn();

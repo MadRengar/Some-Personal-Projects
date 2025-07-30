@@ -10,6 +10,7 @@ public class PickupItem : MonoBehaviour
     [HideInInspector] public InventoryManager inventoryManager;
     [HideInInspector] public PlayerInputSystem playerInputSystem;
     [HideInInspector] public ResourcePoolManager poolManager;
+    [HideInInspector] public ResourceSpawner resourceSpawner;
     public PlayerStats playerStats;
     public ResourceData_SO resourceData;
     public int amount;
@@ -50,7 +51,7 @@ public class PickupItem : MonoBehaviour
                 {
                     //Destroy(gameObject);
                     ReturnToPool();
-                    Debug.Log($"拾取成功：{resourceData.resourceName} x{amount} 当前重量：{inventoryManager.GetPlayerCurrentWeight()}");
+                    //Debug.Log($"拾取成功：{resourceData.resourceName} x{amount} 当前重量：{inventoryManager.GetPlayerCurrentWeight()}");
                 }
                 else
                 {
@@ -99,6 +100,13 @@ public class PickupItem : MonoBehaviour
     // 玩家/AI拾取成功时调用：
     public void ReturnToPool()
     {
+        // 从资源管理列表中移除
+        if (resourceSpawner != null)
+        {
+            resourceSpawner.UnregisterActiveResource(gameObject);
+        }
+
+        // 归还到对象池
         if (poolManager != null)
         {
             poolManager.Return(poolType, gameObject);

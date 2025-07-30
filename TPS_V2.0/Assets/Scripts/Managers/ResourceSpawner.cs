@@ -1,7 +1,8 @@
+using PlayerControl;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
-using PlayerControl;
 
 public class ResourceSpawner : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class ResourceSpawner : MonoBehaviour
     public InventoryManager inventoryManagerRef; // 传入Inventory引用 让动态生成的资源Prefab注册Inventory
     public PlayerInputSystem playerInputSystemRef;
     public List<ResourcePrefabInfo> resourceTypes;
+
+    [Header("Daily Refresh Settings")]
+    public bool enableDailyRefresh = true; // 是否启用每日刷新
+    [Range(0.5f, 2.0f)]
+    public float dailyRefreshMultiplier = 1.0f; // 每日刷新倍率（可以调整资源数量）
 
     /*一次性最多会随机生成的"资源堆"的数量区间*/
     public int minPileCount = 30;
@@ -39,6 +45,8 @@ public class ResourceSpawner : MonoBehaviour
 
     [Header("Debug Settings")]
     public bool enableDebugLog = false;
+
+    private List<GameObject> activeResources = new List<GameObject>(); // 管理激活的资源对象
 
     void Start()
     {
@@ -170,9 +178,10 @@ public class ResourceSpawner : MonoBehaviour
                                 pickup.playerInputSystem = playerInputSystemRef;
                                 pickup.poolManager = poolManager;
                                 pickup.playerStats = GameManager.Instance.GetPlayerStats();
+                                pickup.resourceSpawner = this; // 设置引用
+                                RegisterActiveResource(obj);   // 注册到管理列表
                             }
                             placedPositions.Add(navHit.position);
-
                             if (enableDebugLog)
                                 Debug.Log($"成功生成资源在: {navHit.position}, 类型: {res.resourceData.resourceName}");
                         }
@@ -189,10 +198,6 @@ public class ResourceSpawner : MonoBehaviour
             Debug.Log($"总尝试次数: {tries}");
             Debug.Log($"被营地阻挡次数: {campZoneBlocked}");
         }
-
-        //Debug.Log($"生成了 {placedPositions.Count} 堆资源");
-        // 打印各种资源的统计信息
-        //LogResourceStatistics(placedPositions.Count);
     }
 
     /// <summary>
@@ -227,19 +232,109 @@ public class ResourceSpawner : MonoBehaviour
         return resourceTypes[0];
     }
 
-    /// <summary>
-    /// 打印资源生成统计（可选，用于调试）
-    /// </summary>
-    void LogResourceStatistics(int totalGenerated)
+    #region Refresh Everyday
+    public void ClearAllResources()
     {
-        Debug.Log("=== 资源生成统计 ===");
-        foreach (var res in resourceTypes)
+        int clearedCount = 0;
+
+        // 使用缓存的列表，避免 FindObjectsOfType 的性能消耗
+        for (int i = activeResources.Count - 1; i >= 0; i--)
         {
-            float expectedRatio = (float)res.spawnWeight / GetTotalWeight();
-            int expectedCount = Mathf.RoundToInt(totalGenerated * expectedRatio);
-            Debug.Log($"{res.resourceData.resourceName}: 权重 {res.spawnWeight}, 预期数量 ~{expectedCount}");
+            GameObject resource = activeResources[i];
+
+            if (resource != null && resource.activeInHierarchy)
+            {
+                PickupItem pickup = resource.GetComponent<PickupItem>();
+                if (pickup != null && poolManager != null)
+                {
+                    // 归还到对象池
+                    poolManager.Return(pickup.poolType, resource);
+                    clearedCount++;
+                }
+            }
+
+            // 从列表中移除（倒序遍历，所以直接移除）
+            activeResources.RemoveAt(i);
+        }
+
+        // 清空列表，确保同步
+        activeResources.Clear();
+
+        if (enableDebugLog)
+            Debug.Log($"=== 每日资源刷新 ===\n清空了 {clearedCount} 个资源 (优化版本)");
+    }
+
+    /// <summary>
+    /// 添加资源到管理列表
+    /// </summary>
+    public void RegisterActiveResource(GameObject resource)
+    {
+        if (resource != null && !activeResources.Contains(resource))
+        {
+            activeResources.Add(resource);
+
+            if (enableDebugLog)
+                Debug.Log($"注册资源到管理列表: {resource.name}, 当前总数: {activeResources.Count}");
         }
     }
+
+    /// <summary>
+    /// 从管理列表移除资源
+    /// </summary>
+    public void UnregisterActiveResource(GameObject resource)
+    {
+        if (resource != null && activeResources.Contains(resource))
+        {
+            activeResources.Remove(resource);
+
+            if (enableDebugLog)
+                Debug.Log($"从管理列表移除资源: {resource.name}, 剩余总数: {activeResources.Count}");
+        }
+    }
+
+    /// <summary>
+    /// 获取当前激活资源数量（用于调试）
+    /// </summary>
+    public int GetActiveResourceCount()
+    {
+        return activeResources.Count;
+    }
+
+    /// <summary>
+    /// 每日资源刷新（清空+重新生成）
+    /// </summary>
+    public void DailyResourceRefresh()
+    {
+        if (!enableDailyRefresh)
+        {
+            Debug.Log("每日资源刷新已禁用");
+            return;
+        }
+
+        // 先清空现有资源
+        ClearAllResources();
+
+        // 等待一帧确保清空完成，然后重新生成
+        StartCoroutine(DelayedSpawn());
+    }
+
+    /// <summary>
+    /// 延迟生成协程，确保清空操作完成
+    /// </summary>
+    private IEnumerator DelayedSpawn()
+    {
+        yield return null; // 等待一帧
+
+        if (enableDebugLog)
+            Debug.Log($"开始重新生成资源 - 目标数量: {minPileCount}-{maxPileCount}");
+
+        // 重新生成资源
+        SpawnResources();
+
+        if (enableDebugLog)
+            Debug.Log("每日资源刷新完成！");
+    }
+    #endregion
 
     int GetTotalWeight()
     {
