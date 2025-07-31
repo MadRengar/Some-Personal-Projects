@@ -213,7 +213,7 @@ public class UIManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
-        survivalDayCount.text = GameTimeManager.Instance.GetCurrentDay().ToString();
+        survivalDayCount.text = $"On Day {GameTimeManager.Instance.GetCurrentDay().ToString()}, your defenses finally fell to the undead tide";
         Debug.Log("[UIManager]: 玩家死亡！");
         // 立即激活渐变UI对象
         screenFadeUI.SetActive(true);

@@ -6,6 +6,16 @@ public class ZombieStats : MonoBehaviour
 {
     public ZombieData_SO zombieData; // 只读配置引用
     public ZombieAttackData_SO zombieAttackData;
+    public enum ZombieOrigin
+    {
+        DaySpawn,    // 白天生成的温和僵尸
+        NightSpawn   // 夜晚生成的狂暴僵尸
+    }
+
+
+    [Header("Zombie Origin Tracking")]
+    [SerializeField] private ZombieOrigin spawnOrigin = ZombieOrigin.DaySpawn;
+
 
     [Header("Running Stats")]
     public int currentHealth;
@@ -121,4 +131,38 @@ public class ZombieStats : MonoBehaviour
             spawnManager.OnZombieDied(gameObject);
         }
     }
+
+    #region 设置来源
+    /// <summary>
+    /// 设置僵尸来源
+    /// </summary>
+    public void SetSpawnOrigin(ZombieOrigin origin)
+    {
+        spawnOrigin = origin;
+    }
+
+    /// <summary>
+    /// 获取僵尸来源
+    /// </summary>
+    public ZombieOrigin GetSpawnOrigin()
+    {
+        return spawnOrigin;
+    }
+
+    /// <summary>
+    /// 检查是否为白天生成的僵尸
+    /// </summary>
+    public bool IsDaySpawnedZombie()
+    {
+        return spawnOrigin == ZombieOrigin.DaySpawn;
+    }
+
+    /// <summary>
+    /// 检查是否为夜晚生成的僵尸
+    /// </summary>
+    public bool IsNightSpawnedZombie()
+    {
+        return spawnOrigin == ZombieOrigin.NightSpawn;
+    }
+    #endregion
 }
