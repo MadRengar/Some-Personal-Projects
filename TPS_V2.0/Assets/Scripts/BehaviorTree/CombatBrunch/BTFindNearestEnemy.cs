@@ -7,10 +7,18 @@ using System.Linq;
 
 public class BTFindNearestEnemy : Conditional
 {
-    public SharedTransform nearestEnemy;
-    public float sightRadius; // AI感知/射击范围
-    public LayerMask enemyLayer;    // 仅检测敌人
+    [Header("Enemy References")]
+    public SharedTransform nearestEnemy; // 原有：离AI最近的敌人
+    public SharedTransform nearestEnemyToPlayer; // 新增：离玩家最近的敌人
+    public SharedTransform player; // 玩家引用
+
+    [Header("State Variables")]
     public SharedBool hasAmmo; // 从黑板读取
+    public SharedBool protectMode; // 保护模式标志位
+
+    [Header("Settings")]
+    public float sightRadius; // AI感知/射击范围
+    public LayerMask enemyLayer; // 敌人检测层级
 
     private AIAgentSettings agentSettings;
     private AIAnimationController animController;
@@ -48,20 +56,47 @@ public class BTFindNearestEnemy : Conditional
             }
         }
 
+        if (protectMode.Value && player.Value != null)
+        {
+            float minDistToPlayer = float.MaxValue;
+            Transform targetToPlayer = null;
+
+            foreach (var col in colliders)
+            {
+                if (col.CompareTag("Enemy"))
+                {
+                    float dist = Vector3.Distance(player.Value.position, col.transform.position);
+                    if (dist < minDistToPlayer)
+                    {
+                        minDistToPlayer = dist;
+                        targetToPlayer = col.transform;
+                    }
+                }
+            }
+
+            nearestEnemyToPlayer.Value = targetToPlayer;
+
+            if (targetToPlayer != null)
+            {
+                //Debug.Log($"[保护模式] 离玩家最近的敌人: {targetToPlayer.name}, 距离: {minDistToPlayer:F1}m");
+            }
+        }
+        else
+        {
+            // 非保护模式下清空玩家敌人变量
+            nearestEnemyToPlayer.Value = null;
+        }
+
+
+
         if (target != null)
         {
             nearestEnemy.Value = target;
-            // 发现敌人，切换到战斗待机状态
-            //if (animController != null)
-            //    animController.OnStartAiming();
-            // 发现敌人时不再强制切换到瞄准状态，让BTAimAtEnemy节点来处理
             return TaskStatus.Success;
         }
         else
         {
             nearestEnemy.Value = null;
-            //Debug.Log("BackToMove!");
-            // 没有敌人，切换到idle状态
             if (hasAmmo.Value && animController != null)
             {
                 animController.SetFiring(false);

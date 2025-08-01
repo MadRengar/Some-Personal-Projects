@@ -16,4 +16,4 @@ MonoBehaviour:
   type: 3
   unitWeight: 0
   isConsuming: 1
-  restoreValues: 10
+  restoreValues: 40

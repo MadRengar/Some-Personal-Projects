@@ -5256,6 +5256,7 @@ GameObject:
   - component: {fileID: 7779396787805039542}
   - component: {fileID: 6090457092733235839}
   - component: {fileID: -5896886805300520555}
+  - component: {fileID: 4596613868999617106}
   m_Layer: 12
   m_Name: Turret_2
   m_TagString: PlayerBuilding
@@ -5372,6 +5373,27 @@ MonoBehaviour:
   currentHealth: 0
   cooldown: 0
   showFireTrajectory: 1
+--- !u!65 &4596613868999617106
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2877994378928988297}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1934974, y: 1.6110044, z: 1.8344339}
+  m_Center: {x: -0.007318616, y: 0.8055022, z: -0.13581377}
 --- !u!1 &2908656206488222730
 GameObject:
   m_ObjectHideFlags: 0
@@ -5488,7 +5510,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 3229492624787443399}
-  lowPowerTip: {fileID: 5289121960166295284}
+  capacitySlider: {fileID: 0}
+  BuildingType: {fileID: 5289121960166295284}
+  woodAmountText: {fileID: 0}
+  ironAmountText: {fileID: 0}
   controller: {fileID: -5896886805300520555}
 --- !u!1 &2973252371952778491
 GameObject:

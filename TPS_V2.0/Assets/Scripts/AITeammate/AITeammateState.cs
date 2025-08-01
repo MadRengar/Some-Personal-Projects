@@ -27,6 +27,8 @@ public class AITeammateState : MonoBehaviour
         InitializeAIInventory();
     }
 
+
+
     public void InitializeAIState()
     {
         if (aiPlayerData != null)
@@ -128,7 +130,7 @@ public class AITeammateState : MonoBehaviour
     {
         while(true)
         {
-            if(treatmentArea.IsPlayerInTreatmentArea())
+            if(treatmentArea.IsAIPlayerInTreatmentArea())
             {
                 yield return new WaitForSeconds(1f);
                 if (currentHealth <= aiPlayerData.maxHealth)

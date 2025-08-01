@@ -18,11 +18,13 @@ public class WeaponSwitcher : MonoBehaviour
 
     // 武器切换事件
     private Animator animator;
+    private WeaponManager weaponManager;
     public static event Action<WeaponType> OnWeaponChanged;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        weaponManager = GameManager.Instance.GetPlayerWeaponManager(); 
         // 初始化武器状态
         SwitchToWeapon(currentWeapon);
     }
@@ -51,17 +53,14 @@ public class WeaponSwitcher : MonoBehaviour
     public void SwitchToWeapon(WeaponType weaponType)
     {
         if (currentWeapon == weaponType) return; // 已经是当前武器
-
+        if (weaponManager.IsReloading()) return;
         currentWeapon = weaponType;
-        //animator.SetBool("IsReloading", false);
-        //animator.ResetTrigger("StartShooting");
+
         // 更新武器对象显示状态
         UpdateWeaponDisplay();
 
         // 触发武器切换事件
         OnWeaponChanged?.Invoke(currentWeapon);
-
-        //Debug.Log($"[WeaponSwitcher] 切换到武器: {currentWeapon}");
     }
 
     /// <summary>

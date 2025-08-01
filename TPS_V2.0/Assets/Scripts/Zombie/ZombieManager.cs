@@ -167,7 +167,7 @@ public class ZombieManager : MonoBehaviour
             // ¼ì²éÊÇ·ñËÀÍö
             if (zombieStats.currentHealth <= 0)
             {
-                Debug.Log($"[ZombieManager] ¿ñ±©½©Ê¬ {zombie.name} ÒòÀèÃ÷¿ÛÑªËÀÍö");
+                //Debug.Log($"[ZombieManager] ¿ñ±©½©Ê¬ {zombie.name} ÒòÀèÃ÷¿ÛÑªËÀÍö");
                 yield break; // ½©Ê¬ËÀÍö£¬ÍË³öĞ­³Ì
             }
 

@@ -5463,7 +5463,6 @@ GameObject:
   - component: {fileID: 7256030167428831411}
   - component: {fileID: 4372588776977661159}
   - component: {fileID: 256181077630221352}
-  - component: {fileID: 3119736706758841518}
   m_Layer: 12
   m_Name: Turret_1
   m_TagString: PlayerBuilding
@@ -5601,24 +5600,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1934974, y: 1.4548829, z: 1.2089038}
   m_Center: {x: -0.007318616, y: 0.72744143, z: -0.08944726}
---- !u!114 &3119736706758841518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7377561701843905276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c42ce13a0717e484dafd7cc753837f14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthSlider: {fileID: 0}
-  capacitySlider: {fileID: 0}
-  BuildingType: {fileID: 0}
-  woodAmountText: {fileID: 0}
-  ironAmountText: {fileID: 0}
-  controller: {fileID: 0}
 --- !u!1 &7962360523803734613
 GameObject:
   m_ObjectHideFlags: 0

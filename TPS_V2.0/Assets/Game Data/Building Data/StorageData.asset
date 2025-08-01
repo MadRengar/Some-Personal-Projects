@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62adcd531e0d57543a777e7dba76e54f, type: 3}
   m_Name: StorageData
   m_EditorClassIdentifier: 
-  buildingName: 
-  requiredWoodNum: 5
-  requiredIronNum: 5
-  requiredBuildingTime: 40
-  maxHealth: 200
+  buildingName: Storage
+  requiredWoodNum: 10
+  requiredIronNum: 10
+  requiredBuildingTime: 100
+  maxHealth: 300
   buildingType: 2
   storageCapacity: 300

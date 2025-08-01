@@ -16,6 +16,6 @@ MonoBehaviour:
   requiredWoodNum: 5
   requiredIronNum: 5
   requiredBuildingTime: 60
-  maxHealth: 100
+  maxHealth: 200
   buildingType: 1
   powerOutput: 20

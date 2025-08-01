@@ -1,0 +1,12 @@
+using UnityEngine;
+
+public class SimpleAutoDestroy : MonoBehaviour
+{
+    [Header("œ˙ªŸ…Ë÷√")]
+    public float destroyAfter = 3f;
+
+    void Start()
+    {
+        Destroy(gameObject, destroyAfter);
+    }
+}
