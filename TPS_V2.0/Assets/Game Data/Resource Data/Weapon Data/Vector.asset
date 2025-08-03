@@ -25,7 +25,7 @@ MonoBehaviour:
   range: 70
   accuracy: 0.95
   magazineSize: 40
-  maxReserveAmmo: 240
+  maxReserveAmmo: 400
   reloadTime: 2
   autoReloadWhenEmpty: 1
   fireSound: {fileID: 0}

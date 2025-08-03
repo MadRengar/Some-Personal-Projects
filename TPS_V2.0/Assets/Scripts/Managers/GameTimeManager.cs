@@ -30,6 +30,9 @@ public class GameTimeManager : MonoBehaviour
     [SerializeField] private Gradient sunColor; // 太阳颜色渐变（从黎明到正午到黄昏）
     [SerializeField] private AnimationCurve sunIntensity; // 太阳强度曲线（0-24小时）
 
+    [Header("Tip Tracking")]
+    [SerializeField] private HashSet<string> triggeredTips = new HashSet<string>(); // 已触发的提示跟踪
+
     // 时间事件
     public event Action<int> OnDayChanged;
     public event Action OnDawnStarted;
@@ -56,12 +59,12 @@ public class GameTimeManager : MonoBehaviour
     private void Start()
     {
         // 计算时间流逝速度（24小时 / dayDurationInSeconds）
-        timeSpeed = 24f / dayDurationInSeconds; // 假设5分钟代表1天24小时，24 ÷ 300 = 0.08 小时/秒。含义： 现实中每过1秒，游戏时间就前进0.08小时（约4.8分钟）
+        timeSpeed = 24f / dayDurationInSeconds; // 假设5分钟代表1天24小时，24 ÷ 300 = 0.08 小时/秒。含义：现实中每过1秒，游戏时间就前进0.08小时（约4.8分钟）
 
         // 初始化状态
         lastFrameIsNight = isNight;
 
-        Debug.Log($"游戏时间系统启动 - 第{currentDay}天 {currentHour:F1}时"); // 浮点保留一位
+        Debug.Log($"游戏时间系统启动 - 第{currentDay}天 {currentHour:F1}时"); // 格点保留一位
         dayCount.text = $"Day {currentDay}";
     }
 
@@ -70,15 +73,16 @@ public class GameTimeManager : MonoBehaviour
         UpdateGameTime();
         UpdateLighting();
         CheckDayNightTransition();
+        CheckTimedTips(); // 添加这个持续检查
     }
 
     private void UpdateGameTime()
     {
         // 更新当前小时
-        /*步长调节器：
-            帧率高 = 小步快走（步子小但走得频繁）
-            帧率低 = 大步慢走（步子大但走得少）
-            最终每秒走过的总距离是一样的
+        /*步长调试：
+            帧÷数高 = 小步快跑（步骤小但跑得频繁）
+            帧÷数低 = 大步慢跑（步骤大但跑得少）
+            最终每秒跑过的总距离是一致的
         */
         currentHour += timeSpeed * Time.deltaTime;
 
@@ -95,6 +99,103 @@ public class GameTimeManager : MonoBehaviour
         OnHourChanged?.Invoke(currentHour);
     }
 
+    /// <summary>
+    /// 持续检查时间相关的提示（每帧都执行）
+    /// </summary>
+    private void CheckTimedTips()
+    {
+        // 第1天的提示
+        if (ShouldTriggerTip(1, 8f, 9f, "day1_8am"))
+        {
+            StartCoroutine(ShowTipWithDelay("Switch to the build hammer with the middle mouse button, then strike a prefab to begin building.", UIManager.TipType.TIP, 0f));
+        }
+
+        if (ShouldTriggerTip(1, 9f, 10f, "day1_9am"))
+        {
+            StartCoroutine(ShowTipWithDelay("Defense turrets run on electricity. Use the build menu (B) to see how much power each one consumes.", UIManager.TipType.HELP, 0f));
+        }
+
+        if (ShouldTriggerTip(1, 10f, 11f, "day1_10am"))
+        {
+            StartCoroutine(ShowTipWithDelay("Press V and try to give orders to your teammates to help you complete tasks such as collecting resources, " +
+                "repairing buildings,and cooperate to survive", UIManager.TipType.HELP, 0f));
+        }
+
+        if (ShouldTriggerTip(1, 17f, 18f, "day1_5pm"))
+        {
+            StartCoroutine(ShowTipWithDelay("Surviving the night is easier if you stay near the camp. Get back before darkness falls!", UIManager.TipType.TIP, 0f));
+        }
+
+        // 第2天的提示
+        if (ShouldTriggerTip(2, 6f, 7f, "day2_6am"))
+        {
+            StartCoroutine(ShowDay2Tips());
+        }
+
+        // 第3天的提示
+        if (ShouldTriggerTip(3, 6f, 7f, "day3_6am"))
+        {
+            StartCoroutine(ShowDay3Tips());
+        }
+
+        // 第4天的提示
+        if (ShouldTriggerTip(4, 7f, 8f, "day4_7am"))
+        {
+            StartCoroutine(ShowDay4Tips());
+        }
+
+        // 第5天的提示
+        if (ShouldTriggerTip(5, 7f, 8f, "day5_7am"))
+        {
+            StartCoroutine(ShowTipWithDelay("As you survive longer, more zombies will appear and their health will increase – up to a limit.", UIManager.TipType.TIP, 0f));
+        }
+    }
+
+    /// <summary>
+    /// 显示单个提示（带延迟）
+    /// </summary>
+    private IEnumerator ShowTipWithDelay(string message, UIManager.TipType tipType, float delay)
+    {
+        if (delay > 0)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+        UIManager.Instance.ShowTip(message, tipType);
+    }
+
+    /// <summary>
+    /// 第2天的提示序列
+    /// </summary>
+    private IEnumerator ShowDay2Tips()
+    {
+        yield return new WaitForSeconds(5f);
+        UIManager.Instance.ShowTip("Collect resources, establish a defense line, strive to survive, and wait for rescue.", UIManager.TipType.TIP);
+        yield return new WaitForSeconds(5f);
+        UIManager.Instance.ShowTip("Remember to restock your food daily. Check the area around the camp — food may spawn randomly nearby.", UIManager.TipType.TIP);
+    }
+
+    /// <summary>
+    /// 第3天的提示序列
+    /// </summary>
+    private IEnumerator ShowDay3Tips()
+    {
+        yield return new WaitForSeconds(5f);
+        UIManager.Instance.ShowTip("There will be many zombies randomly appearing around the campsite, be careful to avoid them and save bullets.", UIManager.TipType.TIP);
+        yield return new WaitForSeconds(5f);
+        UIManager.Instance.ShowTip("You'd better replenish your food every day, as there will be random refreshing of food around the campsite. You can also slowly replenish your satiety within the campsite.", UIManager.TipType.TIP);
+    }
+
+    /// <summary>
+    /// 第4天的提示序列
+    /// </summary>
+    private IEnumerator ShowDay4Tips()
+    {
+        yield return new WaitForSeconds(5f);
+        UIManager.Instance.ShowTip("Headshots matter! Shooting zombies in the head inflicts greater damage.", UIManager.TipType.TIP);
+        yield return new WaitForSeconds(5f);
+        UIManager.Instance.ShowTip("You can craft ammo at a supply station – but it costs resources!", UIManager.TipType.TIP);
+    }
+
     private void CheckDayNightTransition()
     {
         // 更新昼夜状态
@@ -105,7 +206,7 @@ public class GameTimeManager : MonoBehaviour
             19:59分：isNight=false, lastFrameIsNight=false → 不触发
             20:00分：isNight=true, lastFrameIsNight=false → 触发夜晚开始！
             20:01分：isNight=true, lastFrameIsNight=true → 不触发
-            没有这个标志位的话，从20:00到次日6:00的每一帧都会触发"夜晚开始"事件！
+            没有这个标志位的话，从20:00到达日6:00的每一帧都会触发"夜晚开始"事件！
         */
         if (isNight != lastFrameIsNight)
         {
@@ -125,47 +226,85 @@ public class GameTimeManager : MonoBehaviour
 
     private void StartDawnPhase()
     {
-        //Debug.Log($"黎明开始 - 第{currentDay}天 {currentHour:F1}时");
-        UIManager.Instance.ShowDayNightTip("We are temporarily safe.", UIManager.TipType.EVENT);
+        StartCoroutine(ShowDawnTipsCoroutine());
+    }
 
-        //如果ai死亡 重新部署
+    private IEnumerator ShowDawnTipsCoroutine()
+    {
+        // 第一句提示
+        UIManager.Instance.ShowTip("We are temporarily safe.", UIManager.TipType.EVENT);
 
-        // TODO: 停止大批量僵尸生成
-        // ZombieSpawnManager.Instance.StopMassiveSpawn();
+        yield return new WaitForSeconds(5f);
 
-        // TODO: 开始资源刷新
+        // 刷新资源
         resourceSpawner.DailyResourceRefresh();
-        Debug.Log($"第{currentDay}天资源已刷新！");
 
-        // TODO: 开始随机生成僵尸
-        // ZombieSpawnManager.Instance.StartRandomSpawn();
+        // 第二句提示
+        UIManager.Instance.ShowTip("The location of the resource has been refreshed", UIManager.TipType.EVENT);
+    }
 
-        // TODO: 将现有僵尸退出狂暴状态
-        // SetAllZombiesRageState(false);
+    /// <summary>
+    /// 检查是否应该触发提示（避免重复触发）
+    /// </summary>
+    /// <param name="day">目标天数</param>
+    /// <param name="startHour">开始小时（包含）</param>
+    /// <param name="endHour">结束小时（不包含）</param>
+    /// <param name="tipId">提示的唯一ID</param>
+    /// <returns>是否应该触发提示</returns>
+    private bool ShouldTriggerTip(int day, float startHour, float endHour, string tipId)
+    {
+        bool isCorrectDay = currentDay == day;
+        bool isInTimeRange = currentHour >= startHour && currentHour < endHour;
+        bool notTriggeredYet = !triggeredTips.Contains(tipId);
+
+        if (isCorrectDay && isInTimeRange && notTriggeredYet)
+        {
+            triggeredTips.Add(tipId); // 标记为已触发
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 重置提示触发状态（用于重新开始游戏或测试）
+    /// </summary>
+    public void ResetTriggeredTips()
+    {
+        triggeredTips.Clear();
+    }
+
+    /// <summary>
+    /// 手动触发指定ID的提示（调试用）
+    /// </summary>
+    public void ManuallyTriggerTip(string tipId)
+    {
+        if (triggeredTips.Contains(tipId))
+        {
+            triggeredTips.Remove(tipId);
+        }
+    }
+
+    /// <summary>
+    /// 检查提示是否已被触发
+    /// </summary>
+    public bool IsTipTriggered(string tipId)
+    {
+        return triggeredTips.Contains(tipId);
     }
 
     private void StartNightPhase()
     {
-        //Debug.Log($"夜晚开始 - 第{currentDay}天 {currentHour:F1}时");
-        UIManager.Instance.ShowDayNightTip("Nihgt fell, they are coming!", UIManager.TipType.EVENT);
-        // TODO: 将白天生成的僵尸设为狂暴状态
-        // SetAllZombiesRageState(true);
-
-        // TODO: 在固定点位生成大批量狂暴僵尸
-        // ZombieSpawnManager.Instance.StartMassiveRageSpawn();
+        StartCoroutine(ShowNightTipsCoroutine());
     }
 
-    // TODO: 僵尸狂暴状态控制方法
-    // private void SetAllZombiesRageState(bool isRage)
-    // {
-    //     var allZombies = FindObjectsOfType<ZombieFSM>();
-    //     foreach (var zombie in allZombies)
-    //     {
-    //         zombie.SetRageState(isRage);
-    //     }
-    // }
+    private IEnumerator ShowNightTipsCoroutine()
+    {
+        UIManager.Instance.ShowTip("Night fell, they are coming!", UIManager.TipType.EVENT);
+        yield return new WaitForSeconds(4f);
+        UIManager.Instance.ShowTip("Zombies enter a state of frenzy at night, and you have nowhere to hide", UIManager.TipType.TIP);
+    }
 
-    // TODO：FIX时间ui闪烁
     private void updateUITime()
     {
         timeText.text = GetFormattedTime();
@@ -178,7 +317,7 @@ public class GameTimeManager : MonoBehaviour
         // 计算太阳角度（0-24小时映射到0-360度）
         float sunAngle = (currentHour / 24f) * 360f - 90f; // -90度让6点时太阳在地平线
 
-        // 设置太阳旋转（绕X轴旋转模拟太阳轨迹）
+        // 设置太阳旋转（让X轴旋转模拟太阳轨迹）
         sunLight.transform.rotation = Quaternion.Euler(sunAngle, 30f, 0f);
 
         // 计算时间因子（0-1，用于颜色和强度插值）
@@ -255,14 +394,14 @@ public class GameTimeManager : MonoBehaviour
 
     /// <summary>
     /// 获取格式化的时间字符串
-    /// 浮点数时间到标准时钟格式的转换
+    /// 格点数时间到标准时钟格式的转换
     /// </summary>
     public string GetFormattedTime()
     {
         // 假设 currentHour = 14.75f（下午2点45分）
         int hours = Mathf.FloorToInt(currentHour); // 14
         int minutes = Mathf.FloorToInt((currentHour - hours) * 60);  // (0.75 * 60) = 45
-        return $"{hours:D2}:{minutes:D2}"; // "14:45" 整型保留两位，不足补零 6 → "06"
+        return $"{hours:D2}:{minutes:D2}"; // "14:45" 这样保留两位，不足补领 6 → "06"
     }
 
     /// <summary>
@@ -282,7 +421,7 @@ public class GameTimeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 设置时间流速（调试用）
+    /// 设置时间流速
     /// </summary>
     public void SetTimeSpeed(float newDayDuration)
     {
@@ -297,16 +436,6 @@ public class GameTimeManager : MonoBehaviour
             timeSpeed = 24f / dayDurationInSeconds;
             Debug.Log($"时间流速已设置为: {timeSpeed}");
         }
-    }
-
-    /// <summary>
-    /// 跳转到指定时间（调试用）
-    /// </summary>
-    public void SetTime(int day, float hour)
-    {
-        currentDay = day;
-        currentHour = hour;
-        Debug.Log($"时间跳转到: 第{currentDay}天 {currentHour:F1}时");
     }
     #endregion
 }

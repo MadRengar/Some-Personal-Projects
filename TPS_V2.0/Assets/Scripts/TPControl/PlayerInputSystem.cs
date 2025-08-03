@@ -22,7 +22,7 @@ namespace PlayerControl
         [HideInInspector] public bool jump;
         [HideInInspector] public bool sprint;
         [HideInInspector] public bool aim;
-        [HideInInspector] public bool pickUp;
+        [HideInInspector] public bool pickUpPressed;
         [HideInInspector] public bool openStatusPanel;
         [HideInInspector] public bool ping;
         [HideInInspector] public bool reload; // 添加换弹输入
@@ -187,8 +187,12 @@ namespace PlayerControl
 
         public void OnPickUp(InputValue value)
         {
-            if (currentMode != PlayerMode.Combat) return; // 只有战斗模式下才能拾取
-            PickUpInput(value.isPressed);
+            if (currentMode != PlayerMode.Combat) return;
+
+            if (value.isPressed) // 只在按下时触发
+            {
+                pickUpPressed = true;
+            }
         }
 
         public void OnOpenStatusPanel(InputValue value)
@@ -308,8 +312,10 @@ namespace PlayerControl
 
 		public void PickUpInput(bool newPickUpInputState)
 		{
-			pickUp = newPickUpInputState;
-
+            if (newPickUpInputState)
+            {
+                pickUpPressed = true;
+            }
         }
 
         public void OpenStatusPanelInput(bool newStatusPanelInputState)
@@ -439,7 +445,7 @@ namespace PlayerControl
             aim = false;
             jump = false;
             sprint = false;
-            pickUp = false;
+            pickUpPressed = false;
             shootPressed = false;
             shootHeld = false;
             shootReleased = false;

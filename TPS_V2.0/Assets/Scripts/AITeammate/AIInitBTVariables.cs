@@ -15,6 +15,7 @@ public class AIInitBTVariables : MonoBehaviour
 
     public BehaviorTree behaviorTree;
     public Transform ammoSupplyPos;
+    public Transform treatmentPos;
     public AmmoWorkbenchController ammoWorkbenchController;
     void Start()
     {
@@ -27,7 +28,7 @@ public class AIInitBTVariables : MonoBehaviour
         behaviorTree.SetVariableValue("player", GameManager.Instance.GetPlayerTransform());
         // µ¯Ò©²¹¸øµã
         behaviorTree.SetVariableValue("ammoSupplyPos", ammoSupplyPos);
-        
+        behaviorTree.SetVariableValue("treatmentPos", treatmentPos);
     }
     void Update()
     {

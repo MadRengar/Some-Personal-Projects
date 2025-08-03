@@ -7,7 +7,8 @@ public enum MessageKey
 
     /* Building */
     Building_Generator_low_energy,
-
+    Building_isDestroied,
+    Building_isAttacked,
     /* BuildingSystem */
     Build_success,
     Build_no_resource,
@@ -24,6 +25,14 @@ public enum MessageKey
 
     /* Interact */
     Interact_foodSupply,
+
+    /* Player */
+    Player_EnterTreatmentArea,
+    Player_lowSatiety,
+    Player_zeroSatiety,
+
+    /* AI */
+    AI_EnterTreatmentArea,
 }
 
 public static class RadioMessages
@@ -41,6 +50,12 @@ public static class RadioMessages
         { MessageKey.Ping_tooclose,      "Mark too close" },
         { MessageKey.Building_FullHealth,      "Building is full health" },
         { MessageKey.Interact_foodSupply,      "Replenishing satiety" },
+        { MessageKey.Player_EnterTreatmentArea,      "You are receiving treatment" },
+        { MessageKey.AI_EnterTreatmentArea,      "Your teammate is receiving treatment" },
+        { MessageKey.Building_isDestroied,      "Building is destroied!" },
+        { MessageKey.Building_isAttacked,      "Our base is under attack!" },
+        { MessageKey.Player_lowSatiety,      "Low satiety! Your stamina has dropped significantly." },
+        { MessageKey.Player_zeroSatiety,      "You're starving! Health is draining over time. Find food immediately." },
     };
 
     public static string Get(MessageKey key)

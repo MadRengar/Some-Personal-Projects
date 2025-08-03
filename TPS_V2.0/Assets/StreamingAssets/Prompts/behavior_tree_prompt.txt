@@ -14,6 +14,8 @@ Valid behaviors:
 - repair_building
 - defend_building
 - attack_target
+- go_heal ¡û go to the treatment zone to recover health
+- replenish_ammo ¡û go to the ammo station to restock ammunition
 
 Examples:
 
@@ -40,6 +42,12 @@ Output: { "behavior": "repair_building" }
 
 Input: "Defend that building!" or "Protect this."
 Output: { "behavior": "defend_building" }
+
+Input: "Go to the medbay!" or "Get yourself healed!"
+Output: { "behavior": "go_heal" }
+
+Input: "We¡¯re out of bullets. Refill now!" or "Go to supply M.O."
+Output: { "behavior": "replenish_ammo" }
 
 If the meaning is unclear or not matched, return:
 { "behavior": "unknown" }

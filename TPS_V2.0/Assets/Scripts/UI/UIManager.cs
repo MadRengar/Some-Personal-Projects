@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Player UI Panel")]
     public GameObject buildingMenuPanelUI;
+    public GameObject buildingConsumingPanelUI;
     [SerializeField] private GameObject gunAmmoPanel;    // GunAmmo UI Ãæ°å
     [SerializeField] private GameObject hammerPanel;     // Hammer UI Ãæ°å
     public GameObject characterStatePanelUI; // ½ÇÉ«×´Ì¬Ãæ°å
@@ -129,6 +130,7 @@ public class UIManager : MonoBehaviour
         if (buildingMenuPanelUI != null)
         {
             buildingMenuPanelUI.SetActive(false);
+            buildingConsumingPanelUI.SetActive(false);
         }
 
         if (screenFadeAnimator != null)
@@ -152,14 +154,14 @@ public class UIManager : MonoBehaviour
 
     public void ShowBuildingMenu()
     {
-        if (buildingMenuPanelUI != null)
-            buildingMenuPanelUI.SetActive(true);
+        buildingMenuPanelUI.SetActive(true);
+        buildingConsumingPanelUI.SetActive(true);
     }
 
     public void HideBuildingMenu()
     {
-        if (buildingMenuPanelUI != null)
-            buildingMenuPanelUI.SetActive(false);
+        buildingMenuPanelUI.SetActive(false);
+        buildingConsumingPanelUI.SetActive(false);
     }
 
     public void ShowAIInfo()
@@ -180,18 +182,31 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowDayNightTip(string msg, TipType tipType) 
+    public void ShowTip(string msg, TipType tipType) 
     {
         SetTipTitle(tipType);
-        StartCoroutine(ShowTipCoroutine(msg));
+        StartCoroutine(ShowTipCoroutine(msg, tipType));
     }
 
-    private IEnumerator ShowTipCoroutine(string msg)
+    private IEnumerator ShowTipCoroutine(string msg, TipType tipType)
     {
         subtitlesText.text = msg;
+        switch(tipType)
+        {
+            case TipType.EVENT:
+                subtitlesText.color = Color.red;
+                break;
+            case TipType.TIP:
+                subtitlesText.color = Color.yellow;
+                break;
+            case TipType.HELP:
+                subtitlesText.color = Color.green;
+                break;
+        }
+        
         subtitlesAnimator.SetBool("Active", true);
         // µÈ´ý3Ãë
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         subtitlesAnimator.SetBool("Active", false);
     }
 

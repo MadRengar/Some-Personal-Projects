@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TurretLevel2
   m_EditorClassIdentifier: 
   buildingName: TurretLevel2
-  requiredWoodNum: 5
-  requiredIronNum: 5
+  requiredWoodNum: 15
+  requiredIronNum: 15
   requiredBuildingTime: 150
   maxHealth: 200
   buildingType: 0

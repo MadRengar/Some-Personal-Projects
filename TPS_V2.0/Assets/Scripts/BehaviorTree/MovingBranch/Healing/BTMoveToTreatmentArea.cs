@@ -4,21 +4,21 @@ using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine.AI;
-
-public class BTMoveToPosition : Action
+public class BTMoveToTreatmentArea : Action
 {
-    public SharedVector3 pingPosition;
-    public SharedBool pingCommandActive;
+    public SharedTransform treatmentPos;
     public SharedString currentCommand;
 
     private NavMeshAgent agent;
     private AIAgentSettings settings;
     private AIAnimationController animController;
+
     public override void OnStart()
     {
         agent = GetComponent<NavMeshAgent>();
         settings = GetComponent<AIAgentSettings>();
         animController = GetComponent<AIAnimationController>();
+        agent.speed = settings.pingMovinfSpeed;
     }
 
     public override TaskStatus OnUpdate()
@@ -29,27 +29,20 @@ public class BTMoveToPosition : Action
             return TaskStatus.Failure;
         }
 
-        float dist = Vector3.Distance(agent.transform.position, pingPosition.Value);
-        /*
-         到达判断
-        1.!agent.pathPending：NavMeshAgent 是否已经完成路径计算
-        2.agent.remainingDistance <= agent.stoppingDistance：剩余距离是否小于停止距离
-        （重大bug！ agent.remainingDistance导致if else中的代码频繁被交替执行）
-         */
+        float dist = Vector3.Distance(agent.transform.position, treatmentPos.Value.position);
+
         if (dist >= agent.stoppingDistance)
         {
             Debug.Log("移动中！");
-            if(pingCommandActive.Value) // 如果指令没有被玩家取消
+            if (currentCommand.Value == "go_heal") // 如果指令没有被玩家取消
             {
-                agent.SetDestination(pingPosition.Value);
-                //animController.SetMoveDirection(1f);
-                animController.SetMoving(true, 8f);
+                agent.SetDestination(treatmentPos.Value.position);
+                animController.SetMoving(true, 10f);
                 return TaskStatus.Running;
             }
             else // 指令在agent移动中取消，停在原地
             {
                 agent.ResetPath();
-                //animController.SetMoveDirection(0);
                 animController.SetMoving(false, 0);
                 currentCommand.Value = "";
                 Debug.LogError("指令取消！");

@@ -278,6 +278,7 @@ public class StorageController : MonoBehaviour, IBuildingController
         if (inventoryManager != null)
         {
             inventoryManager.UnregisterStorage(this);
+            RadioPopController.Instance.ShowMessage(MessageKey.Building_isDestroied, RadioPopController.MessageType.Warning);
         }
     }
 
@@ -310,7 +311,7 @@ public void TakeDamage(int damage)
     else // 正常伤害
     {
         currentHealth -= damage;
-        Debug.Log($"仓库受到 {damage} 点伤害，剩余生命: {currentHealth}");
+        RadioPopController.Instance.ShowMessage(MessageKey.Building_isAttacked, RadioPopController.MessageType.Warning);
 
         if (currentHealth <= 0)
         {
@@ -326,7 +327,6 @@ public void TakeDamage(int damage)
 
     private void DestroyBuilding()
     {
-        Debug.Log("发电机被摧毁！");
         // 清空仓库中的所有资源
         currentWoodAmount = 0;
         currentIronAmount = 0;

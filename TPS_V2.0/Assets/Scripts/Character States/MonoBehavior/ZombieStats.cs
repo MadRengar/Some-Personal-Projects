@@ -6,6 +6,7 @@ public class ZombieStats : MonoBehaviour
 {
     public ZombieData_SO zombieData; // 只读配置引用
     public ZombieAttackData_SO zombieAttackData;
+    private GameTimeManager gameTimeManager;
     public enum ZombieOrigin
     {
         DaySpawn,    // 白天生成的温和僵尸
@@ -24,6 +25,9 @@ public class ZombieStats : MonoBehaviour
 
     private Animator animator;
     private ZombieFSM fsm;
+    private int dayCount;
+    private int maxLimitHealth = 200;
+    private int maxLimitAttack = 50;
     #region Read from Data_SO
     public int MaxHealth
     {
@@ -63,6 +67,7 @@ public class ZombieStats : MonoBehaviour
         //原因：prefab 在运行时被对象池实例化时，其 Inspector 是失效的 所以ZombieSpawn为空
 
         fsm = GetComponent<ZombieFSM>();
+        gameTimeManager = GameManager.Instance.GetGameTimeManager();
     }
     /* OnEnable() 是 Unity 提供的一个回调函数
      * 触发时机：
@@ -80,7 +85,12 @@ public class ZombieStats : MonoBehaviour
     public void ResetZombie()
     {
         //Debug.Log("已被重置！");
-        currentHealth = MaxHealth;
+        currentHealth = MaxHealth + 5 * (dayCount - 1);
+        if (currentHealth >= maxLimitHealth)
+        {
+            currentHealth = maxLimitHealth;
+        }
+
         isAlive = IsAlive;
         isBerserk = false;// 与时间相关
 

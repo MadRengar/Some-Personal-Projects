@@ -24,8 +24,11 @@ public class ZombieManager : MonoBehaviour
     public List<ZombieSpawner> nightSpawners = new List<ZombieSpawner>(); // 夜晚生成器列表
 
     [Header("Total ZombieCount Limit")]
-    public int maxZombiesAlive = 60;
+    public int currentMaxZombiesAlive = 60;
     public int currentZombiesAlive = 0;
+
+    [SerializeField] private int maxZombiesAliveLimit = 75;
+    [SerializeField] private int currentDayCount;
 
     [Header("Zombie Origin Management")]
     [SerializeField] private int dayZombiesCount = 0;    // 白天僵尸数量
@@ -36,6 +39,7 @@ public class ZombieManager : MonoBehaviour
     public Vector3 campZoneSize = new Vector3(100f, 10f, 80f); // 营地大小
 
     private List<GameObject> aliveZombies = new List<GameObject>();
+
 
     private void Start()
     {
@@ -87,7 +91,15 @@ public class ZombieManager : MonoBehaviour
     /// </summary>
     private void OnDawnStarted()
     {
-        //Debug.Log("黎明到来，停止所有僵尸生成器");
+        currentDayCount = GameTimeManager.Instance.GetCurrentDay();
+        if(currentMaxZombiesAlive < maxZombiesAliveLimit)
+        {
+            currentMaxZombiesAlive += (currentDayCount - 1) * 5;
+        }
+        else
+        {
+            currentMaxZombiesAlive = maxZombiesAliveLimit;
+        }
 
         // 停止所有生成器
         foreach (var spawner in nightSpawners)
@@ -261,7 +273,7 @@ public class ZombieManager : MonoBehaviour
             return;
         }
 
-        if (currentZombiesAlive >= maxZombiesAlive) return;
+        if (currentZombiesAlive >= currentMaxZombiesAlive) return;
 
         // 从对象池中取一个僵尸，放置到目标位置
         GameObject zombie = ZombiePool.Instance.TrySpawnZombie(position, Quaternion.identity);
@@ -304,7 +316,7 @@ public class ZombieManager : MonoBehaviour
     /// </summary>
     public bool CanSpawnMoreZombies()
     {
-        return currentZombiesAlive < maxZombiesAlive;
+        return currentZombiesAlive < currentMaxZombiesAlive;
     }
 
     /// <summary>

@@ -19,18 +19,24 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float currentInfectivity; // 当前感染率
     [SerializeField] private bool isAlive;
 
-    public static event Action<int, int> OnHealthChanged; // 当前血量, 最大血量
+    [Header("Hunger Effects")]
+    [SerializeField] private float currentMaxStamina; // 当前实际体力上限
+    [SerializeField] private float staminaMultiplier = 1f; // 体力上限倍数
+
+    public static event Action<int, int> OnHealthChanged; // 当前生命, 最大生命
     public static event Action<float, float> OnSatietyChanged; // 饱食度
     public static event Action<float, float> OnStaminaChanged; // 体力值
 
     [Header("Decay Settings")]
     [SerializeField] private float satietyDecayRate = 1f; // 每秒衰减量
     [SerializeField] private float staminaDecayRate = 1f; // 每秒衰减量
+    [SerializeField] private int hungerDamageRate = 2; // 饥饿时每秒扣血量
 
     private Coroutine satietyDecayCoroutine;
     private Coroutine staminaDecayCoroutine;
     private Coroutine staminaRecoverCoroutine;
     private Coroutine hpRecoverCoroutine;
+    private Coroutine hungerDamageCoroutine; // 饥饿扣血协程
 
     private PlayerInputSystem playerInputSystem;
     private Animator animator;
@@ -63,10 +69,118 @@ public class PlayerStats : MonoBehaviour
         currentInfectivity = playerData.maxInfectivity;
         isAlive = playerData.isAlive;
 
+        // 初始化体力上限
+        currentMaxStamina = playerData.maxStamina;
+        staminaMultiplier = 1f;
+
         //初始化事件
         OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
         OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
+        OnStaminaChanged?.Invoke(currentStamina, currentMaxStamina);
     }
+
+    #region Hunger System
+    /// <summary>
+    /// 根据饱食度更新体力上限和健康状态
+    /// </summary>
+    private void UpdateHungerEffects()
+    {
+        float satietyPercentage = currentSatiety / playerData.maxSatiety;
+
+        // 计算体力上限倍数
+        if (satietyPercentage <= 0f)
+        {
+            staminaMultiplier = 0.1f; // 10%
+            RadioPopController.Instance.ShowMessage(MessageKey.Player_zeroSatiety, RadioPopController.MessageType.Warning);
+            StartHungerDamage();
+        }
+        else if (satietyPercentage <= 0.3f)
+        {
+            staminaMultiplier = 0.5f; // 50%
+            RadioPopController.Instance.ShowMessage(MessageKey.Player_lowSatiety, RadioPopController.MessageType.Warning);
+            StopHungerDamage();
+        }
+        else
+        {
+            staminaMultiplier = 1f; // 100%
+            StopHungerDamage();
+        }
+
+        // 更新当前体力上限
+        float newMaxStamina = playerData.maxStamina * staminaMultiplier;
+
+        // 如果新的体力上限比当前体力还低，需要调整当前体力
+        if (currentStamina > newMaxStamina)
+        {
+            currentStamina = newMaxStamina;
+        }
+
+        currentMaxStamina = newMaxStamina;
+
+        // 触发体力变化事件
+        OnStaminaChanged?.Invoke(currentStamina, currentMaxStamina);
+    }
+
+    /// <summary>
+    /// 开始饥饿扣血
+    /// </summary>
+    private void StartHungerDamage()
+    {
+        if (hungerDamageCoroutine != null)
+        {
+            return;
+        }
+        hungerDamageCoroutine = StartCoroutine(HungerDamageCoroutine());
+    }
+
+    /// <summary>
+    /// 停止饥饿扣血
+    /// </summary>
+    private void StopHungerDamage()
+    {
+        if (hungerDamageCoroutine != null)
+        {
+            StopCoroutine(hungerDamageCoroutine);
+            hungerDamageCoroutine = null;
+        }
+    }
+
+    /// <summary>
+    /// 饥饿扣血协程
+    /// </summary>
+    private IEnumerator HungerDamageCoroutine()
+    {
+        while (isAlive)
+        {
+            // 先等待1秒
+            yield return new WaitForSeconds(1f);
+
+            // 检查游戏状态
+            if (GameManager.Instance != null && GameManager.Instance.IsGameOver())
+            {
+                break;
+            }
+
+            // 检查是否还在饥饿状态
+            if (currentSatiety > 0f)
+            {
+                break;
+            }
+
+            // 执行饥饿扣血
+            if (currentSatiety <= 0f && isAlive)
+            {
+                int damageAmount = Mathf.RoundToInt(hungerDamageRate);
+                TakeDamage(damageAmount);
+                if (currentHealth <= 0)
+                {
+                    break;
+                }
+            }
+        }
+        hungerDamageCoroutine = null;
+    }
+    #endregion
 
     #region OnPlayerStateChange
     public void TakeDamage(int damageValue)
@@ -75,7 +189,6 @@ public class PlayerStats : MonoBehaviour
             return; // 已死亡或游戏结束时不再受伤
 
         currentHealth -= damageValue;
-        //Debug.Log($"玩家受到{damageValue}点伤害，当前生命值：{currentHealth}");
         OnHealthChanged?.Invoke(currentHealth, playerData.maxHealth);
 
         // 检查是否死亡
@@ -91,7 +204,7 @@ public class PlayerStats : MonoBehaviour
         {
             currentHealth += healingValue;
             //Debug.Log($"玩家获得{healingValue}点治疗，当前生命值：{currentHealth}");
-            if(currentHealth > playerData.maxHealth)
+            if (currentHealth > playerData.maxHealth)
             {
                 currentHealth = playerData.maxHealth;
             }
@@ -101,15 +214,17 @@ public class PlayerStats : MonoBehaviour
 
     public void GetFood(int foodValue)
     {
-        if(currentSatiety < playerData.maxSatiety)
+        if (currentSatiety < playerData.maxSatiety)
         {
             currentSatiety += foodValue;
-            Debug.Log($"玩家获得{foodValue}点食物，当前饱食度：{currentSatiety}");
             if (currentSatiety > playerData.maxSatiety)
             {
                 currentSatiety = playerData.maxSatiety;
             }
             OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
+
+            // 饱食度变化时更新饥饿效果
+            UpdateHungerEffects();
         }
     }
 
@@ -133,9 +248,9 @@ public class PlayerStats : MonoBehaviour
     }
     private IEnumerator HpRecoverCoroutine()
     {
-        while(true)
+        while (true)
         {
-            if(treatmentArea.IsPlayerInTreatmentArea())
+            if (treatmentArea.IsPlayerInTreatmentArea())
             {
                 yield return new WaitForSeconds(1f);
                 if (currentHealth <= playerData.maxHealth)
@@ -153,7 +268,7 @@ public class PlayerStats : MonoBehaviour
             {
                 yield return null;
             }
-            
+
         }
     }
     #endregion
@@ -186,29 +301,34 @@ public class PlayerStats : MonoBehaviour
         {
             yield return null;
 
-            if (currentSatiety > 0)
+            if (currentSatiety >= 0)
             {
-                if(currentSatiety > playerData.maxSatiety)
+                if (currentSatiety > playerData.maxSatiety)
                 {
                     currentSatiety = playerData.maxSatiety;
                     OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
+                    UpdateHungerEffects(); // 更新饥饿效果
                     continue;
                 }
+
                 if (foodSupplyZone.isPlayerInRange())
                 {
                     currentSatiety += foodSupplyZone.GetSupplySatietyPerSec() * Time.deltaTime;
                 }
                 else
                 {
-                    currentSatiety -= satietyDecayRate * Time.deltaTime; // 乘以帧时间
+                    currentSatiety -= satietyDecayRate * Time.deltaTime; // 消耗每秒时间
                 }
-                
+
                 if (currentSatiety < 0)
                 {
                     currentSatiety = 0;
                 }
 
                 OnSatietyChanged?.Invoke(currentSatiety, playerData.maxSatiety);
+
+                // 每次饱食度变化都更新饥饿效果
+                UpdateHungerEffects();
             }
         }
     }
@@ -240,15 +360,15 @@ public class PlayerStats : MonoBehaviour
 
             if (currentStamina > 0)
             {
-                if(CampZoneManager.Instance.IsPlayerInCampZone())
+                if (CampZoneManager.Instance.IsPlayerInCampZone())
                 {
                     currentStamina -= 0f * Time.deltaTime;
                 }
                 else
                 {
-                    currentStamina -= staminaDecayRate * Time.deltaTime; // 乘以帧时间
+                    currentStamina -= staminaDecayRate * Time.deltaTime; // 消耗每秒时间
                 }
-                
+
                 if (currentStamina <= 0)
                 {
                     currentStamina = 0;
@@ -259,7 +379,7 @@ public class PlayerStats : MonoBehaviour
                     }
                 }
 
-                OnStaminaChanged?.Invoke(currentStamina, playerData.maxStamina);
+                OnStaminaChanged?.Invoke(currentStamina, currentMaxStamina); // 使用当前最大体力值
             }
         }
     }
@@ -288,26 +408,29 @@ public class PlayerStats : MonoBehaviour
         {
             yield return null; // 每帧执行
 
-            if (currentStamina < playerData.maxStamina)
+            if (currentStamina < currentMaxStamina) // 使用当前最大体力值
             {
-                currentStamina += staminaDecayRate * Time.deltaTime; // 乘以帧时间
-                if (currentStamina > playerData.maxStamina)
+                currentStamina += staminaDecayRate * Time.deltaTime; // 消耗每秒时间
+                if (currentStamina > currentMaxStamina)
                 {
-                    currentStamina = playerData.maxStamina;
+                    currentStamina = currentMaxStamina;
                 }
-                OnStaminaChanged?.Invoke(currentStamina, playerData.maxStamina);
+                OnStaminaChanged?.Invoke(currentStamina, currentMaxStamina); // 使用当前最大体力值
             }
         }
     }
     #endregion
 
-    // 玩家死亡处理（Key：触发入口）
+    // 玩家死亡处理（Key：触发全局）
     private void PlayerDie()
     {
         isAlive = false;
         currentHealth = 0;
 
         Debug.Log("玩家死亡！");
+
+        // 停止饥饿扣血
+        StopHungerDamage();
 
         // 触发全局死亡事件
         GameManager.TriggerPlayerDeath();
@@ -316,6 +439,9 @@ public class PlayerStats : MonoBehaviour
     // 重置玩家状态（用于重新开始）
     public void ResetPlayer()
     {
+        // 停止所有协程
+        StopHungerDamage();
+
         InitializePlayerState();
         controller.ResetPlayerController();
         cameraController.ResetDeathCamera();
@@ -325,7 +451,9 @@ public class PlayerStats : MonoBehaviour
     public int GetCurrentHealth() => currentHealth;
     public int GetMaxHealth() => playerData.maxHealth;
     public float GetCurrentStamina() => currentStamina;
-    public float GetMaxStamina() => playerData.maxStamina;
+    public float GetMaxStamina() => currentMaxStamina; // 返回当前实际体力上限
+    public float GetOriginalMaxStamina() => playerData.maxStamina; // 返回原始体力上限
     public float GetCurrentSatiety() => currentSatiety;
     public float GetMaxSatiety() => playerData.maxSatiety;
+    public float GetStaminaMultiplier() => staminaMultiplier; // 获取体力倍数
 }

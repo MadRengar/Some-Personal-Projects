@@ -20,7 +20,7 @@ public class PickupItem : MonoBehaviour
   
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && playerInputSystem.pickUp)
+        if (other.CompareTag("Player") && playerInputSystem.pickUpPressed)
         {
             if(isConsuming)
             {               
@@ -57,7 +57,7 @@ public class PickupItem : MonoBehaviour
                 {
                     Debug.Log("背包超重，无法拾取");
                 }
-                playerInputSystem.pickUp = false;
+                playerInputSystem.pickUpPressed = false;
             }
         }
     }
@@ -66,7 +66,7 @@ public class PickupItem : MonoBehaviour
     {
         if (other.CompareTag("Player") && playerInputSystem != null)
         {
-            playerInputSystem.pickUp = false;
+            playerInputSystem.pickUpPressed = false;
         }
     }
 

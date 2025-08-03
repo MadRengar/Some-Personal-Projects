@@ -14,13 +14,13 @@ public class TreatmentController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("玩家进入治疗区域！");
+            RadioPopController.Instance.ShowMessage(MessageKey.Player_EnterTreatmentArea, RadioPopController.MessageType.Info);
             playerInTreatmentArea = true;
         }
 
         if (other.CompareTag("AIPlayer"))
         {
-            Debug.Log("ai进入治疗区域！");
+            RadioPopController.Instance.ShowMessage(MessageKey.AI_EnterTreatmentArea, RadioPopController.MessageType.Info);
             aiInTreatmentArea = true;
         }
     }

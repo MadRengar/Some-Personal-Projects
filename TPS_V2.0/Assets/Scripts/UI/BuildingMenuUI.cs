@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PlayerControl;
+using TMPro;
 
 /// <summary>
 /// 建筑菜单UI控制脚本
@@ -11,6 +12,11 @@ public class BuildingMenuUI : MonoBehaviour
     [Header("UI References")]
     public Button closeButton; // 关闭按钮
     public Button[] buildingButtons; // 建筑选择按钮数组
+
+    [Header("buildingConsuming References")]
+    public TextMeshProUGUI woodAmount;
+    public TextMeshProUGUI ironAmount;
+    public TextMeshProUGUI powerAmount;
 
     [Header("Category System")]
     public Button[] categoryButtons; // TURRET, GENERATOR等分类按钮
@@ -273,6 +279,8 @@ public class BuildingMenuUI : MonoBehaviour
         {
             BuildingData_SO buildingData = buildingController.GetBuildingData();
 
+            RefreshConsumingPanel(buildingData);
+
             if (buildingSystem.CheckResourcesIsEnough(buildingData))
             {
                 playerInputSystem.EnterPlacingMode();
@@ -291,7 +299,7 @@ public class BuildingMenuUI : MonoBehaviour
             Debug.LogError("BuildingMenuUI: 找不到BuildingSystem组件！");
         }
     }
-    
+   
     /// <summary>
     /// 关闭建筑菜单
     /// </summary>
@@ -309,6 +317,20 @@ public class BuildingMenuUI : MonoBehaviour
         }
     }
     
+    private void RefreshConsumingPanel(BuildingData_SO buildingData)
+    {
+        woodAmount.text = buildingData.requiredWoodNum.ToString();
+        ironAmount.text = buildingData.requiredIronNum.ToString();
+        if (buildingData is TurretData_SO turretData)
+        {
+            powerAmount.text = turretData.power.ToString();
+        }
+        else
+        {
+            powerAmount.text = "0";
+        }
+    }
+
     private void OnDestroy()
     {
         // 清理事件监听器

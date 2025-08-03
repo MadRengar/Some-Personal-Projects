@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviour
     [Header("Zombie")]
     public ZombieManager zombieManager;
 
+    [Header("Game Time")]
+    public GameTimeManager gameTimeManager;
+
     // 玩家死亡事件声明
     public static event System.Action OnPlayerDeath;
     // ai队友死亡事件声明
@@ -149,6 +152,11 @@ public class GameManager : MonoBehaviour
     public PowerManager GetPowerManager()
     {
         return powerManager;
+    }
+
+    public GameTimeManager GetGameTimeManager()
+    {
+        return gameTimeManager;
     }
     #endregion
 

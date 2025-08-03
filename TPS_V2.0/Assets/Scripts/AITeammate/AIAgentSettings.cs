@@ -18,6 +18,9 @@ public class AIAgentSettings : MonoBehaviour
     public float sightRadius = 20f; // AI感知/射击范围
     public float minDistanceToPing = 3.0f; // 可选：与玩家的最小距离，避免 AI 原地执行
 
+    [Header("MovingSpeed Settings")]
+    public float findResourceSpeed = 20f;
+    public float pingMovinfSpeed = 12f;
 
     [Header("Protect Player")]
     public float playerProtectWeight = 0.7f;          // 跟随玩家的权重 (0-1)
