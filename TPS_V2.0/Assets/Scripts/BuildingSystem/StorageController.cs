@@ -2,6 +2,7 @@ using PlayerControl;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class StorageController : MonoBehaviour, IBuildingController
@@ -206,14 +207,15 @@ public class StorageController : MonoBehaviour, IBuildingController
         if (!CanStoreResources(woodAmount, ironAmount))
         {
             Debug.Log("仓库容量不足，无法存储更多资源");
+            RadioPopController.Instance.ShowMessage("Insufficient warehouse capacity to store more resources", RadioPopController.MessageType.Warning);
             return false;
         }
 
         // 存储资源
         currentWoodAmount += woodAmount;
         currentIronAmount += ironAmount;
+        RadioPopController.Instance.ShowMessage($"Successfully stored {woodAmount}Wood {ironAmount}Iron", RadioPopController.MessageType.Info);
 
-        Debug.Log($"成功存储到仓库: {woodAmount} 木头, {ironAmount} 铁块");
         Debug.Log($"仓库当前存储: {currentWoodAmount} 木头, {currentIronAmount} 铁块");
         Debug.Log($"剩余容量: {GetRemainingCapacity()} kg");
 

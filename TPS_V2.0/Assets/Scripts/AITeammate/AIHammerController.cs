@@ -10,7 +10,6 @@ public class AIHammerController : MonoBehaviour
     [SerializeField] private bool enableDebugLog = true;
 
     private PingMarkerManager pingManager;
-    private GameObject targetBuilding;
 
     void Start()
     {
@@ -27,16 +26,16 @@ public class AIHammerController : MonoBehaviour
             Debug.Log("[AIHammerController] 执行锤子挥击");
         }
 
-        targetBuilding = pingManager.GetCurrentMarkedBuilding();
+        GameObject targetBuilding = pingManager.GetCurrentMarkedBuilding();
 
         // 执行维修
-        PerformRepair();
+        PerformRepair(targetBuilding);
     }
 
     /// <summary>
     /// 执行维修逻辑
     /// </summary>
-    private void PerformRepair()
+    private void PerformRepair(GameObject targetBuilding)
     {
         if (targetBuilding == null) return;
 
@@ -105,14 +104,8 @@ public class AIHammerController : MonoBehaviour
     /// </summary>
     public bool IsTargetBuildingFullHealth()
     {
-        if (targetBuilding == null)
-        {
-            // 获取当前标记的建筑物
-            if (pingManager != null)
-            {
-                targetBuilding = pingManager.GetCurrentMarkedBuilding();
-            }
-        }
+        GameObject targetBuilding = pingManager.GetCurrentMarkedBuilding();
+ 
 
         if (targetBuilding == null) return true;
 

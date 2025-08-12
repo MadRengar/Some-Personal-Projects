@@ -18,4 +18,4 @@ MonoBehaviour:
   requiredBuildingTime: 100
   maxHealth: 300
   buildingType: 2
-  storageCapacity: 300
+  storageCapacity: 150

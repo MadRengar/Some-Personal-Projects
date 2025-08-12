@@ -223,7 +223,7 @@ public class TurretController : MonoBehaviour, IBuildingController
         // 检查目标是否还有效
         if (!IsTargetValid(currentTarget))
         {
-            Debug.Log("[TurretController] 目标无效，切换到空闲状态");
+            //Debug.Log("[TurretController] 目标无效，切换到空闲状态");
             SwitchToIdle();
             return;
         }
@@ -419,23 +419,23 @@ public class TurretController : MonoBehaviour, IBuildingController
                 {
                     currentTarget = nearestEnemy;
                     SwitchToFiring();
-                    Debug.Log($"[TurretController] 找到目标: {nearestEnemy.name}，切换到开火状态");
+                    //Debug.Log($"[TurretController] 找到目标: {nearestEnemy.name}，切换到开火状态");
                 }
             }
             else if (currentState == TurretState.Firing)
             {
                 if (!IsTargetValid(currentTarget))
                 {
-                    Debug.Log("[TurretController] 当前目标无效，寻找新目标");
+                    //Debug.Log("[TurretController] 当前目标无效，寻找新目标");
                     Transform nearestEnemy = FindNearestEnemy();
                     if (nearestEnemy != null)
                     {
                         currentTarget = nearestEnemy;
-                        Debug.Log($"[TurretController] 切换到新目标: {nearestEnemy.name}");
+                        //Debug.Log($"[TurretController] 切换到新目标: {nearestEnemy.name}");
                     }
                     else
                     {
-                        Debug.Log("[TurretController] 没有找到新目标，切换到空闲状态");
+                        //Debug.Log("[TurretController] 没有找到新目标，切换到空闲状态");
                         SwitchToIdle();
                     }
                 }

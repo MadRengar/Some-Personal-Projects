@@ -105,12 +105,18 @@ public class AmmoWorkbenchController : MonoBehaviour
         if (playerWood < woodCost)
         {
             Debug.Log($"木头不足！需要: {woodCost}, 拥有: {playerWood}");
+            int wood = woodCost;
+            int playerOwnWood = playerWood;
+            RadioPopController.Instance.ShowMessage($"Not enough wood! Need: {wood}, own: {playerOwnWood}", RadioPopController.MessageType.Warning);
             return false;
         }
 
         if (playerIron < ironCost)
         {
             Debug.Log($"铁块不足！需要: {ironCost}, 拥有: {playerIron}");
+            int iron = ironCost;
+            int playerOwnIron = playerIron;
+            RadioPopController.Instance.ShowMessage($"Not enough iron! Need: {iron}, own: {playerOwnIron}", RadioPopController.MessageType.Warning);
             return false;
         }
 

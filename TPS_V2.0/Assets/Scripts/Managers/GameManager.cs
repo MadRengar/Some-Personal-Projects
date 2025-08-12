@@ -281,7 +281,9 @@ public class GameManager : MonoBehaviour
                 RadioPopController.Instance.ShowMessage(MessageKey.AI_parse_fail, RadioPopController.MessageType.Error);
             }
 
+            ShowCommandRadioMessage();
             Debug.Log("GPT指令更新为: " + currentCommand);
+
         }
     }
 
@@ -299,5 +301,28 @@ public class GameManager : MonoBehaviour
             tree.SetVariableValue("currentCommand", "");
             Debug.Log("AI指令已清空");
         }
+    }
+
+    private void ShowCommandRadioMessage()
+    {
+        switch (currentCommand)
+        {
+            case "collect_all":
+                RadioPopController.Instance.ShowMessage(MessageKey.Command_Collect, RadioPopController.MessageType.Info);
+                break;
+            case "protect_player":
+                RadioPopController.Instance.ShowMessage(MessageKey.Command_Follow, RadioPopController.MessageType.Info);
+                break;
+            case "follow_player":
+                RadioPopController.Instance.ShowMessage(MessageKey.Command_Follow, RadioPopController.MessageType.Info);
+                break;
+            case "go_heal":
+                RadioPopController.Instance.ShowMessage(MessageKey.Command_GoHeal, RadioPopController.MessageType.Info);
+                break;
+            case "replenish_ammo":
+                RadioPopController.Instance.ShowMessage(MessageKey.Command_ReplenishAmmo, RadioPopController.MessageType.Info);
+                break;
+        }
+
     }
 }

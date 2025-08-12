@@ -56,6 +56,7 @@ public class PickupItem : MonoBehaviour
                 else
                 {
                     Debug.Log("背包超重，无法拾取");
+                    RadioPopController.Instance.ShowMessage(MessageKey.Interact_NotEnoughBackpackCapacity, RadioPopController.MessageType.Warning);
                 }
                 playerInputSystem.pickUpPressed = false;
             }

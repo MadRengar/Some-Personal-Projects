@@ -30,6 +30,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Decay Settings")]
     [SerializeField] private float satietyDecayRate = 1f; // 每秒衰减量
     [SerializeField] private float staminaDecayRate = 1f; // 每秒衰减量
+    [SerializeField] private float staminaRecoverRate = 5f; // 每秒衰减量
     [SerializeField] private int hungerDamageRate = 2; // 饥饿时每秒扣血量
 
     private Coroutine satietyDecayCoroutine;
@@ -96,7 +97,7 @@ public class PlayerStats : MonoBehaviour
         }
         else if (satietyPercentage <= 0.3f)
         {
-            staminaMultiplier = 0.5f; // 50%
+            staminaMultiplier = 0.3f; // 30%
             RadioPopController.Instance.ShowMessage(MessageKey.Player_lowSatiety, RadioPopController.MessageType.Warning);
             StopHungerDamage();
         }
@@ -410,7 +411,14 @@ public class PlayerStats : MonoBehaviour
 
             if (currentStamina < currentMaxStamina) // 使用当前最大体力值
             {
-                currentStamina += staminaDecayRate * Time.deltaTime; // 消耗每秒时间
+                if(CampZoneManager.Instance.IsPlayerInCampZone())
+                {
+                    currentStamina += staminaRecoverRate * Time.deltaTime; // 消耗每秒时间
+                }
+                else
+                {
+                    currentStamina += staminaDecayRate * Time.deltaTime; // 消耗每秒时间
+                }               
                 if (currentStamina > currentMaxStamina)
                 {
                     currentStamina = currentMaxStamina;

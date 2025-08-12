@@ -19,6 +19,9 @@ Valid behaviors:
 
 Examples:
 
+Input: "Hey, just follow me!" or "Come with me!" or "We should stay together"
+Output: { "behavior": "follow_player" }
+
 Input: "Go get some wood!"
 Output: { "behavior": "collect_wood" }
 
@@ -31,10 +34,13 @@ Output: { "behavior": "collect_all" }
 Input: "Collect wood, metal, and fuel."
 Output: { "behavior": "collect_all" }
 
-Input: "Stay close to me and protect me!"
+Input: "Stay close to me and protect me!" or "Help me!"
 Output: { "behavior": "protect_player" }
 
-Input: "Moving this area!" or "Moving this way!" or "Moving this place!"
+Input: "Moving this area!" or "Moving this way!" or "Moving this place!" or "Defend this area" or "Defend there"
+Output: { "behavior": "move_to_mark" }
+
+Input: "Defend this area" or "Defend there"
 Output: { "behavior": "move_to_mark" }
 
 Input: "Repair this building!" or "Repair this."

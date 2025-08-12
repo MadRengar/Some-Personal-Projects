@@ -16,7 +16,7 @@ public class BTRepairBuilding : Action
     private AIAnimationController animController;
     private AIHammerController hammerController;
     private PingMarkerManager pingManager;
-    private bool hasStartedRepair = false;
+    [SerializeField] private bool hasStartedRepair = false;
     private float swingTimer = 0f;
 
     public override void OnStart()
@@ -32,7 +32,6 @@ public class BTRepairBuilding : Action
         animController = GetComponent<AIAnimationController>();
         hammerController = GetComponent<AIHammerController>();
         pingManager = GameManager.Instance.GetPingMarkerManager();
-
         Debug.Log("[BTRepairBuilding] 进入维修节点");
     }
 
@@ -114,7 +113,7 @@ public class BTRepairBuilding : Action
     {
 
         animController.TriggerHammerSwing();
-        Debug.Log("[BTRepairBuilding] 触发锤子挥击动画");
+        //Debug.Log("[BTRepairBuilding] 触发锤子挥击动画");
 
     }
 

@@ -14,7 +14,6 @@ public class PingMarkerManager : MonoBehaviour
     public LayerMask groundLayer; // 用来射线检测地面层
 
 
-
     [Header("2D UI")]
     public RectTransform markerUIIconPrefab;
     public Canvas uiCanvas;
@@ -119,7 +118,7 @@ public class PingMarkerManager : MonoBehaviour
         /* 2D TipUI */
         ShowTipUI();
 
-        Debug.Log($"标记建筑物: {building.name} (Tag: {building.tag})");
+        Debug.Log($"Mark Position: {building.name} (Tag: {building.tag})");
     }
 
     private void CreateGroundMarker(RaycastHit hit)
@@ -145,7 +144,7 @@ public class PingMarkerManager : MonoBehaviour
         /* 2D TipUI */
         ShowTipUI();
 
-        Debug.Log($"标记地面位置: {hit.point}");
+        //Debug.Log($"标记地面位置: {hit.point}");
     }
 
     private void ClearCurrentMarker()
@@ -177,7 +176,7 @@ public class PingMarkerManager : MonoBehaviour
                 //显示距离Text
                 if (distanceText != null)
                 {
-                    string markerType = isCurrentTargetBuilding ? "建筑" : "位置";
+                    string markerType = isCurrentTargetBuilding ? "Building" : "Position";
                     distanceText.text = $"{markerType}\n{distance:F1}m";
                 }
             }

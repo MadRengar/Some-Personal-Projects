@@ -17,14 +17,23 @@ public enum MessageKey
     /* Zombie */
     Zombie_wave,
 
+    /* Command */
     /* Ping */
     PingMove_success,
     PingMove_unsuccess,
     Ping_illegal,
     Ping_tooclose,
 
+    Command_Follow,
+    Command_Collect,
+
+    Command_GoHeal,
+    Command_ReplenishAmmo,
+
     /* Interact */
     Interact_foodSupply,
+    Interact_NotEnoughResources,
+    Interact_NotEnoughBackpackCapacity,
 
     /* Player */
     Player_EnterTreatmentArea,
@@ -39,7 +48,7 @@ public static class RadioMessages
 {
     public static readonly Dictionary<MessageKey, string> MessageTable = new Dictionary<MessageKey, string>
     {
-        { MessageKey.AI_parse_fail,      "AI instruction parsing failed!" },
+        { MessageKey.AI_parse_fail,      "AI instruction parsing failed! Clear command." },
         { MessageKey.Building_Generator_low_energy,  "Insufficient power!" },
         { MessageKey.Build_success,      "Construction completed!" },
         { MessageKey.Build_no_resource,  "Insufficient resources to build!" },
@@ -56,6 +65,12 @@ public static class RadioMessages
         { MessageKey.Building_isAttacked,      "Our base is under attack!" },
         { MessageKey.Player_lowSatiety,      "Low satiety! Your stamina has dropped significantly." },
         { MessageKey.Player_zeroSatiety,      "You're starving! Health is draining over time. Find food immediately." },
+        { MessageKey.Command_Follow,      "AI is tactically moving closer to players." },
+        { MessageKey.Command_Collect,      "AI is collecting resources." },
+        { MessageKey.Command_GoHeal,      "AI is heading to the treatment area!" },
+        { MessageKey.Command_ReplenishAmmo,      "AI is heading to the ammo supply location." },
+        { MessageKey.Interact_NotEnoughBackpackCapacity,      "You don't have enough Backpack Capacity." },
+        { MessageKey.Interact_NotEnoughResources,      "You don't have enough resources." },
     };
 
     public static string Get(MessageKey key)

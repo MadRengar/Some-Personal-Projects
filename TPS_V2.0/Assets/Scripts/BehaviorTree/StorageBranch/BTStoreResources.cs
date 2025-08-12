@@ -40,7 +40,7 @@ public class BTStoreResources : Action
         {
             // 背包空了，清空命令，完成任务
             currentCommand.Value = "";
-            needStorage = false;
+            needStorage.Value = false;
             Debug.Log("[BTStoreResources] AI背包为空，任务完成");
             return TaskStatus.Success;
         }
