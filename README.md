@@ -114,9 +114,9 @@ NPC 可以执行 **四个动作**（上、下、左、右），但环境具有�
 
 本项目是一个使用 **C++** 开发的 **2D 动作游戏**，采用 **SFML** 作为图形渲染库，实现角色控制、物理碰撞、关卡设计、数据驱动等核心功能。该项目展现了 **C++ 游戏开发** 的关键技术，包括 **<u>状态管理、碰撞检测、动画渲染、输入处理 、更新模式、数据结构设计、性能优化</u>**等。
 
-1. 游戏采用 **E-C（Entity-Component）架构** 组织代码，使游戏逻辑 **模块化**，方便扩展和复用。
+1. 游戏采用 **E-C-S（Entity-Component-System）架构** 组织代码，使游戏逻辑 **模块化**，方便扩展和复用。
 2. 同时，使用 **智能指针（`std::shared_ptr` / `std::unique_ptr`）** 进行资源管理，避免内存泄漏。
-3. 在架构设计上，采用 **命令模式（Command Pattern）** 处理输入，**更新模式（Update Pattern）** 等开发模式管理游戏逻辑，使游戏代码清晰、可维护。
+3. 在架构设计上，采用 **命令模式（Command Pattern）** 处理输入，**更新模式（Update Pattern）** ，**对象池（ObjectsPool）**，**观察者模式（Observer ）**等开发模式管理游戏逻辑，使游戏代码清晰、可维护。
 4. 采用adaptiveLoop，实现帧数计算和锁定。
 5. 遵循**The Data Locality Pattern**设计模式，优化数据存储分布，提高cpu和ram的交换效率，提高游戏性能。
 
@@ -161,6 +161,30 @@ sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;winmm.lib;g
 | L-SHIFT | 发射火球             |
 | Space   | 普通攻击/收集Log资源 |
 | Esc     | 暂停游戏             |
+
+## 4. **基于 Unity3D 的语音控制 AI 队友 TPS 游戏开发**
+
+### (1) 项目简介
+
+技术栈：Unity3D、C#、NavMesh、Behavior Designer (BT)、FSM、PCG、Whisper、GPT-3.5
+
+1. 使用 Unity (C#) 开发合作生存类游戏，设计并实现了一个 语音控制 AI 队友系统，支持玩家通过语音指令驱动 AI 进行跟随、采集、战斗、建造等操作。
+
+2. 集成战斗系统，建造系统，包括动画、碰撞检测，并支持简单的背包系统。
+
+3. 集成 Whisper（本地语音识别）与 GPT-3.5（意图解析），结合 Behavior Designer 行为树 实现任务切换逻辑，并通过 有限状态机 (FSM) 构建僵尸敌
+
+   人 AI（包括昼夜 AI 模式切换、Root Motion 驱动移动）。
+
+4. 实现 程序化内容生成 (PCG)，动态刷新资源、僵尸；根据游戏时间和预选难度，动态调整敌人强度和资源数量，提升游戏的可重玩性与挑战性。
+
+（**项目成果已被 IEEE Conference on Games 2025（COG）接收并发表，具备完整的交互系统与研究性实现价值。**）
+
+### (2) 配置手册
+
+详情请见 ***项目部署手册*** 
+
+
 
 
 
