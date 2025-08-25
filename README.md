@@ -1,6 +1,8 @@
 # Some-Personal-Projects
 Here are some of my daily practice projects
 
+TPS项目演示视频：https://www.bilibili.com/video/BV1kJeRzoEMP/?vd_source=c703283436444fd088ab487a21258cc4
+
 ## 1. 基于强化学习的 NPC 行为优化(RL_FrozenLake)
 
 技术栈：**Python** 
